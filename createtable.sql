@@ -12,7 +12,7 @@ CREATE TABLE movies (
 
 CREATE TABLE stars (
     id varchar(10) not null default '',
-    name varchar(10) not null default '',
+    name varchar(100) not null default '',
     birthYear integer,
     PRIMARY KEY (id)
 );
