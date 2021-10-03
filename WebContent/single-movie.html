@@ -18,29 +18,68 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <title>Single Movie</title>
+    <style>
+
+        body {
+            background-color: #5B6172;
+            opacity: 70%;
+        }
+
+        .outline {
+            color: white;
+            font-size: 50px;
+        }
+
+        h3
+        {
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-right: 100px;
+            margin-left: 100px;
+            outline-style: double;
+            outline-width: medium;
+            outline-color: coral ;
+
+            color: white;
+            font: -apple-system-body;
+        }
+        p.outline
+        {
+            outline-style: double;
+            outline-width: medium;
+            outline-color: coral;
+        }
+
+
+    </style>
 </head>
 <body>
-<h1>Single Movie Page</h1>
+
 
 <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
 <!-- single-star.js will find this html element by it's id "star_info" -->
-<h3 id="star_info"></h3>
-<table id=movie_table class="table table-striped">
-    <thead>
-    <tr>
-<!--        <th>Movie Title</th>-->
-<!--        <th>Release Year</th>-->
-<!--        <th>Director</th>-->
-        <th>Stars</th>
-        <th>Genres</th>
-        <th>
-    </tr>
-    </thead>
+<h3 id="star_info" class=" solidboard"></h3>
+<!--<table id=movie_table class="table-striped">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--&lt;!&ndash;        <th>Movie Title</th>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>Release Year</th>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>Director</th>&ndash;&gt;-->
+<!--        <th>Stars</th>-->
 
-    <!-- Table body is left empty here, will be populated with the data retrieved with single-star.js -->
-    <!-- single-star.js will find this html element by it's id "movie_table_body" -->
-    <tbody id=movie_table_body></tbody>
-</table>
+<!--        <th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+
+<!--    &lt;!&ndash; Table body is left empty here, will be populated with the data retrieved with single-star.js &ndash;&gt;-->
+<!--    &lt;!&ndash; single-star.js will find this html element by it's id "movie_table_body" &ndash;&gt;-->
+<!--    <tbody id=movie_table_body></tbody>-->
+<!--</table>-->
+
+</div>
+<p align="center" class = "outline">
+    <a href="movie.html">Back to Movie List</a>
+</p>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -17,6 +17,25 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <title>Movie List</title>
+    <style>
+
+        .table-movie thead tr {
+            background-color: #5B6172;
+            color: #dddddd;
+            text-align: left;
+            table-layout: auto;
+            width: 100%;
+        }
+
+
+        .table-movie tbody tr:nth-of-type(even) {
+            table-layout: auto;
+            width: 100%;
+            background-color: #f3f3f0;
+        }
+
+
+    </style>
 </head>
 <body>
 
@@ -24,7 +43,7 @@
 <h1>Movies</h1>
 
 <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
-<table id=movie_table class="table table-striped">
+<table id=movie_table class="table-movie">
     <!-- Create a table header -->
     <thead>
     <tr>
