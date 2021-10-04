@@ -54,9 +54,9 @@ function handleResult(resultData) {
         html_content +=
             '<a href="single-movie.html?id=' + movie_id + '">' +
             movie_name + // display star_name for the link text
-            '</a>' + ' \n       '
+            '</a>' + ', '
     }
-    html_content = html_content.slice(0, -8);
+    html_content = html_content.slice(0, -2);
 
     // append two html <h3> created to the body, which will refresh the page
     if (resultData[0]["star_dob"] == null) {
