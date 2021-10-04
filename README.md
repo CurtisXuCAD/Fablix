@@ -3,7 +3,7 @@ This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1 because of mistaken push from local desktop. This won't happen in project2.
 ---
 ## Video Demo Link
-**https://youtu.be/mk4vUNHJ700**
+**https://youtu.be/VxH_fKQ9mSs**
 ## Application URL
 **http://ec2-3-101-58-84.us-west-1.compute.amazonaws.com:8080/cs122b-fall21-team-6-project1/**
 
