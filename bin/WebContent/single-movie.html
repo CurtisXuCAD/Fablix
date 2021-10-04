@@ -1,0 +1,111 @@
+<!-- This example is following frontend and backend separation.
+
+    This .html performs two steps:
+    1. Create a html template skeleton, with all the elements defined (some left empty) and named with ids.
+    2. Load single-star.js to populate the data into empty elements.
+    -->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Single Movie</title>
+    <style>
+
+        html{
+            height:100%;
+            background: linear-gradient(to bottom, #4fc3f7, #86fde8);
+        }
+
+        .card-box{
+            border-radius: 20px;
+            padding: 10px;
+            margin: 50px 100px 50px;
+            box-shadow: 0px 0px 30px rgba( 100,181,246, 1);
+            background: white;
+        }
+
+        .back-button-text {
+            border-radius: 20px;
+            padding: 5px;
+            color: white;
+            font-size: 35px;
+            text-decoration: none;
+        }
+
+        .link{
+            border-radius: 20px;
+            padding: 5px;
+            color: white;
+            background:#595959;
+            font-size: 35px;
+            margin: 30px auto;
+            width: 30%;
+        }
+        
+        a:visited, a:link{
+            color: #0000EE;
+            text-decoration: underline;
+        }
+        
+        .link a:link{
+            text-decoration: none;
+            color: white;
+        }
+
+        .link a:hover, .link a:active{
+            text-decoration: underline;
+            color: white;
+        }
+        
+        h1{
+            margin: 50px 100px 30px;
+            font-size: 50px;
+            text-shadow: 3px 3px 3px rgba( 100,181,246, 1);
+        }
+
+        h3
+        {
+            margin: 10px 100px 10px;
+            font-size: 25px;
+        }
+
+        span{
+             color: #d4380d
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="card-box">
+            <!-- div body is left empty here, will be populated with the data retrieved with single-star.js -->
+            <!-- single-star.js will find this html element by it's id "star_info" -->
+            <div id="movie_info"></div>
+        <div class = "link">
+            <a class="link-dec" href="movie.html">
+                <div class="back-button-text" align="center">
+                    Back to Movie List
+                </div>
+            </a>
+        </div>
+    </div>
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Load our own JS file -->
+<!-- The path is relative to single-star.html, since these two files are in the same directory -->
+<!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
+     otherwise the url is relative to the root path-->
+<script src="single-movie.js"></script>
+</body>
+
+
+</html>
