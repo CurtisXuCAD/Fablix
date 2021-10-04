@@ -1,7 +1,10 @@
 # cs122b-fall21-team-6
 cs122b-fall21-team-6 created by GitHub Classroom
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1 because of mistaken push from local desktop. This won't happen in project2.
-
+## Video URL
+```
+https://youtu.be/mk4vUNHJ700
+```
 ## How to deploy your application with Tomcat
 - on aws Server clone the project1
  ```
