@@ -56,8 +56,8 @@ public class SingleMovieServlet extends HttpServlet {
 
             String query = "select m.title, m.year, m.director, \n" +
                     "                    substring(group_concat(DISTINCT  CONCAT_WS('-', sn.id, sn.name) separator ', ' ),1) as stars,\n" +
-                    "                    substring(group_concat(DISTINCT gn.name separator ', '),1) as genres\n" +
-                    "                    from movies as m,stars_in_movies as s, stars as sn, genres as gn, genres_in_movies as g\n" +
+                    "                    substring(group_concat(DISTINCT gn.name separator ', '),1) as genres, r.rating\n" +
+                    "                    from movies as m,stars_in_movies as s, stars as sn, genres as gn, genres_in_movies as g, ratings as r\n" +
                     "                    where m.id = ? and s.movieId = ?and \n" +
                     "                    g.movieId = ? and g.genreId = gn.id\n" +
                     "                    and s.starId = sn.id";
