@@ -8,7 +8,7 @@ cs122b-fall21-team-6 created by GitHub Classroom
 - 
 
 
-#Contribution
+## Contribution
 - CurtisXuCAD (Chunzhi Xu)
 ```
   Create movie list page
