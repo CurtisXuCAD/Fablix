@@ -59,7 +59,7 @@ public class SingleMovieServlet extends HttpServlet {
                     "                    substring(group_concat(DISTINCT gn.name separator ', '),1) as genres, r.rating\n" +
                     "                    from movies as m,stars_in_movies as s, stars as sn, genres as gn, genres_in_movies as g, ratings as r\n" +
                     "                    where m.id = ? and s.movieId = ?and \n" +
-                    "                    g.movieId = ? and g.genreId = gn.id\n" +
+                    "                    g.movieId = ? and g.genreId = gn.id and m.id = r.movieId\n" +
                     "                    and s.starId = sn.id";
 
             // Declare our statement
