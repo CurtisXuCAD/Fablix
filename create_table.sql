@@ -73,3 +73,5 @@ CREATE TABLE ratings(
     numVotes integer not null,
     FOREIGN KEY(movieId) REFERENCES movies(id)
 );
+
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
