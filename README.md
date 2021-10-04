@@ -7,7 +7,6 @@ This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 ## Application URL
 **http://ec2-3-101-58-84.us-west-1.compute.amazonaws.com:8080/cs122b-fall21-team-6-project1/**
 
----
 ## How to deploy your application with Tomcat
 - On AWS Server clone the project1
  ```
