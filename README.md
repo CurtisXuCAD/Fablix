@@ -8,7 +8,7 @@ cs122b-fall21-team-6 created by GitHub Classroom
 - 
 
 
-##Contribution
+#Contribution
 - CurtisXuCAD (Chunzhi Xu)
 ```
   Create movie list page
@@ -17,10 +17,13 @@ cs122b-fall21-team-6 created by GitHub Classroom
   AWS setup
   Create demo
 ```
+
+- Silence-silence-silence (Haoting Ni)
+```
   Single Movie Page
   Single Star Page
   Jump Function
   Readme Creation 
   Beautify Pages
   Creat_table.sql
-- Silence-silence-silence (Haoting Ni)
+```
