@@ -6,12 +6,18 @@ cs122b-fall21-team-6 created by GitHub Classroom
 https://youtu.be/mk4vUNHJ700
 ```
 ## How to deploy your application with Tomcat
-- on aws Server clone the project1
+- On aws Server clone the project1
  ```
  https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
  ```
-- 
-
+- Generate target folder
+ ```
+ mvn package
+ ```
+- Copy war file to tomcat
+ ```
+ sudo cp ./target/*.war /var/lib/tomcat9/webapps/
+ ```
 
 ## Contribution
 - CurtisXuCAD (Chunzhi Xu)
