@@ -19,66 +19,83 @@
 
     <title>Single Star</title>
     <style>
-        body {
-            background-color: #5B6172;
-            opacity: 70%;
+        html{
+            height:100%;
+            background: linear-gradient(to bottom, #4fc3f7, #86fde8);
         }
 
-        .outline {
+        .card-box{
+            border-radius: 20px;
+            padding: 10px;
+            margin: 50px 100px 50px;
+            box-shadow: 0px 0px 30px rgba( 100,181,246, 1);
+            background: white;
+        }
+
+        .back-button-text {
+            border-radius: 20px;
+            padding: 5px;
             color: white;
+            font-size: 35px;
+            text-decoration: none;
+        }
+
+        .link{
+            border-radius: 20px;
+            padding: 5px;
+            color: white;
+            background:#595959;
+            font-size: 35px;
+            margin: 30px auto;
+            width: 30%;
+        }
+        
+        a:visited, a:link{
+            color: #0000EE;
+            text-decoration: underline;
+        }
+        
+        .link a:link{
+            text-decoration: none;
+            color: white;
+        }
+
+        .link a:hover, .link a:active{
+            text-decoration: underline;
+            color: white;
+        }
+        
+        h1{
+            margin: 50px 100px 30px;
             font-size: 50px;
+            text-shadow: 3px 3px 3px rgba( 100,181,246, 1);
         }
 
         h3
         {
-            outline-style: double;
-            outline-width: medium;
-            outline-color: coral ;
-            margin-top: 100px;
-            margin-bottom: 100px;
-            margin-right: 100px;
-            margin-left: 100px;
-            color: white;
-            font: -apple-system-body;
+            margin: 10px 100px 10px;
+            font-size: 25px;
         }
-        p.outline
-        {
-            outline-style: double;
-            outline-width: medium;
-            outline-color: coral;
+
+        span{
+             color: #d4380d
         }
     </style>
 
 </head>
 <body>
-
-
-
-<!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
-<!-- single-star.js will find this html element by it's id "star_info" -->
-<h3 id="star_info" class=" solidboard"></h3>
-<!--<table id=movie_table class="table table-striped">-->
-
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        &lt;!&ndash;        <th>Movie Title</th>&ndash;&gt;-->
-<!--        &lt;!&ndash;        <th>Release Year</th>&ndash;&gt;-->
-<!--        &lt;!&ndash;        <th>Director</th>&ndash;&gt;-->
-<!--        <th>Movies</th>-->
-
-<!--        <th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-
-<!--    &lt;!&ndash; Table body is left empty here, will be populated with the data retrieved with single-star.js &ndash;&gt;-->
-<!--    &lt;!&ndash; single-star.js will find this html element by it's id "movie_table_body" &ndash;&gt;-->
-<!--    <tbody id=movie_table_body></tbody>-->
-<!--</table>-->
-
-</div>
-<p class = "outline" align="center" >
-    <a href="movie.html">Back to Movie List</a>
-</p>
+    <div class="card-box">
+            <!-- div body is left empty here, will be populated with the data retrieved with single-star.js -->
+            <!-- single-star.js will find this html element by it's id "star_info" -->
+            <div id="star_info"></div>
+        <div class = "link">
+            <a class="link-dec" href="movie.html">
+                <div class="back-button-text" align="center">
+                    Back to Movie List
+                </div>
+            </a>
+        </div>
+    </div>
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

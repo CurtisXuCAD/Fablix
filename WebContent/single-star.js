@@ -46,37 +46,34 @@ function handleResult(resultData) {
 
 
     let mnames = resultData[0]["movie_title"];
-        let html_content = "";
-        const id_name_array = mnames.split(', ');
-        for (let j = 0; j < id_name_array.length; j++) {
-            const movie_id = id_name_array[j].split("-")[0];
-            const movie_name = id_name_array[j].split("-")[1];
-            html_content +=
-                '<a href="single-movie.html?id=' + movie_id + '">' +
-                movie_name + // display star_name for the link text
-                '</a>' + ', '
-        }
-    html_content = html_content.slice(0, -2);
-
-    // append two html <p> created to the h3 body, which will refresh the page
-    if (resultData[0]["star_dob"] == null)
-    {
-        starInfoElement.append("<p>Star Name: " + resultData[0]["star_name"] + "</p>" +
-            "<p>YEAR of Birth: " + "N/A" + "</p>"+
-            "<p>Movies: " + html_content  + "</p>");
+    let html_content = "";
+    const id_name_array = mnames.split(', ');
+    for (let j = 0; j < id_name_array.length; j++) {
+        const movie_id = id_name_array[j].split("-")[0];
+        const movie_name = id_name_array[j].split("-")[1];
+        html_content +=
+            '<a href="single-movie.html?id=' + movie_id + '">' +
+            movie_name + // display star_name for the link text
+            '</a>' + ' \n       '
     }
-    else
-    {
-        starInfoElement.append("<p>Star Name: " + resultData[0]["star_name"] + "</p>" +
-            "<p>YEAR of Birth: " + "N/A" + "</p>"+
-            "<p>Movies: " + html_content  + "</p>");
+    html_content = html_content.slice(0, -8);
+
+    // append two html <h3> created to the body, which will refresh the page
+    if (resultData[0]["star_dob"] == null) {
+        starInfoElement.append("<h1>" + resultData[0]["star_name"] + "</h1>" +
+            "<h3>YEAR of Birth: " + "<span>N/A</span>" + "</h3>" +
+            "<h3>Movies: " + html_content + "</h3>");
+    } else {
+        starInfoElement.append("<h1>" + resultData[0]["star_name"] + "</h1>" +
+            "<h3>YEAR of Birth: " + "<span>" + resultData[0]["star_dob"] + "</span>" + "</h3>" +
+            "<h3>Movies: " + html_content + "</h3>");
     }
 
     console.log("handleResult: populating movie table from resultData");
 
     // Populate the star table
     // Find the empty table body by id "movie_table_body"
-   // let movieTableBodyElement = jQuery("#movie_table_body");
+    // let movieTableBodyElement = jQuery("#movie_table_body");
 
     // Concatenate the html tags with resultData jsonObject to create table rows
     // for (let i = 0; i < Math.min(10, resultData.length); i++) {
@@ -113,8 +110,8 @@ let starId = getParameterByName('id');
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
-    dataType: "json",  // Setting return data type
-    method: "GET",// Setting request method
+    dataType: "json", // Setting return data type
+    method: "GET", // Setting request method
     url: "api/single-star?id=" + starId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
