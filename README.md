@@ -1,20 +1,27 @@
-# cs122b-fall21-team-6
-cs122b-fall21-team-6 created by GitHub Classroom
+# CS122B-Fall21-Team-6
+This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1 because of mistaken push from local desktop. This won't happen in project2.
-## Video URL
-```
-https://youtu.be/mk4vUNHJ700
-```
+---
+## Video Demo Link
+**https://youtu.be/mk4vUNHJ700**
+## Application URL
+**http://ec2-3-101-58-84.us-west-1.compute.amazonaws.com:8080/cs122b-fall21-team-6-project1/**
+
+---
 ## How to deploy your application with Tomcat
-- On aws Server clone the project1
+- On AWS Server clone the project1
  ```
- https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
+ git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
  ```
-- Generate target folder
+- Direct to project folder
+ ```
+ cd cs122b-fall21-team-6/
+ ```
+- Build the war file
  ```
  mvn package
  ```
-- Copy war file to tomcat
+- Copy war file to tomcat to deploy
  ```
  sudo cp ./target/*.war /var/lib/tomcat9/webapps/
  ```
@@ -27,6 +34,7 @@ https://youtu.be/mk4vUNHJ700
   GitHub setup
   AWS setup
   Create demo
+  Bug fixing
 ```
 
 - Silence-silence-silence (Haoting Ni)
