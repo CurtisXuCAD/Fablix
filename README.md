@@ -1,6 +1,6 @@
 # CS122B-Fall21-Team-6
 This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
-### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1 because of mistaken push from local desktop. This won't happen in project2.
+### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
 ---
 ## Video Demo Link
 **https://youtu.be/VxH_fKQ9mSs**
