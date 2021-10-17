@@ -12,8 +12,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Enumeration;
 
 
 // Declaring a WebServlet called MoviesServlet, which maps to url "/api/movies"
@@ -39,25 +41,97 @@ public class MoviesServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+
+        String name = request.getParameter("name");
+        String director = request.getParameter("director");
+        String stars = request.getParameter("stars");
+        String year = request.getParameter("year");
+        String genre = request.getParameter("genre");
+        String az = request.getParameter("AZ");
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
+        if (year.equals(""))
+        {
+            year = "%";
+        }
+
+
+
+        if (genre.equals("null"))
+        {
+            genre = "";
+
+        }
+
+        if (az.equals("null"))
+        {
+            az = "";
+        }
+        System.out.println("goodsdads" + genre);
+        System.out.println(year);
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
 
-            // Declare our statement
-            Statement statement = conn.createStatement();
+            String query;
 
-            String query = "SELECT m.id, m.title, m.year, m.director, " +
-            "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, "+
-            "substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) separator ', '), ', ' , 3) as snames, " +
-            "r.rating " +
-            "from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim " +
-            "where m.id = gim.movieId and m.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m.id = r.movieId " +
-            "group by m.id order by r.rating DESC limit 20;";
+            if (!genre.equals(""))
+            {
+                query = "SELECT m.id, m.title, m.year, m.director, \n" +
+                        "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
+                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) separator ', '), ', ' , 3) as snames, \n" +
+                        "            r.rating \n" +
+                        "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
+                        "            \n" +
+                        "            (SELECT m.id\n" +
+                        "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
+                        "\t\t\twhere sm.movieId = m.id and s.id = sm.starId and g.name like ? and\n" +
+                        "\t\t\tm.id = gim.movieId  and gim.genreId = g.id and m.id = r.movieId \n" +
+                        "\t\t\tgroup by m.id) as m1\n" +
+                        "            \n" +
+                        "            \n" +
+                        "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
+                        "            group by m.id ";
+            }
+            else
+            {
+                query = "SELECT m.id, m.title, m.year, m.director, \n" +
+                        "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
+                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) separator ', '), ', ' , 3) as snames, \n" +
+                        "            r.rating \n" +
+                        "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
+                        "            \n" +
+                        "            (SELECT m.id\n" +
+                        "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
+                        "\t\t\twhere m.title LIKE ? and m.year like ? and m.director LIKE ? and sm.movieId = m.id and s.id = sm.starId and s.name LIKE ? and\n" +
+                        "\t\t\tm.id = gim.movieId  and m.title LIKE ? and gim.genreId = g.id and m.id = r.movieId \n" +
+                        "\t\t\tgroup by m.id) as m1\n" +
+                        "            \n" +
+                        "            \n" +
+                        "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
+                        "            group by m.id ";
 
-            // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+
+            }
+
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            if (!genre.equals(""))
+            {
+                statement.setString(1, "%"+genre+"%");
+            }
+            else
+            {
+                statement.setString(1, "%"+name+"%");
+                statement.setString(2, year);
+                statement.setString(3, "%"+director+"%");
+                statement.setString(4, "%"+stars+"%");
+                statement.setString(5,  az +"%");
+            }
+
+            ResultSet rs = statement.executeQuery();
+
 
             JsonArray jsonArray = new JsonArray();
 
