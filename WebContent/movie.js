@@ -63,7 +63,7 @@ function handleMovieResult(resultData) {
         }
         rowHTML += "<th>" + html_contentg.slice(0, -2) + "</th>";
 
-
+        //test
         let snames = resultData[i]["movie_snames"];
         let html_content = "";
         const id_name_array = snames.split(', ');
