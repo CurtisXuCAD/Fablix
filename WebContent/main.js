@@ -1,24 +1,27 @@
-let search_form = $("#search_form");
+let login_form = $("#login_form");
 
 /**
  * Handle the data returned by LoginServlet
  * @param resultDataString jsonObject
  */
 function handleLoginResult(resultDataString) {
+    window.location.replace("login.html");
+
+}
 
 
-    window.location.replace("movie.html?name=" + movieName + "&director=" +movieDirector +"&stars=" + movieStars + "&year=" + movieYear);
-
+function doFunc(resultDataString) {
+    resultDataString.preventDefault();
+    $.ajax(
+        "api/main", {
+            method: "GET",
+            data: { action: "Logout" },
+            success: handleLoginResult
+        }
+    );
 }
 
 
 
 // Bind the submit action of the form to a handler function
-search_form.submit(handleLoginResult);
-
-// Get id from URL
-let movieName = getParameterByName('name');
-let movieDirector = getParameterByName('director');
-let movieStars = getParameterByName('stars');
-let movieYear = getParameterByName('year');
-
+login_form.submit(doFunc);

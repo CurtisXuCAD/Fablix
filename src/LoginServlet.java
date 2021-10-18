@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +39,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-
+        System.out.println("Login Post");
         // The log message can be found in localhost log
         request.getServletContext().log("GetUser: " + username);
 
@@ -70,9 +71,16 @@ public class LoginServlet extends HttpServlet {
 
             if (rs.next()) {
                 // Login success:
+                System.out.println("Correct");
+                HttpSession session = request.getSession(true);
 
                 // set this user into the session
-                request.getSession().setAttribute("user", new User(username));
+                session.setAttribute("user", new User(username));
+
+                // set the logged_in attribute
+                Boolean logged_in = (Boolean) session.getAttribute("logged_in");
+                logged_in = true;
+                session.setAttribute("logged_in", logged_in);
 
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
@@ -91,7 +99,7 @@ public class LoginServlet extends HttpServlet {
                 }
             }
 
-            response.getWriter().write(responseJsonObject.toString());
+            out.write(responseJsonObject.toString());
             rs.close();
             statement.close();
 

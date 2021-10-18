@@ -24,16 +24,28 @@ public class LoginFilter implements Filter {
 
         // Check if this URL is allowed to access without logging in
         if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
+            System.out.println("isAllow");
             // Keep default action: pass along the filter chain
-            chain.doFilter(request, response);
-            return;
+            System.out.println(httpRequest.getSession().getAttribute("logged_in"));
+            if(httpRequest.getSession().getAttribute("logged_in") != null) {
+                if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
+                    httpResponse.sendRedirect("main.html");
+                    System.out.println("LoginFilter: to main");
+                }
+            }
+            else{
+                chain.doFilter(request, response);
+            }
         }
-
-        // Redirect to login page if the "user" attribute doesn't exist in session
-        if (httpRequest.getSession().getAttribute("user") == null) {
-            httpResponse.sendRedirect("login.html");
-        } else {
-            chain.doFilter(request, response);
+        else{
+            System.out.println("NoAllow");
+            // Redirect to login page if the "user" attribute doesn't exist in session
+            if (httpRequest.getSession().getAttribute("user") == null) {
+                System.out.println("LoginFilter: to login");
+                httpResponse.sendRedirect("login.html");
+            } else {
+                chain.doFilter(request, response);
+            }
         }
     }
 
@@ -50,6 +62,7 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.html");
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
+        allowedURIs.add("cs122b-fall21-team-6-war/");
     }
 
     public void destroy() {

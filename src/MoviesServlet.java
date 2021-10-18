@@ -98,7 +98,7 @@ public class MoviesServlet extends HttpServlet {
             {
                 query = "SELECT m.id, m.title, m.year, m.director, \n" +
                         "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
-                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) separator ', '), ', ' , 3) as snames, \n" +
+                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name like ? then -1 end separator ', '), ', ' , 3) as snames, \n" +
                         "            r.rating \n" +
                         "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
                         "            \n" +
@@ -123,11 +123,12 @@ public class MoviesServlet extends HttpServlet {
             }
             else
             {
-                statement.setString(1, "%"+name+"%");
-                statement.setString(2, year);
-                statement.setString(3, "%"+director+"%");
-                statement.setString(4, "%"+stars+"%");
-                statement.setString(5,  az +"%");
+                statement.setString(1, "%"+stars+"%");
+                statement.setString(2, "%"+name+"%");
+                statement.setString(3, year);
+                statement.setString(4, "%"+director+"%");
+                statement.setString(5, "%"+stars+"%");
+                statement.setString(6,  az +"%");
             }
 
             ResultSet rs = statement.executeQuery();
