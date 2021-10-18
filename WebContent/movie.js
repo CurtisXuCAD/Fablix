@@ -50,7 +50,19 @@ function handleMovieResult(resultData) {
             "</th>";
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_gnames"] + "</th>";
+
+        let gnames = resultData[i]["movie_gnames"];
+        let html_contentg = "";
+        const id_name_arrayg = gnames.split(', ');
+        for (let j = 0; j < id_name_arrayg.length; j++) {
+            const g_name = id_name_arrayg[j];
+            html_contentg +=
+                '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name  + '&AZ='  + '">' +
+                g_name + // display movie_name for the link text
+                '</a>' + ', '
+        }
+        rowHTML += "<th>" + html_contentg.slice(0, -2) + "</th>";
+
 
         let snames = resultData[i]["movie_snames"];
         let html_content = "";

@@ -69,8 +69,10 @@ public class MoviesServlet extends HttpServlet {
         {
             az = "";
         }
-        System.out.println("goodsdads" + genre);
-        System.out.println(year);
+
+
+
+
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
 
@@ -94,23 +96,45 @@ public class MoviesServlet extends HttpServlet {
                         "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
                         "            group by m.id ";
             }
+
             else
             {
-                query = "SELECT m.id, m.title, m.year, m.director, \n" +
-                        "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
-                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name like ? then -1 end separator ', '), ', ' , 3) as snames, \n" +
-                        "            r.rating \n" +
-                        "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
-                        "            \n" +
-                        "            (SELECT m.id\n" +
-                        "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
-                        "\t\t\twhere m.title LIKE ? and m.year like ? and m.director LIKE ? and sm.movieId = m.id and s.id = sm.starId and s.name LIKE ? and\n" +
-                        "\t\t\tm.id = gim.movieId  and m.title LIKE ? and gim.genreId = g.id and m.id = r.movieId \n" +
-                        "\t\t\tgroup by m.id) as m1\n" +
-                        "            \n" +
-                        "            \n" +
-                        "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
-                        "            group by m.id ";
+                if (az.equals("*"))
+                {
+                    query = "SELECT m.id, m.title, m.year, m.director,\n" +
+                            "                        substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
+                            "                                    substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name then -1 end separator ', '), ', ' , 3) as snames,\n" +
+                            "                                  r.rating \n" +
+                            "                                   from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim ,\n" +
+                            "                                   \n" +
+                            "                                    (SELECT m.id\n" +
+                            "                        FROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
+                            "                        where m.title not REGEXP '^[0-9A-Za-z]' and sm.movieId = m.id and s.id = sm.starId  and\n" +
+                            "                       m.id = gim.movieId and gim.genreId = g.id and m.id = r.movieId \n" +
+                            "                       group by m.id) as m1\n" +
+                            "                             \n" +
+                            "                                where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
+                            "                              group by m.id ";
+                }
+                else
+                {
+                    query = "SELECT m.id, m.title, m.year, m.director, \n" +
+                            "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
+                            "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name like ? then -1 end separator ', '), ', ' , 3) as snames, \n" +
+                            "            r.rating \n" +
+                            "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
+                            "            \n" +
+                            "            (SELECT m.id\n" +
+                            "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
+                            "\t\t\twhere m.title LIKE ? and m.year like ? and m.director LIKE ? and sm.movieId = m.id and s.id = sm.starId and s.name LIKE ? and\n" +
+                            "\t\t\tm.id = gim.movieId  and m.title LIKE ? and gim.genreId = g.id and m.id = r.movieId \n" +
+                            "\t\t\tgroup by m.id) as m1\n" +
+                            "            \n" +
+                            "            \n" +
+                            "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
+                            "            group by m.id ";
+                }
+
 
 
             }
@@ -123,12 +147,16 @@ public class MoviesServlet extends HttpServlet {
             }
             else
             {
-                statement.setString(1, "%"+stars+"%");
-                statement.setString(2, "%"+name+"%");
-                statement.setString(3, year);
-                statement.setString(4, "%"+director+"%");
-                statement.setString(5, "%"+stars+"%");
-                statement.setString(6,  az +"%");
+                if (!az.equals("*"))
+                {
+                    statement.setString(1, "%"+stars+"%");
+                    statement.setString(2, "%"+name+"%");
+                    statement.setString(3, year);
+                    statement.setString(4, "%"+director+"%");
+                    statement.setString(5, "%"+stars+"%");
+                    statement.setString(6,  az +"%");
+                }
+
             }
 
             ResultSet rs = statement.executeQuery();
