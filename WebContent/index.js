@@ -29,8 +29,8 @@ function handleCartArray(resultArray) {
     // change it to html list
     let res = "<ul>";
     for (let i = 0; i < resultArray.length; i++) {
-        // each item will be in a bullet point
-        res += "<li>" + resultArray[i] + "</li>";
+        const title = resultArray[i].split("-")[0];
+        res += "<li>" +  title + "</li>";
     }
     res += "</ul>";
 

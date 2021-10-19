@@ -9,7 +9,7 @@
  *      3. Populate the data to correct html elements.
  */
 
-
+let cart = $("#cart");
 /**
  * Retrieve parameter from request URL, matching by parameter name
  * @param target String
@@ -70,6 +70,24 @@ function handleResult(resultData) {
 /**
  * Once this .js is loaded, following scripts will be executed by the browser\
  */
+function handleCartInfo(cartEvent) {
+    console.log("submit cart form");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    cartEvent.preventDefault();
+
+    $.ajax("api/single-movie?id=" + movieId, {
+        method: "POST",
+        data: cart.serialize()
+
+});
+
+    // clear input form
+    cart[0].reset();
+}
 
 // Get id from URL
 let movieId = getParameterByName('id');
@@ -81,3 +99,5 @@ jQuery.ajax({
     url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
+
+cart.submit(handleCartInfo);

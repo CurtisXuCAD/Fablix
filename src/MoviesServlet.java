@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 
@@ -211,6 +213,39 @@ public class MoviesServlet extends HttpServlet {
         }
 
         // Always remember to close db connection after usage. Here it's done by try-with-resources
+
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("sadsads");
+        String item = request.getParameter("item");
+
+
+        HttpSession session = request.getSession();
+
+
+
+        System.out.println("why>?"+item);
+        ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+        if (previousItems == null) {
+            previousItems = new ArrayList<>();
+            previousItems.add(item);
+            session.setAttribute("previousItems", previousItems);
+        } else {
+            // prevent corrupted states through sharing under multi-threads
+            // will only be executed by one thread at a time
+            synchronized (previousItems) {
+                previousItems.add(item);
+            }
+        }
+
+        JsonObject responseJsonObject = new JsonObject();
+
+        JsonArray previousItemsJsonArray = new JsonArray();
+        previousItems.forEach(previousItemsJsonArray::add);
+        responseJsonObject.add("previousItems", previousItemsJsonArray);
+
+        response.getWriter().write(responseJsonObject.toString());
 
     }
 }

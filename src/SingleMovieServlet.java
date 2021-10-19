@@ -8,12 +8,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
 
 // Declaring a WebServlet called SingleStarServlet, which maps to url "/api/single-star"
 @WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
@@ -31,11 +34,14 @@ public class SingleMovieServlet extends HttpServlet {
         }
     }
 
+    static String movieName;
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      * response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+
 
         response.setContentType("application/json"); // Response mime type
 
@@ -82,6 +88,7 @@ public class SingleMovieServlet extends HttpServlet {
                 //String starId = rs.getString("starId");
 
                 String movieTitle = rs.getString("title");
+                movieName = movieTitle;
                 String movieYear = rs.getString("year");
                 String movieDirector = rs.getString("director");
 
@@ -127,4 +134,49 @@ public class SingleMovieServlet extends HttpServlet {
 
     }
 
-}
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String id = request.getParameter("id");
+
+
+
+        // The log message can be found in localhost log
+        request.getServletContext().log("getting id: " + id);
+
+
+
+                HttpSession session = request.getSession();
+
+
+                String item = movieName + "-"+id;
+                System.out.println(item);
+                ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+                if (previousItems == null) {
+                    previousItems = new ArrayList<>();
+                    previousItems.add(item);
+                    session.setAttribute("previousItems", previousItems);
+                } else {
+                    // prevent corrupted states through sharing under multi-threads
+                    // will only be executed by one thread at a time
+                    synchronized (previousItems) {
+                        previousItems.add(item);
+                    }
+                }
+
+                JsonObject responseJsonObject = new JsonObject();
+
+                JsonArray previousItemsJsonArray = new JsonArray();
+                previousItems.forEach(previousItemsJsonArray::add);
+                responseJsonObject.add("previousItems", previousItemsJsonArray);
+
+                response.getWriter().write(responseJsonObject.toString());
+
+            }
+
+
+
+
+    }
+
+
