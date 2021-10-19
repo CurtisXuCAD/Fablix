@@ -47,7 +47,7 @@ public class IndexServlet extends HttpServlet {
      * handles POST requests to add and show the item list information
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String item = request.getParameter("item");
+        String item = request.getParameter("id");
         System.out.println(item);
         HttpSession session = request.getSession();
 

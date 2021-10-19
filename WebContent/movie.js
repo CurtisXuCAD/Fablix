@@ -5,9 +5,7 @@
  *      1. Use jQuery to talk to backend API to get the json data.
  *      2. Populate the data to correct html elements.
  */
-let cart = $("#cart");
-let cart1 = $("#cart1");
-let cart0 = $("#cart0");
+
 
 function getParameterByName(target) {
     // Get request URL
@@ -83,19 +81,21 @@ function handleMovieResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
 
 
-        const movieTitle = resultData[i]["movie_title"] +"-"+resultData[i]["movie_id"];
 
 
-            rowHTML +=  "<th><form ACTION= '#' id='cart" + i + "' METHOD='post'>" +
-                "<input type='text' name='item' value='"+ movieTitle + "'>"+
-                "<input type='submit' VALUE='add'>" +
-                "</form></th>";
-        rowHTML += "</tr>";
+
+        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('"+resultData[i]['movie_id']+"','"+resultData[i]['movie_title']+"')\">add</BUTTON></th>";
+
+
 
 
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
+
+
+
+    movieTableBodyElement.append(rowHTML);
 }
 
 function handleCartInfo1(cartEvent) {
@@ -117,6 +117,23 @@ function handleCartInfo1(cartEvent) {
     cart[0].reset();
 }
 
+function handleCart(id,title) {
+    console.log("submit cart form");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    jQuery.ajax({
+        dataType: "json", // Setting return data type
+        method: "POST", // Setting request method
+        url: "api/index?id="+title+"-"+ id, // Setting request url, which is mapped to the TestServlet
+        success: (resultData) => handleSearchResult(resultData) //
+
+    });
+
+
+}
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser
@@ -135,6 +152,3 @@ jQuery.ajax({
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MoviesServlet
 });
 
-cart.submit(handleCartInfo1);
-cart0.submit(handleCartInfo1);
-cart1.submit(handleCartInfo1);
