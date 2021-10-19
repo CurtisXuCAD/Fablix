@@ -37,7 +37,7 @@ function handleMovieResult(resultData) {
     let movieTableBodyElement = jQuery("#movie_table_body");
 
     // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < Math.min(20, resultData.length); i++) {
+    for (let i = 0; i < Math.min(101 - 1, resultData.length - 1); i++) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
@@ -58,7 +58,7 @@ function handleMovieResult(resultData) {
         for (let j = 0; j < id_name_arrayg.length; j++) {
             const g_name = id_name_arrayg[j];
             html_contentg +=
-                '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name  + '&AZ='  + '">' +
+                '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name + '&AZ=' + '">' +
                 g_name + // display movie_name for the link text
                 '</a>' + ', '
         }
@@ -84,7 +84,7 @@ function handleMovieResult(resultData) {
 
 
 
-        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('"+resultData[i]['movie_id']+"','"+resultData[i]['movie_title']+"')\">add</BUTTON></th>";
+        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id'] + "','" + resultData[i]['movie_title'] + "')\">add</BUTTON></th>";
 
 
 
@@ -95,7 +95,86 @@ function handleMovieResult(resultData) {
 
 
 
-    movieTableBodyElement.append(rowHTML);
+    totalResults = resultData[resultData.length - 1]["totalResults"];
+    var t = parseInt(totalResults)
+    console.log(totalResults);
+    let paginationElement = jQuery("#pagination");
+    let htmlContent = "";
+    var a = parseInt(startIndex);
+    var b = parseInt(movieNum);
+
+    htmlContent += '<div class="pagination">'
+    let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+        "&numRecords=" + movieNum + "&startIndex=" + "0" + "&totalResults=" + totalResults +
+        "&sortBy=" + sortBy + "&order=" + order;
+    htmlContent += '<a href="' + first_page_url + '">' + "&laquo;" + '</a>';
+
+    for (let i = 0; i < Math.ceil(t / b); i++) {
+        if (Math.abs(a - (b * i)) < 6 * b) {
+            let page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + (b * i).toString() + "&totalResults=" + totalResults +
+                "&sortBy=" + sortBy + "&order=" + order;
+
+            htmlContent += '<a href="' + page_url + '"';
+            if (a == b * i) {
+                htmlContent += 'class="active"'
+            }
+            htmlContent += '>' + (i + 1).toString() + '</a>';
+        }
+    }
+    let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+        "&numRecords=" + movieNum + "&startIndex=" + (Math.floor(t / b) * b).toString() + "&totalResults=" + totalResults +
+        "&sortBy=" + sortBy + "&order=" + order;
+    htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
+
+    htmlContent += '</div>';
+
+
+
+    if (a > 0) {
+        var prev_index = (a - b).toString();
+        if (prev_index < 0) {
+            prev_index = 0;
+        }
+        let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+            "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
+            "&sortBy=" + sortBy + "&order=" + order;
+        htmlContent +=
+            '<div class = "link">' +
+            '<a class="link-dec" href="' + prev_url + '">' +
+            '<div class="back-button-text" align="center">' +
+            'Prev Page' +
+            '</div>' +
+            '</a>' +
+            '</div>';
+    }
+
+    var next_index = (a + b).toString();
+    if (next_index < t) {
+        let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+            "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
+            "&sortBy=" + sortBy + "&order=" + order;
+        htmlContent +=
+            '<div class = "link">' +
+            '<a class="link-dec" href="' + next_url + '">' +
+            '<div class="back-button-text" align="center">' +
+            'Next Page' +
+            '</div>' +
+            '</a>' +
+            '</div>';
+    }
+
+
+
+    // htmlContent += "<form action=\"" +
+    //     prev_url +
+    //     "\"> \n" + "<button type=\"submit\">Prev Page</button>" + "</button>";
+
+    // htmlContent += "<form action=\"" +
+    //     next_url +
+    //     "\"> \n" + "<button type=\"submit\">Next Page</button>" + "</button>";
+
+    paginationElement.append(htmlContent);
 }
 
 function handleCartInfo1(cartEvent) {
@@ -107,7 +186,7 @@ function handleCartInfo1(cartEvent) {
      */
     cartEvent.preventDefault();
 
-    $.ajax( "api/movies?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +movieAZ,{
+    $.ajax("api/movies?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ, {
         method: "POST",
         data: cart.serialize()
 
@@ -117,7 +196,7 @@ function handleCartInfo1(cartEvent) {
     cart[0].reset();
 }
 
-function handleCart(id,title) {
+function handleCart(id, title) {
     console.log("submit cart form");
     /**
      * When users click the submit button, the browser will not direct
@@ -127,7 +206,7 @@ function handleCart(id,title) {
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "POST", // Setting request method
-        url: "api/index?id="+title+"-"+ id, // Setting request url, which is mapped to the TestServlet
+        url: "api/index?id=" + title + "-" + id, // Setting request url, which is mapped to the TestServlet
         success: (resultData) => handleSearchResult(resultData) //
 
     });
@@ -144,11 +223,24 @@ let movieStars = getParameterByName('stars');
 let movieYear = getParameterByName('year');
 let movieGenre = getParameterByName('genre');
 let movieAZ = getParameterByName('AZ');
+let movieNum = getParameterByName('numRecords');
+if (movieNum == null) {
+    movieNum = 20;
+}
+let startIndex = getParameterByName('startIndex');
+if (startIndex == null) {
+    startIndex = 0;
+}
+let totalResults = getParameterByName('totalResults');
+let sortBy = getParameterByName('sortBy');
+let order = getParameterByName('order');
 // Makes the HTTP GET request and registers on success callback function handleMovieResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movies?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +movieAZ, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
+    url: "api/movies?name=" + movieName + "&director=" + movieDirector + "&stars=" +
+        movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
+        movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
+        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MoviesServlet
 });
-

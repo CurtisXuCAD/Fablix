@@ -56,6 +56,32 @@
             padding: 10px;
         }
 
+        .button {
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            appearance: button;
+
+            text-decoration: none;
+            color: initial;
+        }
+        .pagination {
+            display: inline-block;
+        }
+
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+        .pagination a.active {
+            background-color: #4fc3f7;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {background-color: #ddd;}
     </style>
 </head>
 
@@ -87,10 +113,7 @@
     <tbody id=movie_table_body></tbody>
 </table>
 
-<form id="pagenation" action="main.html" method="GET">
-    <input TYPE="submit" value="Previous Page">
-    <input TYPE="submit" value="Next Page">
-</form>
+<form id=pagination></form>
 
 
 

@@ -44,12 +44,19 @@ public class MoviesServlet extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
 
 
-        String name = request.getParameter("name");
-        String director = request.getParameter("director");
-        String stars = request.getParameter("stars");
-        String year = request.getParameter("year");
-        String genre = request.getParameter("genre");
-        String az = request.getParameter("AZ");
+        String name = (String)request.getParameter("name");
+        String director = (String)request.getParameter("director");
+        String stars = (String)request.getParameter("stars");
+        String year =(String) request.getParameter("year");
+        String genre = (String)request.getParameter("genre");
+        String az = (String)request.getParameter("AZ");
+        String numRecords = (String)request.getParameter("numRecords");
+        String startIndex = (String)request.getParameter("startIndex");
+        String totalResults = (String)request.getParameter("totalResults");
+        String sortBy = (String)request.getParameter("sortBy");
+        String order = (String)request.getParameter("order");
+
+        String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -107,16 +114,10 @@ public class MoviesServlet extends HttpServlet {
                             "                        substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
                             "                                    substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name then -1 end separator ', '), ', ' , 3) as snames,\n" +
                             "                                  r.rating \n" +
-                            "                                   from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim ,\n" +
-                            "                                   \n" +
-                            "                                    (SELECT m.id\n" +
                             "                        FROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
                             "                        where m.title not REGEXP '^[0-9A-Za-z]' and sm.movieId = m.id and s.id = sm.starId  and\n" +
                             "                       m.id = gim.movieId and gim.genreId = g.id and m.id = r.movieId \n" +
-                            "                       group by m.id) as m1\n" +
-                            "                             \n" +
-                            "                                where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
-                            "                              group by m.id ";
+                            "                       group by m.id";
                 }
                 else
                 {
@@ -140,6 +141,41 @@ public class MoviesServlet extends HttpServlet {
 
 
             }
+
+            if(totalResults == null || totalResults.equals("null")){
+                String count_query = "select count(*) as c from (" + query + ") as fc";
+                PreparedStatement count_statement = conn.prepareStatement(count_query);
+                if (!genre.equals(""))
+                {
+                    count_statement.setString(1, "%"+genre+"%");
+                }
+                else
+                {
+                    if (!az.equals("*"))
+                    {
+                        count_statement.setString(1, "%"+stars+"%");
+                        count_statement.setString(2, "%"+name+"%");
+                        count_statement.setString(3, year);
+                        count_statement.setString(4, "%"+director+"%");
+                        count_statement.setString(5, "%"+stars+"%");
+                        count_statement.setString(6,  az +"%");
+                    }
+                }
+                ResultSet rs1 = count_statement.executeQuery();
+                while (rs1.next()) {
+                    totalResults = rs1.getString("c");
+                }
+                rs1.close();
+            }
+
+            if (!(sortBy == null || sortBy.equals("null"))) {
+                query += "order by " + sortBy + " " + order;
+            }
+            
+            query += queryResultLimit;
+
+
+            System.out.println(query);
 
             PreparedStatement statement = conn.prepareStatement(query);
 
@@ -188,6 +224,14 @@ public class MoviesServlet extends HttpServlet {
 
                 jsonArray.add(jsonObject);
             }
+            
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("numRecords", numRecords);
+            jsonObject.addProperty("startIndex", startIndex);
+            jsonObject.addProperty("totalResults", totalResults);
+            jsonObject.addProperty("sortBy", sortBy);
+            jsonObject.addProperty("order", order);
+            jsonArray.add(jsonObject);
             rs.close();
             statement.close();
 
