@@ -170,6 +170,12 @@ public class MoviesServlet extends HttpServlet {
 
             if (!(sortBy == null || sortBy.equals("null"))) {
                 query += "order by " + sortBy + " " + order;
+                if(sortBy.equals("title")){
+                    query += ", rating";
+                }
+                else if(sortBy.equals("rating")){
+                    query += ", title";
+                }
             }
             
             query += queryResultLimit;
