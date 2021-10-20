@@ -82,6 +82,33 @@
         }
 
         .pagination a:hover:not(.active) {background-color: #ddd;}
+
+        .sortable_header {
+            cursor: pointer;
+        }
+
+        .table-movie .th-sort-asc::after{
+            content: "\25b4";
+        }
+
+        .table-movie .th-sort-desc::after{
+            content: "\25be";
+        }
+
+        .table-movie .th-sort-none::after{
+            content: " \2013";
+        }
+
+        {% comment %} .table-movie .th-sort-asc::after,
+        .table-movie .th-sort-desc::after{
+            margin-left: 5px;
+        } {% endcomment %}
+
+        {% comment %} .table-sortable .th-sort-asc,
+        .table-sortable .th-sort-desc{
+            background: rgba(0, 0, 0, 0.1);
+        } {% endcomment %}
+
     </style>
 </head>
 
@@ -100,12 +127,12 @@
     <thead>
     <tr>
         <!-- Titles of each column-->
-        <th>Title</th>
+        <th id = "title" class = "sortable_header">Title</th>
         <th>Year</th>
         <th>Director</th>
         <th>Genres</th>
         <th>Stars</th>
-        <th>Rating</th>
+        <th id = "rating" class = "sortable_header">Rating</th>
     </tr>
     </thead>
     <!-- Table body is left empty here, will be populated with the data retrieved with index.js -->

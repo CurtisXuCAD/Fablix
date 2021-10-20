@@ -36,12 +36,12 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 
-        String username = request.getParameter("username");
+        String email = request.getParameter("username");
         String password = request.getParameter("password");
 
-        System.out.println("Login Post");
+        // System.out.println("Login Post");
         // The log message can be found in localhost log
-        request.getServletContext().log("GetUser: " + username);
+        request.getServletContext().log("GetUser: " + email);
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -55,36 +55,50 @@ public class LoginServlet extends HttpServlet {
 
             // Construct a query with parameter represented by "?"
 
-            String query = "SELECT * FROM moviedb.customers where email = ? and password = ?";
+            String query = "SELECT * FROM moviedb.customers where email = ?";
 
             // Declare our statement
             PreparedStatement statement = conn.prepareStatement(query);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
             // num 1 indicates the first "?" in the query
-            statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(1, email);
+            // statement.setString(2, password);
 
 
             // Perform the query
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                // Login success:
-                System.out.println("Correct");
-                HttpSession session = request.getSession(true);
-
-                // set this user into the session
-                session.setAttribute("user", new User(username));
-
-                // set the logged_in attribute
-                Boolean logged_in = (Boolean) session.getAttribute("logged_in");
-                logged_in = true;
-                session.setAttribute("logged_in", logged_in);
-
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
-
+                // Have this user:
+                if(password.equals(rs.getString("password"))){
+                    System.out.println("Correct");
+                    HttpSession session = request.getSession(true);
+    
+                    String id = rs.getString("id");
+                    String firstName = rs.getString("firstName");
+                    String lastName = rs.getString("lastName");
+                    String ccId = rs.getString("ccId");
+                    String address = rs.getString("address");
+                    // set this user into the session
+                    session.setAttribute("ID", id);
+                    session.setAttribute("user", new User(id, email, firstName, lastName, ccId, address));
+    
+                    // set the logged_in attribute
+                    Boolean logged_in = (Boolean) session.getAttribute("logged_in");
+                    logged_in = true;
+                    session.setAttribute("logged_in", logged_in);
+    
+                    responseJsonObject.addProperty("status", "success");
+                    responseJsonObject.addProperty("message", "success");
+                }
+                else{
+                    //incorrect password
+                    responseJsonObject.addProperty("status", "fail");
+                    // Log to localhost log
+                    request.getServletContext().log("Login failed");
+                    responseJsonObject.addProperty("message", "Incorrect Username or Password");
+                }
             } else {
                 // Login fail
 
@@ -92,11 +106,8 @@ public class LoginServlet extends HttpServlet {
                 // Log to localhost log
                 request.getServletContext().log("Login failed");
                 // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-                if (!username.equals("anteater")) {
-                    responseJsonObject.addProperty("message", "user " + username + " doesn't exist");
-                } else {
-                    responseJsonObject.addProperty("message", "incorrect password");
-                }
+                // responseJsonObject.addProperty("message", "user with email " + email + " doesn't exist");
+                responseJsonObject.addProperty("message", "Incorrect Username or Password");
             }
 
             out.write(responseJsonObject.toString());

@@ -11,6 +11,13 @@ function handleLoginResult(resultDataString) {
 
 }
 
+function handleUserInfo(resultDataString) {
+    console.log(resultDataString);
+    let resultDataJson = JSON.parse(resultDataString);
+    username = resultDataJson["username"];
+    $("#username").text("Username: " + username);
+}
+
 
 function doFunc(resultDataString) {
     resultDataString.preventDefault();
@@ -39,6 +46,13 @@ function handleAdvanceSearch(resultDataString) {
     //     }
     // );
 }
+
+$.ajax(
+    "api/main", {
+        method: "Post",
+        success: handleUserInfo
+    }
+);
 
 // Bind the submit action of the form to a handler function
 login_form.submit(doFunc);

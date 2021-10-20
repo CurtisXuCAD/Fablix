@@ -175,6 +175,37 @@ function handleMovieResult(resultData) {
     //     "\"> \n" + "<button type=\"submit\">Next Page</button>" + "</button>";
 
     paginationElement.append(htmlContent);
+
+    let titleHtml = document.getElementById("title");
+    let ratingHtml = document.getElementById("rating");
+    titleHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+    ratingHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+
+    if (sortBy == null || sortBy == "null") {
+        titleHtml.classList.toggle("th-sort-none", 1);
+        ratingHtml.classList.toggle("th-sort-none", 1);
+    } else if (sortBy == "title") {
+        if (order == null) {
+            titleHtml.classList.toggle("th-sort-none", 1);
+        } else if (order == "asc") {
+            titleHtml.classList.toggle("th-sort-asc", 1);
+        } else {
+            titleHtml.classList.toggle("th-sort-desc", 1);
+        }
+        ratingHtml.classList.toggle("th-sort-none", 1);
+    } else if (sortBy == "rating") {
+        if (order == null) {
+            ratingHtml.classList.toggle("th-sort-none", 1);
+        } else if (order == "asc") {
+            ratingHtml.classList.toggle("th-sort-asc", 1);
+        } else {
+            ratingHtml.classList.toggle("th-sort-desc", 1);
+        }
+        titleHtml.classList.toggle("th-sort-none", 1);
+    }
+
+
+
 }
 
 function handleCartInfo1(cartEvent) {
@@ -207,12 +238,55 @@ function handleCart(id, title) {
         dataType: "json", // Setting return data type
         method: "POST", // Setting request method
         url: "api/index?id=" + title + "-" + id, // Setting request url, which is mapped to the TestServlet
-        success: (resultData) => handleSearchResult(resultData) //
+        // success: (resultData) => handleSearchResult(resultData) //
 
     });
 
 
 }
+
+document.getElementById("title").addEventListener("click", () => {
+    const currentIsAscending = document.getElementById("title").classList.contains("th-sort-asc");
+    console.log(currentIsAscending);
+    sortBy = "title";
+    if (currentIsAscending) {
+        order = 'desc';
+    } else {
+        order = 'asc';
+    }
+
+    window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
+        movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
+        movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
+        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order);
+});
+
+document.getElementById("rating").addEventListener("click", () => {
+    const currentIsAscending = document.getElementById("rating").classList.contains("th-sort-asc");
+    console.log(currentIsAscending);
+    sortBy = "rating";
+    if (currentIsAscending) {
+        order = 'desc';
+    } else {
+        order = 'asc';
+    }
+
+    window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
+        movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
+        movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
+        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order);
+});
+
+// document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+//     headerCell.addEventListener("click", () => {
+//         const tableElement = headerCell.parentElement.parentElement.parentElement;
+//         const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+//         const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+//         sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+//     });
+// });
+
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser

@@ -43,4 +43,33 @@ public class MainServlet extends HttpServlet {
                     // response.sendRedirect("login.html");
                 }
     }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // String item = request.getParameter("item");
+        // System.out.println(item);
+        HttpSession session = request.getSession();
+        User u = (User)session.getAttribute("user");
+        String username = u.getUsername();
+        // get the previous items in a ArrayList
+        // ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+        // if (previousItems == null) {
+        //     previousItems = new ArrayList<>();
+        //     previousItems.add(item);
+        //     session.setAttribute("previousItems", previousItems);
+        // } else {
+        //     // prevent corrupted states through sharing under multi-threads
+        //     // will only be executed by one thread at a time
+        //     synchronized (previousItems) {
+        //         previousItems.add(item);
+        //     }
+        // }
+
+        JsonObject responseJsonObject = new JsonObject();
+
+        // JsonArray previousItemsJsonArray = new JsonArray();
+        // previousItems.forEach(previousItemsJsonArray::add);
+        responseJsonObject.addProperty("username", username);
+
+        response.getWriter().write(responseJsonObject.toString());
+    }
 }
