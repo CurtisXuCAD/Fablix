@@ -77,16 +77,46 @@
         span{
              color: #d4380d
         }
+        .popup { display: none; }
+        .popup.open { display: block; }
+        .background {
 
+            content: ' ';
+            top: 0;
+
+            right: 0;
+
+            left: 0;
+            bottom: 0;
+            position: fixed;
+        }
+        .popup .Succeful {
+            border: 2px solid #ccc;
+            width: 200px;
+            height: 200px;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            background: #fff1cc;
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-60%, -60%);
+        }
 
     </style>
 </head>
 <body>
-<form ACTION="#" id="cart" METHOD="post">
+<form ACTION="#" id="cart" METHOD="post" onclick ="openpop()">
 
 
     <input type="submit" VALUE="add">
 </form>
+
+<div class="popup">
+    <div class="background" onclick="closepop()"></div>
+    <div class="Succeful">Succeful!</div>
+</div>
 
     <div class="card-box">
             <!-- div body is left empty here, will be populated with the data retrieved with single-star.js -->

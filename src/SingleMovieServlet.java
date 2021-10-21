@@ -149,18 +149,39 @@ public class SingleMovieServlet extends HttpServlet {
                 HttpSession session = request.getSession();
 
 
-                String item = movieName + "-"+id;
-                System.out.println(item);
+                String item = "";
+
                 ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
                 if (previousItems == null) {
                     previousItems = new ArrayList<>();
+                    item = movieName + "-"+id + "-" + "1" ;
                     previousItems.add(item);
+                    System.out.println(item);
                     session.setAttribute("previousItems", previousItems);
                 } else {
                     // prevent corrupted states through sharing under multi-threads
                     // will only be executed by one thread at a time
                     synchronized (previousItems) {
-                        previousItems.add(item);
+                        int check = 0;
+                        for (int i  = 0; i < previousItems.size(); i++)
+                        {
+                            if ((previousItems.get(i)).contains(id))
+                            {
+                                String[] splited = (previousItems.get(i)).split("-");
+                                int count = Integer.parseInt(splited[2]);
+                                count ++;
+                                item = movieName+"-"+id+"-"+ count;
+                                previousItems.set(i,item);
+                                check = 1;
+                            }
+                        }
+                        System.out.println(item);
+                        if (check ==0)
+                        {
+                            item = movieName + "-"+id + "-" + "1" ;
+                            previousItems.add(item);
+                        }
+
                     }
                 }
 

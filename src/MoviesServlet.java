@@ -267,35 +267,7 @@ public class MoviesServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("sadsads");
-        String item = request.getParameter("item");
 
-
-        HttpSession session = request.getSession();
-
-
-
-        System.out.println("why>?"+item);
-        ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
-        if (previousItems == null) {
-            previousItems = new ArrayList<>();
-            previousItems.add(item);
-            session.setAttribute("previousItems", previousItems);
-        } else {
-            // prevent corrupted states through sharing under multi-threads
-            // will only be executed by one thread at a time
-            synchronized (previousItems) {
-                previousItems.add(item);
-            }
-        }
-
-        JsonObject responseJsonObject = new JsonObject();
-
-        JsonArray previousItemsJsonArray = new JsonArray();
-        previousItems.forEach(previousItemsJsonArray::add);
-        responseJsonObject.add("previousItems", previousItemsJsonArray);
-
-        response.getWriter().write(responseJsonObject.toString());
 
     }
 }

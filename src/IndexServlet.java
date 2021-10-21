@@ -34,6 +34,7 @@ public class IndexServlet extends HttpServlet {
             previousItems = new ArrayList<>();
         }
         // Log to localhost log
+
         request.getServletContext().log("getting " + previousItems.size() + " items");
         JsonArray previousItemsJsonArray = new JsonArray();
         previousItems.forEach(previousItemsJsonArray::add);
@@ -48,22 +49,74 @@ public class IndexServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String item = request.getParameter("id");
-        System.out.println(item);
+        String condition = request.getParameter("condition");
+        System.out.println("what is id:"+item);
         HttpSession session = request.getSession();
-
+        System.out.println(condition);
         // get the previous items in a ArrayList
+
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
-        if (previousItems == null) {
-            previousItems = new ArrayList<>();
-            previousItems.add(item);
-            session.setAttribute("previousItems", previousItems);
-        } else {
-            // prevent corrupted states through sharing under multi-threads
-            // will only be executed by one thread at a time
-            synchronized (previousItems) {
+
+
+            if (previousItems == null) {
+                previousItems = new ArrayList<>();
+                System.out.println("before"+item);
+                item = item + "-"+"1";
                 previousItems.add(item);
+                System.out.println("after"+item);
+                session.setAttribute("previousItems", previousItems);
+            } else {
+                // prevent corrupted states through sharing under multi-threads
+                // will only be executed by one thread at a time
+                synchronized (previousItems) {
+                    int check = 0;
+                    for (int i  = 0; i < previousItems.size(); i++)
+                    {
+                        if ((previousItems.get(i)).contains(item))
+                        {
+                            String[] splited = (previousItems.get(i)).split("-");
+                            int count = Integer.parseInt(splited[2]);
+                            if (condition.equals("decrease"))
+                            {
+                                count--;
+                                if (count ==0)
+                                {
+                                    previousItems.remove(i);
+                                }
+                                item = item + "-"+count;
+                                previousItems.set(i,item);
+
+                            }
+                            else if (condition.equals("delete"))
+                            {
+                                previousItems.remove(i);
+                            }
+                            else {
+                                count ++;
+                                item = item + "-"+count;
+                                previousItems.set(i,item);
+                            }
+
+
+
+                            check = 1;
+                            break;
+                        }
+                    }
+
+                    if (check ==0)
+                    {
+                        item = item + "-" + "1" ;
+                        System.out.println(item);
+                        previousItems.add(item);
+                    }
+
+                }
             }
-        }
+
+
+
+
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -72,5 +125,8 @@ public class IndexServlet extends HttpServlet {
         responseJsonObject.add("previousItems", previousItemsJsonArray);
 
         response.getWriter().write(responseJsonObject.toString());
+
+
+
     }
 }

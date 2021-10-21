@@ -88,7 +88,6 @@ function handleMovieResult(resultData) {
 
 
 
-
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
@@ -226,6 +225,7 @@ function handleCartInfo1(cartEvent) {
     // clear input form
     cart[0].reset();
 }
+const popup = document.querySelector('.popup');
 
 function handleCart(id, title) {
     console.log("submit cart form");
@@ -243,7 +243,17 @@ function handleCart(id, title) {
     });
 
 
+    popup.classList.add('open');
+
+
+
+
 }
+
+function closepop() {
+    popup.classList.remove('open');
+}
+
 
 document.getElementById("title").addEventListener("click", () => {
     const currentIsAscending = document.getElementById("title").classList.contains("th-sort-asc");

@@ -19,6 +19,7 @@
     <title>Movie List</title>
     <style>
 
+
         h1{
             margin: 50px 100px 30px;
         }
@@ -75,7 +76,33 @@
             text-decoration: none;
             transition: background-color .3s;
         }
+        .popup { display: none; }
+        .popup.open { display: block; }
+        .background {
 
+            content: ' ';
+            top: 0;
+
+            right: 0;
+
+            left: 0;
+            bottom: 0;
+            position: fixed;
+        }
+        .popup .Succeful {
+            border: 2px solid #ccc;
+
+            width: 200px;
+            height: 200px;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            background: #fff1cc;
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-60%, -60%);
+        }
         .pagination a.active {
             background-color: #4fc3f7;
             color: white;
@@ -113,6 +140,12 @@
 </head>
 
 <h1>Movies</h1>
+<div class="popup">
+    <div class="background" onclick="closepop()"></div>
+    <div class="Succeful">Succeful!</div>
+</div>
+
+<p id="demo"></p>
 <div class = "link">
     <a class="link-dec" href="index.html">
         <div class="back-button-text" align="center">

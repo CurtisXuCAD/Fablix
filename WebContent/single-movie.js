@@ -89,6 +89,16 @@ function handleCartInfo(cartEvent) {
     cart[0].reset();
 }
 
+const popup = document.querySelector('.popup');
+
+function openpop() {
+    popup.classList.add('open');
+}
+
+function closepop() {
+    popup.classList.remove('open');
+}
+
 // Get id from URL
 let movieId = getParameterByName('id');
 
