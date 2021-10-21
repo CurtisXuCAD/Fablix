@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -93,6 +94,13 @@ public class SingleStarServlet extends HttpServlet {
 
                 jsonArray.add(jsonObject);
             }
+
+            JsonObject json_prev_url = new JsonObject();
+            HttpSession session = request.getSession();
+            String prev_url = (String)session.getAttribute("prev_url");
+            json_prev_url.addProperty("prev_url", prev_url);
+            jsonArray.add(json_prev_url);
+
             rs.close();
             statement.close();
 

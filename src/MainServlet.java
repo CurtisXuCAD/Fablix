@@ -50,6 +50,8 @@ public class MainServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User u = (User)session.getAttribute("user");
         String username = u.getUsername();
+
+        session.setAttribute("prev_url","main.html");
         // get the previous items in a ArrayList
         // ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
         // if (previousItems == null) {
