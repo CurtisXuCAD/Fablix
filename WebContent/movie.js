@@ -124,7 +124,7 @@ function handleMovieResult(resultData) {
         }
     }
     let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-        "&numRecords=" + movieNum + "&startIndex=" + (Math.floor(t / b) * b).toString() + "&totalResults=" + totalResults +
+        "&numRecords=" + movieNum + "&startIndex=" + (Math.floor((t - 1) / b) * b).toString() + "&totalResults=" + totalResults +
         "&sortBy1=" + sortBy1 + "&order1=" + order1 +
         "&sortBy2=" + sortBy2 + "&order2=" + order2;
     htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
@@ -371,7 +371,7 @@ document.getElementById("sort_button").addEventListener("click", () => {
     window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
-        startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+        "0" + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
         "&sortBy2=" + sortBy2 + "&order2=" + order2);
 });
 
