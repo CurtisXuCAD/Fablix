@@ -29,7 +29,7 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-document.getElementById("cart").addEventListener("click", () => {
+document.getElementById("cart_button").addEventListener("click", () => {
     window.location.replace("index.html");
 })
 

@@ -359,7 +359,7 @@ function sortFirstByRating() {
     }
 }
 
-document.getElementById("cart").addEventListener("click", () => {
+document.getElementById("cart_button").addEventListener("click", () => {
     window.location.replace("index.html");
 })
 

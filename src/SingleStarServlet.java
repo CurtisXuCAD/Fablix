@@ -55,8 +55,8 @@ public class SingleStarServlet extends HttpServlet {
 
             // Construct a query with parameter represented by "?"
 
-            String query = "SELECT sn.name as snames,sn.birthYear as sdob, \n" +
-                    "                    substring(group_concat(DISTINCT CONCAT_WS('-', m.id, m.title) separator ', '), 1) as mnames\n" +
+            String query = "SELECT sn.name as snames, sn.birthYear as sdob, \n" +
+                    "                    substring(group_concat(DISTINCT CONCAT_WS('-', m.id, m.title) order by m.title asc separator ', '), 1) as mnames\n" +
                     "                    FROM stars as sn, stars_in_movies as sim, movies as m\n" +
                     "                    where sn.id = ? and sim.starId = ? and m.id = sim.movieId";
 

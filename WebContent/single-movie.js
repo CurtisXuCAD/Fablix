@@ -55,11 +55,27 @@ function handleResult(resultData) {
     }
     html_content = html_content.slice(0, -2);
 
+    let gnames = resultData[0]["genres_name"];
+    let gnames_html_content = "";
+    if (gnames == null || gnames == "null") {
+        gnames_html_content += "N/A";
+    } else {
+        const id_name_arrayg = gnames.split(', ');
+        for (let j = 0; j < id_name_arrayg.length; j++) {
+            const g_name = id_name_arrayg[j];
+            gnames_html_content +=
+                '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name + '&AZ=' + '">' +
+                g_name + // display movie_name for the link text
+                '</a>' + ', '
+        }
+        gnames_html_content = gnames_html_content.slice(0, -2);
+    }
+
     // append two html <p> created to the h3 body, which will refresh the page
     starInfoElement.append("<h1>" + resultData[0]["movie_title"] + "</h1>" +
         "<h3>Year: " + "<span>" + resultData[0]["movie_year"] + "</span>" + "</h3>" +
         "<h3>Director: " + "<span>" + resultData[0]["movie_director"] + "</span>" + "</h3>" +
-        "<h3>Genres: " + "<span>" + resultData[0]["genres_name"] + "</span>" + "</h3>" +
+        "<h3>Genres: " + gnames_html_content + "</h3>" +
         "<h3>Stars: " + html_content + "</h3>" +
         "<h3>Rating: " + "<span>" + resultData[0]["movie_rating"] + "</span>" + "</h3>"
     );
@@ -103,7 +119,7 @@ function closepop() {
     popup.classList.remove('open');
 }
 
-document.getElementById("cart").addEventListener("click", () => {
+document.getElementById("cart_button").addEventListener("click", () => {
     window.location.replace("index.html");
 })
 

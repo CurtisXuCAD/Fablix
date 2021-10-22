@@ -112,7 +112,7 @@ document.getElementById("back-button-text").addEventListener("click", () => {
  * Once this .js is loaded, following scripts will be executed by the browser\
  */
 
-document.getElementById("cart").addEventListener("click", () => {
+document.getElementById("cart_button").addEventListener("click", () => {
     window.location.replace("index.html");
 });
 
