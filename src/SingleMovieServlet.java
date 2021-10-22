@@ -46,11 +46,11 @@ public class SingleMovieServlet extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameter id from url request.
-        String id = request.getParameter("id");
+        String movie_id = request.getParameter("id");
 
         // The log message can be found in localhost log
-        request.getServletContext().log("getting id: " + id);
-
+        request.getServletContext().log("getting id: " + movie_id);
+        System.out.println("getting id: " + movie_id);
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
@@ -60,22 +60,22 @@ public class SingleMovieServlet extends HttpServlet {
 
             // Construct a query with parameter represented by "?"
 
-            String query = "select m.title, m.year, m.director, \n" +
-                    "                    substring(group_concat(DISTINCT  CONCAT_WS('-', sn.id, sn.name) separator ', ' ),1) as stars,\n" +
-                    "                    substring(group_concat(DISTINCT gn.name separator ', '),1) as genres, r.rating\n" +
-                    "                    from movies as m,stars_in_movies as s, stars as sn, genres as gn, genres_in_movies as g, ratings as r\n" +
-                    "                    where m.id = ? and s.movieId = ?and \n" +
-                    "                    g.movieId = ? and g.genreId = gn.id and m.id = r.movieId\n" +
-                    "                    and s.starId = sn.id";
-
+            // String query = "select m.title, m.year, m.director, \n" +
+            //         "                    substring(group_concat(DISTINCT  CONCAT_WS('-', sn.id, sn.name) separator ', ' ),1) as stars,\n" +
+            //         "                    substring(group_concat(DISTINCT gn.name separator ', '),1) as genres, r.rating\n" +
+            //         "                    from movies as m,stars_in_movies as s, stars as sn, genres as gn, genres_in_movies as g, ratings as r\n" +
+            //         "                    where m.id = ? and s.movieId = ?and \n" +
+            //         "                    g.movieId = ? and g.genreId = gn.id and m.id = r.movieId\n" +
+            //         "                    and s.starId = sn.id";
+            String  query = "SELECT m.id, m.title, m.year, m.director \n" +
+                    "from movies as m \n" +
+                    "where m.id = ? \n";
             // Declare our statement
             PreparedStatement statement = conn.prepareStatement(query);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
             // num 1 indicates the first "?" in the query
-            statement.setString(1, id);
-            statement.setString(2, id);
-            statement.setString(3, id);
+            statement.setString(1, movie_id);
 
             // Perform the query
             ResultSet rs = statement.executeQuery();
@@ -88,23 +88,58 @@ public class SingleMovieServlet extends HttpServlet {
                 //String starId = rs.getString("starId");
 
                 String movieTitle = rs.getString("title");
-                movieName = movieTitle;
                 String movieYear = rs.getString("year");
                 String movieDirector = rs.getString("director");
 
-                String movieStar = rs.getString("stars");
-                String movieGenres = rs.getString("genres");
-                String movieRating = rs.getString("rating");
+                String sub_query_gnames = "select substring(group_concat(DISTINCT g.name order by g.name asc separator ', '), 1) as gnames \n" +
+                "from genres as g, genres_in_movies as gim \n" +
+                "where gim.genreId = g.id and gim.movieId = ? ";
+                PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
+                gnames_statement.setString(1, movie_id);
+                ResultSet gnames_rs = gnames_statement.executeQuery();
+                String movie_gnames = "N/A";
+                if(gnames_rs.next()){
+                    movie_gnames= gnames_rs.getString("gnames");
+                }
+                gnames_rs.close();
+
+                String sub_query_snames = "select substring(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), 1) as snames \n" +
+                "from stars as s, stars_in_movies as sim \n" +
+                "where sim.starId = s.id and sim.movieId = ? ";
+                PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
+                snames_statement.setString(1, movie_id);
+                ResultSet snames_rs = snames_statement.executeQuery();
+                String movie_snames = "N/A";
+                if(snames_rs.next()){
+                    movie_snames= snames_rs.getString("snames");
+                }
+                snames_rs.close();
+
+                String sub_query_rating = "select r.rating as rating\n" +
+                "from ratings as r \n" +
+                "where r.movieId = ?";
+                PreparedStatement rating_statement = conn.prepareStatement(sub_query_rating);
+                rating_statement.setString(1, movie_id);
+                ResultSet rating_rs = rating_statement.executeQuery();
+                String movie_rating = "N/A";
+                if(rating_rs.next()){
+                    movie_rating= rating_rs.getString("rating");
+                }
+                rating_rs.close();
+                
+                // String movieStar = rs.getString("stars");
+                // String movieGenres = rs.getString("genres");
+                // String movieRating = rs.getString("rating");
 
                 // Create a JsonObject based on the data we retrieve from rs
 
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("star_name", movieStar);
-                jsonObject.addProperty("genres_name", movieGenres);
+                jsonObject.addProperty("star_name", movie_snames);
+                jsonObject.addProperty("genres_name", movie_gnames);
                 jsonObject.addProperty("movie_title", movieTitle);
                 jsonObject.addProperty("movie_year", movieYear);
                 jsonObject.addProperty("movie_director", movieDirector);
-                jsonObject.addProperty("movie_rating", movieRating);
+                jsonObject.addProperty("movie_rating", movie_rating);
 
                 jsonArray.add(jsonObject);
             }

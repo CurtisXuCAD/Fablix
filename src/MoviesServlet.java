@@ -60,9 +60,6 @@ public class MoviesServlet extends HttpServlet {
 
         System.out.println(stars);
 
-        if(sortBy1.equals("rating")){ sortBy1 = "ISNULL(rating), "+sortBy1;}
-        if(sortBy2.equals("rating")){ sortBy2 = "ISNULL(rating), "+sortBy2;}
-
         //sort information to session
         HttpSession session = request.getSession();
         String current_url = "movie.html?name=" + name + "&director=" + director + "&stars=" +
@@ -71,6 +68,9 @@ public class MoviesServlet extends HttpServlet {
             startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
             "&sortBy2=" + sortBy2 + "&order2=" + order2;
         session.setAttribute("prev_url", current_url);
+
+        if(sortBy1.equals("rating")){ sortBy1 = "ISNULL(rating), "+sortBy1;}
+        if(sortBy2.equals("rating")){ sortBy2 = "ISNULL(rating), "+sortBy2;}
 
         // System.out.println(current_url);
         
