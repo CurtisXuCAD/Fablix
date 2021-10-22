@@ -1,12 +1,20 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,6 +24,18 @@ import java.util.Date;
  */
 @WebServlet(name = "IndexServlet", urlPatterns = "/api/index")
 public class IndexServlet extends HttpServlet {
+    private static final long serialVersionUID = 2L;
+
+    // Create a dataSource which registered in web.xml
+    private DataSource dataSource;
+
+    public void init(ServletConfig config) {
+        try {
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * handles GET requests to store session information
@@ -48,13 +68,70 @@ public class IndexServlet extends HttpServlet {
      * handles POST requests to add and show the item list information
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String item = request.getParameter("id");
+        String id = request.getParameter("id");
         String condition = request.getParameter("condition");
-        System.out.println("what is id:"+item);
+        String item = "";
         HttpSession session = request.getSession();
-        System.out.println(condition);
-        // get the previous items in a ArrayList
+        String title = "";
 
+
+
+        try (Connection conn = dataSource.getConnection())
+        {
+            // Get a connection from dataSource
+
+            // Construct a query with parameter represented by "?"
+
+            String query = "SELECT title FROM movies where id = ?;";
+
+            // Declare our statement
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            // Set the parameter represented by "?" in the query to the id we get from url,
+            // num 1 indicates the first "?" in the query
+            statement.setString(1, id);
+
+
+            // statement.setString(2, password);
+
+
+            // Perform the query
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                // Have this user:
+
+                title = rs.getString("title");
+
+
+
+
+            }
+
+
+            rs.close();
+            statement.close();
+
+            response.setStatus(200);
+
+        }
+
+        catch (Exception e) {
+            // Write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+
+
+            // Log error to localhost log
+            request.getServletContext().log("Error:", e);
+            // Set response status to 500 (Internal Server Error)
+            response.setStatus(500);
+        }
+
+
+
+        item = title + "-" + id;
+        System.out.println(item);
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
 
 
@@ -74,10 +151,17 @@ public class IndexServlet extends HttpServlet {
                     {
                         if ((previousItems.get(i)).contains(item))
                         {
+                            System.out.println(previousItems.get(i));
                             String[] splited = (previousItems.get(i)).split("-");
                             int count = Integer.parseInt(splited[2]);
                             if (condition.equals("decrease"))
                             {
+                                System.out.println("dsfds");
+                            }
+                            System.out.println(condition);
+                            if (condition.equals("decrease"))
+                            {
+                                System.out.println(count + "cousadsant");
                                 count--;
                                 if (count ==0)
                                 {
@@ -88,17 +172,19 @@ public class IndexServlet extends HttpServlet {
 
                             }
                             else if (condition.equals("delete"))
-                            {
+                            {System.out.println(count + "cousadsant");
                                 previousItems.remove(i);
                             }
                             else {
                                 count ++;
+                                System.out.println(previousItems.get(i)+"why?");
                                 item = item + "-"+count;
+                                System.out.println(item);
                                 previousItems.set(i,item);
                             }
 
 
-
+                            System.out.println(item+"sdasd");
                             check = 1;
                             break;
                         }

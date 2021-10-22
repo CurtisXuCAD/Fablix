@@ -30,12 +30,12 @@ function getParameterByName(target) {
 }
 
 let price = getParameterByName('price');
-
+let sale = getParameterByName('sale');
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/payment?id=" + price, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: "api/payment?price=" + price + "&sale=" + sale, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
 
@@ -68,7 +68,7 @@ function handlePayResult(resultDataString) {
     // If login succeeds, it will redirect the user to index.html
     if (resultDataJson["status"] === "success") {
 
-        window.location.replace("main.html");
+        window.location.replace("confirmation.html?price="+ price + "&sale =" + resultDataJson["message"]);
     } else {
         // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"
