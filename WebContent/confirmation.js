@@ -2,11 +2,18 @@ function handleResult(resultData) {
 
     console.log("handleResult: handle price");
 
-    let total = $("#total_price");
+    let total = jQuery("#total_price");
 
-    let res = "<p>Total price: "+ price +" </p>";
+    let res = "<h1> Congratulations! Payment Received</h1>";
+        res += "<h3>Total price: "+ price +" </h3>";
+    res += "<h3>Sale ID: "+ sale +" </h3>";
+    res += "<h3 align='center'>Oder Information </h3>";
+    for (let i = 0; i < Math.min(101 - 1, resultData.length - 1); i++) {
+        res += "<p>"+resultData[i]["movie_title"] +"</p>";
+
+    }
+
     total.append(res);
-
 
 }
 
@@ -32,6 +39,6 @@ let sale = getParameterByName('sale');
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/confirmation?id=" + price + "&sale=" + sale, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: "api/confirmation?price=" + price + "&sale=" + sale, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
