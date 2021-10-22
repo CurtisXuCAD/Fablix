@@ -15,7 +15,6 @@ h1 {
     width: 75%;
     vertical-align: top;
     min-width: 800px;
-    position: fixed;
 }
 
 .table-movie {
@@ -233,12 +232,12 @@ th {
 
 .fa.fa-shopping-cart {
     color: #4fc3f7;
-    size: 50px;
+    font-size: 30px;
     cursor: pointer;
 }
 
 .fas.fa-home {
     color: #4fc3f7;
-    size: 50px;
+    font-size: 30px;
     cursor: pointer;
 }

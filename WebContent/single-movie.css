@@ -91,3 +91,15 @@ span {
     left: 50vw;
     transform: translate(-60%, -60%);
 }
+
+.fa.fa-shopping-cart {
+    color: #4fc3f7;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.fas.fa-home {
+    color: #4fc3f7;
+    font-size: 30px;
+    cursor: pointer;
+}
