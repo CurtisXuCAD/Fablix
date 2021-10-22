@@ -1,3 +1,4 @@
+*.iml
 .idea
 .settings
 target/
@@ -6,4 +7,4 @@ target/
 .classpath
 bin
 query_test.sql
-cs122b-fall21-team-6.iml
+movie-data.sql
