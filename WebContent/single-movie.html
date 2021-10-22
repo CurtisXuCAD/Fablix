@@ -12,104 +12,17 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="single-movie.css">
     <title>Single Movie</title>
-    <style>
-
-        html{
-            height:100%;
-            background: linear-gradient(to bottom, #4fc3f7, #86fde8);
-        }
-
-        .card-box{
-            border-radius: 20px;
-            padding: 10px;
-            margin: 50px 100px 50px;
-            box-shadow: 0px 0px 30px rgba( 100,181,246, 1);
-            background: white;
-        }
-
-        .back-button-text {
-            border-radius: 20px;
-            padding: 5px;
-            color: white;
-            font-size: 35px;
-            text-decoration: none;
-        }
-
-        .link{
-            border-radius: 20px;
-            padding: 5px;
-            color: white;
-            background:#595959;
-            font-size: 35px;
-            margin: 30px auto;
-            width: 30%;
-        }
-        
-        a:visited, a:link{
-            color: #0000EE;
-            text-decoration: underline;
-        }
-        
-        .link a:link{
-            text-decoration: none;
-            color: white;
-        }
-
-        .link a:hover, .link a:active{
-            text-decoration: underline;
-            color: white;
-        }
-        
-        h1{
-            margin: 50px 100px 30px;
-            font-size: 50px;
-            text-shadow: 3px 3px 3px rgba( 100,181,246, 1);
-        }
-
-        h3
-        {
-            margin: 10px 100px 10px;
-            font-size: 25px;
-        }
-
-        span{
-             color: #d4380d
-        }
-        .popup { display: none; }
-        .popup.open { display: block; }
-        .background {
-
-            content: ' ';
-            top: 0;
-
-            right: 0;
-
-            left: 0;
-            bottom: 0;
-            position: fixed;
-        }
-        .popup .Succeful {
-            border: 2px solid #ccc;
-            width: 200px;
-            height: 200px;
-            display: grid;
-            align-items: center;
-            justify-content: center;
-            background: #fff1cc;
-            position: fixed;
-            top: 50vh;
-            left: 50vw;
-            transform: translate(-60%, -60%);
-        }
-
-    </style>
 </head>
 <body>
 <form ACTION="#" id="cart" METHOD="post" onclick ="openpop()">
 
-
+    <i class="fa fa-shopping-cart" id='cart'></i>
+    <i class="fas fa-home" id='home'></i>
     <input type="submit" VALUE="add">
 </form>
 

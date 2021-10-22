@@ -5,11 +5,11 @@ function handleResult(resultData) {
     let total = jQuery("#total_price");
 
     let res = "<h1> Congratulations! Payment Received</h1>";
-        res += "<h3>Total price: "+ price +" </h3>";
-    res += "<h3>Sale ID: "+ sale +" </h3>";
+    res += "<h3>Total price: " + price + " </h3>";
+    res += "<h3>Sale ID: " + sale + " </h3>";
     res += "<h3 align='center'>Oder Information </h3>";
     for (let i = 0; i < resultData.length; i++) {
-        res += "<p>"+resultData[i]["movie_title"] +"</p>";
+        res += "<p>" + resultData[i]["movie_title"] + "</p>";
 
     }
 
@@ -32,6 +32,10 @@ function getParameterByName(target) {
     // Return the decoded parameter value
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+document.getElementById("home").addEventListener("click", () => {
+    window.location.replace("main.html");
+})
 
 let price = getParameterByName('price');
 let sale = getParameterByName('sale');

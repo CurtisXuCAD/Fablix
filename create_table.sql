@@ -1,6 +1,6 @@
-/*DROP DATABASE IF EXISTS moviedb;*/
-CREATE DATABASE moviedb;
-USE moviedb;
+DROP DATABASE IF EXISTS moviedbExp;
+CREATE DATABASE moviedbExp;
+USE moviedbExp;
 
 CREATE TABLE movies (
     id varchar(10) not null default '',

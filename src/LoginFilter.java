@@ -20,17 +20,17 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        System.out.println("LoginFilter: " + httpRequest.getRequestURI());
+        // System.out.println("LoginFilter: " + httpRequest.getRequestURI());
 
         // Check if this URL is allowed to access without logging in
         if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
-            System.out.println("isAllow");
+            // System.out.println("isAllow");
             // Keep default action: pass along the filter chain
-            System.out.println(httpRequest.getSession().getAttribute("logged_in"));
+            // System.out.println(httpRequest.getSession().getAttribute("logged_in"));
             if(httpRequest.getSession().getAttribute("logged_in") != null) {
                 if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
                     httpResponse.sendRedirect("main.html");
-                    System.out.println("LoginFilter: to main");
+                    // System.out.println("LoginFilter: to main");
                 }
             }
             else{
@@ -38,10 +38,10 @@ public class LoginFilter implements Filter {
             }
         }
         else{
-            System.out.println("NoAllow");
+            // System.out.println("NoAllow");
             // Redirect to login page if the "user" attribute doesn't exist in session
             if (httpRequest.getSession().getAttribute("user") == null) {
-                System.out.println("LoginFilter: to login");
+                // System.out.println("LoginFilter: to login");
                 httpResponse.sendRedirect("login.html");
             } else {
                 chain.doFilter(request, response);

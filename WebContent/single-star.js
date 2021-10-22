@@ -106,12 +106,19 @@ function handleResult(resultData) {
 }
 
 document.getElementById("back-button-text").addEventListener("click", () => {
-        window.location.replace(prev_url);
-    })
-    /**
-     * Once this .js is loaded, following scripts will be executed by the browser\
-     */
+    window.location.replace(prev_url);
+});
+/**
+ * Once this .js is loaded, following scripts will be executed by the browser\
+ */
 
+document.getElementById("cart").addEventListener("click", () => {
+    window.location.replace("index.html");
+});
+
+document.getElementById("home").addEventListener("click", () => {
+    window.location.replace("main.html");
+});
 // Get id from URL
 let starId = getParameterByName('id');
 

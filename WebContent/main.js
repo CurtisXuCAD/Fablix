@@ -47,6 +47,10 @@ function handleAdvanceSearch(resultDataString) {
     // );
 }
 
+document.getElementById("cart").addEventListener("click", () => {
+    window.location.replace("index.html");
+})
+
 $.ajax(
     "api/main", {
         method: "Post",

@@ -58,6 +58,11 @@ public class MoviesServlet extends HttpServlet {
         String sortBy2 = (String)request.getParameter("sortBy2");
         String order2 = (String)request.getParameter("order2");
 
+        System.out.println(stars);
+
+        if(sortBy1.equals("rating")){ sortBy1 = "ISNULL(rating), "+sortBy1;}
+        if(sortBy2.equals("rating")){ sortBy2 = "ISNULL(rating), "+sortBy2;}
+
         //sort information to session
         HttpSession session = request.getSession();
         String current_url = "movie.html?name=" + name + "&director=" + director + "&stars=" +
@@ -67,38 +72,93 @@ public class MoviesServlet extends HttpServlet {
             "&sortBy2=" + sortBy2 + "&order2=" + order2;
         session.setAttribute("prev_url", current_url);
 
-        System.out.println(current_url);
+        // System.out.println(current_url);
         
+        String query = "";
+        //start building query
+        if(!(genre.equals("null") || genre == null || genre.equals(""))) {
+            // query += "SELECT m.id, m.title, m.year, m.director \n" +
+            // "from movies as m, stars as s, stars_in_movies as sim \n" +
+            // "where m.title LIKE '%sth%'' \n" +
+            // "and m.year like '%'' \n" +
+            // "and m.director LIKE '%%'' \n" +
+            // "and sim.movieId = m.id and s.id = sim.starId and s.name LIKE '%%' \n" +
+            // "group by m.id";
+            query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+            "from movies as m LEFT join ratings as r on r.movieId = m.id, genres as g, genres_in_movies as gim \n" +
+            "where g.name like ? and gim.genreId = g.id and m.id = gim.movieId \n" +
+            "group by m.id";
+        }
+        else if(!(az.equals("null") || az == null || az.equals(""))){
+            if (az.equals("*"))
+            {                
+                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                "where m.title not REGEXP \'^[0-9A-Za-z]\' " +
+                "group by m.id";
+            }
+            else{
+                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                "where m.title like ? \n" +
+                "group by m.id";
+            }
+        }
+        else{
+            if(!(stars.equals("null") || stars == null || stars.equals(""))){
+                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                "from movies as m LEFT join ratings as r on r.movieId = m.id, (SELECT movieId FROM stars as s, stars_in_movies as sim \n" +
+                "where sim.starId = s.id and s.name LIKE ? group by movieId) as mid \n" +
+                "where mid.movieId = m.id \n" +
+                "and m.title LIKE ? \n" +
+                "and m.year like ? \n" +
+                "and m.director LIKE ? \n" +
+                "group by m.id";
+            }
+            else{
+                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                    "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                    "where m.title LIKE ? \n" +
+                    "and m.year like ? \n" +
+                    "and m.director LIKE ? \n" +
+                    "group by m.id";
+            }
+        }
+
+        if (year.equals("")){year = "%";}
+        // if (genre.equals("null"))
+        // {
+        //     genre = "";
+
+        // }
+
+        // if (az.equals("null"))
+        // {
+        //     az = "";
+        // }
+
+        if (!(sortBy1 == null || sortBy1.equals("null"))) {
+            query += " order by " + sortBy1;
+            if(!(order1 == null || order1.equals("null"))){
+                query += " " + order1;
+            }
+        }
+
+        if (!(sortBy2 == null || sortBy2.equals("null"))) {
+            query += ", " + sortBy2;
+            if(!(order2 == null || order2.equals("null"))){
+                query += " " + order2;
+            }
+        }
+
         String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
-
-        if (year.equals(""))
-        {
-            year = "%";
-        }
-
-
-
-        if (genre.equals("null"))
-        {
-            genre = "";
-
-        }
-
-        if (az.equals("null"))
-        {
-            az = "";
-        }
-
-
-
-
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
 
-            String query;
+            /*String query;
 
             if (!genre.equals(""))
             {
@@ -153,27 +213,35 @@ public class MoviesServlet extends HttpServlet {
 
 
 
-            }
+            }*/
 
-            if(totalResults == null || totalResults.equals("null")){
+            //try to get total results at first time
+            if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
                 String count_query = "select count(*) as c from (" + query + ") as fc";
                 PreparedStatement count_statement = conn.prepareStatement(count_query);
-                if (!genre.equals(""))
-                {
+                if (!(genre.equals("null") || genre == null || genre.equals(""))){
                     count_statement.setString(1, "%"+genre+"%");
                 }
-                else
-                {
+                else if(!(az.equals("null") || az == null || az.equals(""))){
                     if (!az.equals("*"))
                     {
+                        count_statement.setString(1, az+"%");
+                    }
+                }
+                else
+                {            
+                    if(!(stars.equals("null") || stars == null || stars.equals(""))){
                         count_statement.setString(1, "%"+stars+"%");
                         count_statement.setString(2, "%"+name+"%");
                         count_statement.setString(3, year);
                         count_statement.setString(4, "%"+director+"%");
-                        count_statement.setString(5, "%"+stars+"%");
-                        count_statement.setString(6,  az +"%");
                     }
-                }
+                    else{
+                        count_statement.setString(1, "%"+name+"%");
+                        count_statement.setString(2, year);
+                        count_statement.setString(3, "%"+director+"%");
+                    }
+                }    
                 ResultSet rs1 = count_statement.executeQuery();
                 while (rs1.next()) {
                     totalResults = rs1.getString("c");
@@ -181,59 +249,39 @@ public class MoviesServlet extends HttpServlet {
                 rs1.close();
             }
 
-            // if (!(sortBy == null || sortBy.equals("null"))) {
-            //     query += "order by " + sortBy + " " + order;
-            //     if(sortBy.equals("title")){
-            //         query += ", rating";
-            //     }
-            //     else if(sortBy.equals("rating")){
-            //         query += ", title";
-            //     }
-            // }
-
-            if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                query += "order by " + sortBy1;
-                if(!(order1 == null || order1.equals("null"))){
-                    query += " " + order1;
-                }
-            }
-
-            if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                query += ", " + sortBy2;
-                if(!(order2 == null || order2.equals("null"))){
-                    query += " " + order2;
-                }
-            }
-
-            
-            
+            System.out.println(totalResults);
+   
             query += queryResultLimit;
-
 
             System.out.println(query);
 
             PreparedStatement statement = conn.prepareStatement(query);
 
-            if (!genre.equals(""))
-            {
+            if (!(genre.equals("null") || genre == null || genre.equals(""))){
                 statement.setString(1, "%"+genre+"%");
             }
-            else
-            {
+            else if(!(az.equals("null") || az == null || az.equals(""))){
                 if (!az.equals("*"))
                 {
+                    statement.setString(1, az+"%");
+                }
+            }
+            else
+            {            
+                if(!(stars.equals("null") || stars == null || stars.equals(""))){
                     statement.setString(1, "%"+stars+"%");
                     statement.setString(2, "%"+name+"%");
                     statement.setString(3, year);
                     statement.setString(4, "%"+director+"%");
-                    statement.setString(5, "%"+stars+"%");
-                    statement.setString(6,  az +"%");
                 }
-
+                else{
+                    statement.setString(1, "%"+name+"%");
+                    statement.setString(2, year);
+                    statement.setString(3, "%"+director+"%");
+                }
             }
 
             ResultSet rs = statement.executeQuery();
-
 
             JsonArray jsonArray = new JsonArray();
 
@@ -243,9 +291,68 @@ public class MoviesServlet extends HttpServlet {
                 String movie_title = rs.getString("title");
                 String movie_year= rs.getString("year");
                 String movie_director = rs.getString("director");
-                String movie_gnames= rs.getString("gnames");
-                String movie_snames= rs.getString("snames");
-                String movie_rating= rs.getString("rating");
+                String movie_rating = rs.getString("rating");
+                // System.out.println("movie_rating: "+movie_rating);
+                
+                // String sub_query = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames, \n" +
+                // "substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames, \n" +
+                // "r.rating as rating\n" +
+                // "from genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim \n" +
+                // "where gim.genreId = g.id and gim.movieId = ? \n" +
+                // "and sim.starId = s.id and sim.movieId = ? \n" +
+                // "and r.movieId = ?";
+
+                // PreparedStatement single_info_statement = conn.prepareStatement(sub_query);
+                // single_info_statement.setString(1, movie_id);
+                // single_info_statement.setString(2, movie_id);
+                // single_info_statement.setString(3, movie_id);
+
+                // ResultSet sub_rs = single_info_statement.executeQuery();
+                // String movie_gnames = "";
+                // String movie_snames = "";
+                // String movie_rating = "";
+                // if(sub_rs.next()){
+                //     movie_gnames= sub_rs.getString("gnames");
+                //     movie_snames= sub_rs.getString("snames");
+                //     movie_rating= sub_rs.getString("rating");
+                // }
+                // sub_rs.close();
+
+                String sub_query_gnames = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames \n" +
+                "from genres as g, genres_in_movies as gim \n" +
+                "where gim.genreId = g.id and gim.movieId = ? ";
+                PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
+                gnames_statement.setString(1, movie_id);
+                ResultSet gnames_rs = gnames_statement.executeQuery();
+                String movie_gnames = "null";
+                if(gnames_rs.next()){
+                    movie_gnames= gnames_rs.getString("gnames");
+                }
+                gnames_rs.close();
+
+                String sub_query_snames = "select substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames \n" +
+                "from stars as s, stars_in_movies as sim \n" +
+                "where sim.starId = s.id and sim.movieId = ? ";
+                PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
+                snames_statement.setString(1, movie_id);
+                ResultSet snames_rs = snames_statement.executeQuery();
+                String movie_snames = "null";
+                if(snames_rs.next()){
+                    movie_snames= snames_rs.getString("snames");
+                }
+                snames_rs.close();
+
+                // String sub_query_rating = "select r.rating as rating\n" +
+                // "from ratings as r \n" +
+                // "where r.movieId = ?";
+                // PreparedStatement rating_statement = conn.prepareStatement(sub_query_rating);
+                // rating_statement.setString(1, movie_id);
+                // ResultSet rating_rs = rating_statement.executeQuery();
+                // String movie_rating = "null";
+                // if(rating_rs.next()){
+                //     movie_rating= rating_rs.getString("rating");
+                // }
+                // rating_rs.close();
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();

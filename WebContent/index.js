@@ -1,5 +1,3 @@
-
-
 /**
  * Handle the data returned by IndexServlet
  * @param resultDataString jsonObject, consists of session info
@@ -37,25 +35,24 @@ function handleCartArray(resultArray) {
         const id = resultArray[i].split("-")[1];
         const quantity = resultArray[i].split("-")[2];
 
-        res += "<li>" +  title +  "     quantity : "+ quantity+ "     price : " +  10*quantity+" <BUTTON id='increase'  onclick=\"handleCart('" +"increase"+"','" + id+"')\">increase</BUTTON><BUTTON id='decrease'  onclick=\"handleCart('" +"decrease"+"','" + id+"')\">decrease</BUTTON><BUTTON id='delete'  onclick=\"handleCart('" +"delete"+"','" + id+"')\">delete</BUTTON></li>";
-        total = total + 10*quantity;
+        res += "<li>" + title + "     quantity : " + quantity + "     price : " + 10 * quantity + " <BUTTON id='increase'  onclick=\"handleCart('" + "increase" + "','" + id + "')\">increase</BUTTON><BUTTON id='decrease'  onclick=\"handleCart('" + "decrease" + "','" + id + "')\">decrease</BUTTON><BUTTON id='delete'  onclick=\"handleCart('" + "delete" + "','" + id + "')\">delete</BUTTON></li>";
+        total = total + 10 * quantity;
         sale += id + "-" + quantity;
-        if (i !== resultArray.length -1)
-        {
+        if (i !== resultArray.length - 1) {
             sale += ",";
         }
     }
     res += "</ul>";
 
-    let pes = "<p>Total Price:" +total+ "</p>";
+    let pes = "<p>Total Price:" + total + "</p>";
     // clear the old array and show the new array in the frontend
     item_list.html("");
     item_list.append(res);
     total_price.append(pes);
 
     let pyy = "<form id=\"payment\" method=\"get\" action = \"payment.html\">\n" +
-        "<input type = \"hidden\" name = \"price\" value ="+ total +" >\n" +
-        "<input type = \"hidden\" name = \"sale\" value ="+ sale +" >\n" +
+        "<input type = \"hidden\" name = \"price\" value =" + total + " >\n" +
+        "<input type = \"hidden\" name = \"sale\" value =" + sale + " >\n" +
         "        <input type=\"submit\" value=\"Pay\">\n" +
         "        </form>";
 
@@ -65,10 +62,12 @@ function handleCartArray(resultArray) {
 
 }
 
+document.getElementById("home").addEventListener("click", () => {
+    window.location.replace("main.html");
+})
 
 
-
-function handleCart(condition,item) {
+function handleCart(condition, item) {
     console.log("change quantity");
     /**
      * When users click the submit button, the browser will not direct
@@ -78,7 +77,7 @@ function handleCart(condition,item) {
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "POST", // Setting request method
-        url: "api/index?id=" + item + "&condition="+condition,
+        url: "api/index?id=" + item + "&condition=" + condition,
 
 
     });
@@ -92,4 +91,3 @@ $.ajax("api/index", {
     method: "GET",
     success: handleSessionData
 });
-

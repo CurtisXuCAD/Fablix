@@ -103,7 +103,14 @@ function closepop() {
     popup.classList.remove('open');
 }
 
-// Get id from URL
+document.getElementById("cart").addEventListener("click", () => {
+    window.location.replace("index.html");
+})
+
+document.getElementById("home").addEventListener("click", () => {
+        window.location.replace("main.html");
+    })
+    // Get id from URL
 let movieId = getParameterByName('id');
 
 // Makes the HTTP GET request and registers on success callback function handleResult

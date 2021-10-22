@@ -36,168 +36,190 @@ function handleMovieResult(resultData) {
     // Find the empty table body by id "movie_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
 
-    // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < Math.min(101 - 1, resultData.length - 1); i++) {
+    if (resultData.length <= 1) {
+        let htmlContent = "<tr class='np_result'>" +
+            "<th class=;search-message-empty-container' colspan='6'>" +
+            "<img class='search-message-empty-message' src='pic/no-results-icon.png' alt='No Results' width='10%' height='10%'>" +
+            "<div class='search-message-empty-message'>" +
+            "Hmmm... We couldn't find any matches" +
+            "</div>" +
+            "</th>" +
+            "</tr>";
 
-        // Concatenate the html tags with resultData jsonObject
-        let rowHTML = "";
-        rowHTML += "<tr>";
-        rowHTML +=
-            "<th>" +
-            // Add a link to single-movie.html with id passed with GET url parameter
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">' +
-            resultData[i]["movie_title"] + // display movie_name for the link text
-            '</a>' +
-            "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+        movieTableBodyElement.append(htmlContent);
+    } else {
 
-        let gnames = resultData[i]["movie_gnames"];
-        let html_contentg = "";
-        const id_name_arrayg = gnames.split(', ');
-        for (let j = 0; j < id_name_arrayg.length; j++) {
-            const g_name = id_name_arrayg[j];
-            html_contentg +=
-                '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name + '&AZ=' + '">' +
-                g_name + // display movie_name for the link text
-                '</a>' + ', '
+        // Iterate through resultData, no more than 10 entries
+        for (let i = 0; i < Math.min(101 - 1, resultData.length - 1); i++) {
+
+            // Concatenate the html tags with resultData jsonObject
+            let rowHTML = "";
+            rowHTML += "<tr>";
+            rowHTML +=
+                "<th>" +
+                // Add a link to single-movie.html with id passed with GET url parameter
+                '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">' +
+                resultData[i]["movie_title"] + // display movie_name for the link text
+                '</a>' +
+                "</th>";
+            rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
+            rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+
+            let gnames = resultData[i]["movie_gnames"];
+            if (gnames == null || gnames == "null") {
+                rowHTML += "<th>" + "N/A" + "</th>";
+            } else {
+                let html_contentg = "";
+                const id_name_arrayg = gnames.split(', ');
+                for (let j = 0; j < id_name_arrayg.length; j++) {
+                    const g_name = id_name_arrayg[j];
+                    html_contentg +=
+                        '<a href="movie.html?movies?name=&director=&stars=&year=&genre=' + g_name + '&AZ=' + '">' +
+                        g_name + // display movie_name for the link text
+                        '</a>' + ', '
+                }
+                rowHTML += "<th>" + html_contentg.slice(0, -2) + "</th>";
+            }
+
+
+
+            let snames = resultData[i]["movie_snames"];
+            if (snames == null || snames == "null") {
+                rowHTML += "<th>" + "N/A" + "</th>";
+            } else {
+                let html_content = "";
+                const id_name_array = snames.split(', ');
+                for (let j = 0; j < id_name_array.length; j++) {
+                    const star_id = id_name_array[j].split("-")[0];
+                    const star_name = id_name_array[j].split("-")[1];
+                    html_content +=
+                        '<a href="single-star.html?id=' + star_id + '">' +
+                        star_name + // display star_name for the link text
+                        '</a>' + ', '
+                }
+                rowHTML += "<th>" + html_content.slice(0, -2) + "</th>";
+            }
+
+            if (resultData[i]["movie_rating"] == null || resultData[i]["movie_rating"] == "null") {
+                rowHTML += "<th>" + "N/A" + "</th>";
+            } else {
+                rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
+            }
+
+            rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id'] + "')\">add</BUTTON></th>";
+
+
+
+            // Append the row created to the table body, which will refresh the page
+            movieTableBodyElement.append(rowHTML);
         }
-        rowHTML += "<th>" + html_contentg.slice(0, -2) + "</th>";
 
 
-        let snames = resultData[i]["movie_snames"];
-        let html_content = "";
-        const id_name_array = snames.split(', ');
-        for (let j = 0; j < id_name_array.length; j++) {
-            const star_id = id_name_array[j].split("-")[0];
-            const star_name = id_name_array[j].split("-")[1];
-            html_content +=
-                '<a href="single-star.html?id=' + star_id + '">' +
-                star_name + // display star_name for the link text
-                '</a>' + ', '
+
+        totalResults = resultData[resultData.length - 1]["totalResults"];
+        var t = parseInt(totalResults)
+        console.log(totalResults);
+        let paginationElement = jQuery("#pagination");
+        let htmlContent = "";
+        var a = parseInt(startIndex);
+        var b = parseInt(movieNum);
+
+        htmlContent += '<div class="pagination">'
+        let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+            "&numRecords=" + movieNum + "&startIndex=" + "0" + "&totalResults=" + totalResults +
+            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+        htmlContent += '<a href="' + first_page_url + '">' + "&laquo;" + '</a>';
+
+        for (let i = 0; i < Math.ceil(t / b); i++) {
+            if (Math.abs(a - (b * i)) < 6 * b) {
+                let page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                    "&numRecords=" + movieNum + "&startIndex=" + (b * i).toString() + "&totalResults=" + totalResults +
+                    "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                    "&sortBy2=" + sortBy2 + "&order2=" + order2;
+
+                htmlContent += '<a href="' + page_url + '"';
+                if (a == b * i) {
+                    htmlContent += 'class="active"'
+                }
+                htmlContent += '>' + (i + 1).toString() + '</a>';
+            }
         }
-        rowHTML += "<th>" + html_content.slice(0, -2) + "</th>";
+        let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+            "&numRecords=" + movieNum + "&startIndex=" + (Math.floor((t - 1) / b) * b).toString() + "&totalResults=" + totalResults +
+            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+        htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
 
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
-
-
-
-
-
-        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id']  + "')\">add</BUTTON></th>";
+        htmlContent += '</div>';
 
 
 
-        // Append the row created to the table body, which will refresh the page
-        movieTableBodyElement.append(rowHTML);
-    }
-
-
-
-    totalResults = resultData[resultData.length - 1]["totalResults"];
-    var t = parseInt(totalResults)
-    console.log(totalResults);
-    let paginationElement = jQuery("#pagination");
-    let htmlContent = "";
-    var a = parseInt(startIndex);
-    var b = parseInt(movieNum);
-
-    htmlContent += '<div class="pagination">'
-    let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-        "&numRecords=" + movieNum + "&startIndex=" + "0" + "&totalResults=" + totalResults +
-        "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-        "&sortBy2=" + sortBy2 + "&order2=" + order2;
-    htmlContent += '<a href="' + first_page_url + '">' + "&laquo;" + '</a>';
-
-    for (let i = 0; i < Math.ceil(t / b); i++) {
-        if (Math.abs(a - (b * i)) < 6 * b) {
-            let page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-                "&numRecords=" + movieNum + "&startIndex=" + (b * i).toString() + "&totalResults=" + totalResults +
+        if (a > 0) {
+            var prev_index = (a - b).toString();
+            if (prev_index < 0) {
+                prev_index = 0;
+            }
+            let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
                 "&sortBy1=" + sortBy1 + "&order1=" + order1 +
                 "&sortBy2=" + sortBy2 + "&order2=" + order2;
-
-            htmlContent += '<a href="' + page_url + '"';
-            if (a == b * i) {
-                htmlContent += 'class="active"'
-            }
-            htmlContent += '>' + (i + 1).toString() + '</a>';
+            htmlContent +=
+                '<div class = "link">' +
+                '<a class="link-dec" href="' + prev_url + '">' +
+                '<div class="back-button-text" align="center">' +
+                'Prev Page' +
+                '</div>' +
+                '</a>' +
+                '</div>';
         }
-    }
-    let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-        "&numRecords=" + movieNum + "&startIndex=" + (Math.floor((t - 1) / b) * b).toString() + "&totalResults=" + totalResults +
-        "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-        "&sortBy2=" + sortBy2 + "&order2=" + order2;
-    htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
 
-    htmlContent += '</div>';
-
-
-
-    if (a > 0) {
-        var prev_index = (a - b).toString();
-        if (prev_index < 0) {
-            prev_index = 0;
+        var next_index = (a + b).toString();
+        if (next_index < t) {
+            let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
+                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            htmlContent +=
+                '<div class = "link">' +
+                '<a class="link-dec" href="' + next_url + '">' +
+                '<div class="back-button-text" align="center">' +
+                'Next Page' +
+                '</div>' +
+                '</a>' +
+                '</div>';
         }
-        let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-            "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
-            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-            "&sortBy2=" + sortBy2 + "&order2=" + order2;
-        htmlContent +=
-            '<div class = "link">' +
-            '<a class="link-dec" href="' + prev_url + '">' +
-            '<div class="back-button-text" align="center">' +
-            'Prev Page' +
-            '</div>' +
-            '</a>' +
-            '</div>';
+
+        paginationElement.append(htmlContent);
+
+        // let titleHtml = document.getElementById("title");
+        // let ratingHtml = document.getElementById("rating");
+        // titleHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+        // ratingHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+
+        // if (sortBy == null || sortBy == "null") {
+        //     titleHtml.classList.toggle("th-sort-none", 1);
+        //     ratingHtml.classList.toggle("th-sort-none", 1);
+        // } else if (sortBy == "title") {
+        //     if (order == null) {
+        //         titleHtml.classList.toggle("th-sort-none", 1);
+        //     } else if (order == "asc") {
+        //         titleHtml.classList.toggle("th-sort-asc", 1);
+        //     } else {
+        //         titleHtml.classList.toggle("th-sort-desc", 1);
+        //     }
+        //     ratingHtml.classList.toggle("th-sort-none", 1);
+        // } else if (sortBy == "rating") {
+        //     if (order == null) {
+        //         ratingHtml.classList.toggle("th-sort-none", 1);
+        //     } else if (order == "asc") {
+        //         ratingHtml.classList.toggle("th-sort-asc", 1);
+        //     } else {
+        //         ratingHtml.classList.toggle("th-sort-desc", 1);
+        //     }
+        //     titleHtml.classList.toggle("th-sort-none", 1);
+        // }
     }
-
-    var next_index = (a + b).toString();
-    if (next_index < t) {
-        let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-            "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
-            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-            "&sortBy2=" + sortBy2 + "&order2=" + order2;
-        htmlContent +=
-            '<div class = "link">' +
-            '<a class="link-dec" href="' + next_url + '">' +
-            '<div class="back-button-text" align="center">' +
-            'Next Page' +
-            '</div>' +
-            '</a>' +
-            '</div>';
-    }
-
-    paginationElement.append(htmlContent);
-
-    // let titleHtml = document.getElementById("title");
-    // let ratingHtml = document.getElementById("rating");
-    // titleHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
-    // ratingHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
-
-    // if (sortBy == null || sortBy == "null") {
-    //     titleHtml.classList.toggle("th-sort-none", 1);
-    //     ratingHtml.classList.toggle("th-sort-none", 1);
-    // } else if (sortBy == "title") {
-    //     if (order == null) {
-    //         titleHtml.classList.toggle("th-sort-none", 1);
-    //     } else if (order == "asc") {
-    //         titleHtml.classList.toggle("th-sort-asc", 1);
-    //     } else {
-    //         titleHtml.classList.toggle("th-sort-desc", 1);
-    //     }
-    //     ratingHtml.classList.toggle("th-sort-none", 1);
-    // } else if (sortBy == "rating") {
-    //     if (order == null) {
-    //         ratingHtml.classList.toggle("th-sort-none", 1);
-    //     } else if (order == "asc") {
-    //         ratingHtml.classList.toggle("th-sort-asc", 1);
-    //     } else {
-    //         ratingHtml.classList.toggle("th-sort-desc", 1);
-    //     }
-    //     titleHtml.classList.toggle("th-sort-none", 1);
-    // }
-
     fixFilter();
 
 }
@@ -234,7 +256,7 @@ function handleCart(id) {
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "POST", // Setting request method
-        url: "api/index?id=" + id + "&condition=new" , // Setting request url, which is mapped to the TestServlet
+        url: "api/index?id=" + id + "&condition=new", // Setting request url, which is mapped to the TestServlet
         // success: (resultData) => handleSearchResult(resultData) //
 
     });
@@ -336,6 +358,14 @@ function sortFirstByRating() {
         order2_asc.classList.add("active");
     }
 }
+
+document.getElementById("cart").addEventListener("click", () => {
+    window.location.replace("index.html");
+})
+
+document.getElementById("home").addEventListener("click", () => {
+    window.location.replace("main.html");
+})
 
 document.getElementById("sortBy1_title").addEventListener("click", () => sortFirstByTitle());
 

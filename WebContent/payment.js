@@ -7,7 +7,7 @@ function handleResult(resultData) {
 
     let total = $("#total_price");
 
-    let res = "<p>Total price: "+ price +" </p>";
+    let res = "<p>Total price: " + price + " </p>";
     total.append(res);
 
 
@@ -28,6 +28,14 @@ function getParameterByName(target) {
     // Return the decoded parameter value
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+document.getElementById("cart").addEventListener("click", () => {
+    window.location.replace("index.html");
+})
+
+document.getElementById("home").addEventListener("click", () => {
+    window.location.replace("main.html");
+})
 
 let price = getParameterByName('price');
 let sale = getParameterByName('sale');
@@ -68,7 +76,7 @@ function handlePayResult(resultDataString) {
     // If login succeeds, it will redirect the user to index.html
     if (resultDataJson["status"] === "success") {
 
-        window.location.replace("confirmation.html?price="+ price + "&sale=" + resultDataJson["message"]);
+        window.location.replace("confirmation.html?price=" + price + "&sale=" + resultDataJson["message"]);
     } else {
         // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"

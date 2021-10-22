@@ -159,7 +159,9 @@ public class PaymentServlet extends HttpServlet {
 
                  }
 
-
+                 //remove session cart
+                 HttpSession session = request.getSession();
+                 session.removeAttribute("previousItems");
 
 
 

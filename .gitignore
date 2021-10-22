@@ -5,3 +5,4 @@ target/
 .vscode
 .classpath
 bin
+query_test.sql
