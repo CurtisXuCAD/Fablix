@@ -1,4 +1,4 @@
-let cart = $("#cart");
+
 
 /**
  * Handle the data returned by IndexServlet
@@ -30,14 +30,20 @@ function handleCartArray(resultArray) {
     let pay = $("#pay");
     // change it to html list
     let res = "<ul>";
+    let sale = "";
     let total = 0;
     for (let i = 0; i < resultArray.length; i++) {
         const title = resultArray[i].split("-")[0];
         const id = resultArray[i].split("-")[1];
         const quantity = resultArray[i].split("-")[2];
-        const item = title +"-" + id;
-        res += "<li>" +  title +  "     quantity : "+ quantity+ "     price : " +  10*quantity+" <BUTTON id='increase'  onclick=\"handleCart('" +"increase"+"','" + item+"')\">increase</BUTTON><BUTTON id='decrease'  onclick=\"handleCart('" +"decrease"+"','" + item+"')\">decrease</BUTTON><BUTTON id='delete'  onclick=\"handleCart('" +"delete"+"','" + item+"')\">delete</BUTTON></li>";
+
+        res += "<li>" +  title +  "     quantity : "+ quantity+ "     price : " +  10*quantity+" <BUTTON id='increase'  onclick=\"handleCart('" +"increase"+"','" + id+"')\">increase</BUTTON><BUTTON id='decrease'  onclick=\"handleCart('" +"decrease"+"','" + id+"')\">decrease</BUTTON><BUTTON id='delete'  onclick=\"handleCart('" +"delete"+"','" + id+"')\">delete</BUTTON></li>";
         total = total + 10*quantity;
+        sale += id + "-" + quantity;
+        if (i !== resultArray.length -1)
+        {
+            sale += ",";
+        }
     }
     res += "</ul>";
 
@@ -48,7 +54,8 @@ function handleCartArray(resultArray) {
     total_price.append(pes);
 
     let pyy = "<form id=\"payment\" method=\"get\" action = \"payment.html\">\n" +
-        "<input type = \"text\" name = \"price\" value ="+ total +" >\n" +
+        "<input type = \"\" name = \"price\" value ="+ total +" >\n" +
+        "<input type = \"text\" name = \"sale\" value ="+ sale +" >\n" +
         "        <input type=\"submit\" value=\"Pay\">\n" +
         "        </form>";
 
@@ -58,34 +65,11 @@ function handleCartArray(resultArray) {
 
 }
 
-/**
- * Submit form content with POST method
- * @param cartEvent
- */
-function handleCartInfo(cartEvent) {
-    console.log("submit cart form");
-    /**
-     * When users click the submit button, the browser will not direct
-     * users to the url defined in HTML form. Instead, it will call this
-     * event handler when the event is triggered.
-     */
-    cartEvent.preventDefault();
 
-    $.ajax("api/index", {
-        method: "POST",
-        data: cart.serialize(),
-        success: resultDataString => {
-            let resultDataJson = JSON.parse(resultDataString);
-            handleCartArray(resultDataJson["previousItems"]);
-        }
-    });
 
-    // clear input form
-    cart[0].reset();
-}
 
 function handleCart(condition,item) {
-    console.log("submit cart form");
+    console.log("change quantity");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -109,5 +93,3 @@ $.ajax("api/index", {
     success: handleSessionData
 });
 
-// Bind the submit action of the form to a event handler function
-cart.submit(handleCartInfo);

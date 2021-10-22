@@ -84,7 +84,7 @@ function handleMovieResult(resultData) {
 
 
 
-        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id'] + "','" + resultData[i]['movie_title'] + "')\">add</BUTTON></th>";
+        rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id']  + "')\">add</BUTTON></th>";
 
 
 
@@ -222,17 +222,19 @@ function handleCartInfo1(cartEvent) {
 }
 const popup = document.querySelector('.popup');
 
-function handleCart(id, title) {
-    console.log("submit cart form");
+function handleCart(id) {
+    console.log("add movie to checkout");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
+
+
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "POST", // Setting request method
-        url: "api/index?id=" + title + "-" + id, // Setting request url, which is mapped to the TestServlet
+        url: "api/index?id=" + id + "&condition=new" , // Setting request url, which is mapped to the TestServlet
         // success: (resultData) => handleSearchResult(resultData) //
 
     });

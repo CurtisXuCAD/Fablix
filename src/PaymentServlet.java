@@ -16,6 +16,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A servlet that takes input from a html <form> and talks to MySQL moviedbexample,
@@ -37,7 +39,8 @@ public class PaymentServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-
+    String price = "";
+    String sale = "";
     // Use http GET
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -45,8 +48,10 @@ public class PaymentServlet extends HttpServlet {
 
 
         PrintWriter out = response.getWriter();
-        String price = request.getParameter("price");
-        System.out.println(price);
+        price = request.getParameter("price");
+        System.out.println("sadsa"+price);
+        sale = request.getParameter("sale");
+        System.out.println("sdasda"+sale);
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("price", price);
@@ -57,6 +62,7 @@ public class PaymentServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         String fname = request.getParameter("fname");
         String lname = request.getParameter("lname");
         String card = request.getParameter("card");
@@ -68,7 +74,8 @@ public class PaymentServlet extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-
+        System.out.println(price);
+        System.out.println(sale);
         JsonObject responseJsonObject = new JsonObject();
 
         try (Connection conn = dataSource.getConnection())
@@ -79,7 +86,8 @@ public class PaymentServlet extends HttpServlet {
 
             String query = "SELECT * FROM creditcards where id = ? and firstName = ? and lastname = ? and expiration = ?;";
 
-            // Declare our statement
+
+
             PreparedStatement statement = conn.prepareStatement(query);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
@@ -96,13 +104,67 @@ public class PaymentServlet extends HttpServlet {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                // Have this user:
+                String maxquery = "SELECT max(id) FROM sales;";
 
-                    System.out.println("Correct");
+                Statement maxstatement = conn.createStatement();
+
+                ResultSet rsmax = maxstatement.executeQuery(maxquery);
+                String id = "";
+
+                if (rsmax.next()) {
+                    id = rsmax.getString("max(id)");
+                    System.out.println(id);
+                }
+
+                int realid = Integer.parseInt(id);
+                realid++;
+
+                String[] movies = sale.split(",");
+
+                for (String a : movies)
+                 {
+                     String[] re = a.split("-");
+
+                     for (int i = 0; i < Integer.parseInt(re[1]);i++)
+                     {
+                         String insquery = "INSERT INTO sales (id,customerId,movieId,saleDate)\n" +
+                                 "VALUES (?,?,?,?);";
+                         PreparedStatement insstatement = conn.prepareStatement(insquery);
+
+                         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                         LocalDateTime now = LocalDateTime.now();
+
+                         // Set the parameter represented by "?" in the query to the id we get from url,
+                         // num 1 indicates the first "?" in the query
+
+                         HttpSession session = request.getSession();
+                         User u = (User)session.getAttribute("user");
+                         String username = u.getId();
+
+
+                         insstatement.setString(1, Integer.toString(realid));
+
+                         insstatement.setString(2, username);
+
+                         insstatement.setString(3, re[0]);
+
+                         insstatement.setString(4, dtf.format(now));
+
+
+                         System.out.println(insstatement);
+                         ResultSet rssss = insstatement.executeQuery();
+
+                         System.out.println(rssss);
+                     }
+
+                 }
+
+
+
 
 
                     responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "success");
+                    responseJsonObject.addProperty("message", realid);
 
             } else {
                 // Login fail
