@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+
+
+
+
+</head>
+<body>
+Payment
+
+
+<div id="total_price"></div>
+
+
+
+    <p id="pay_header"> Please Enter Card Info:</p>
+    <form id = "place_order"  METHOD="Post">
+        First Name: <input TYPE="TEXT" name="fname" required> <br>
+        Last Name: <input TYPE="TEXT" name="lname" required> <br>
+        Card Number: <input TYPE="TEXT" name="card" required> <br>
+        Expiration Date: <input TYPE="date" name="exp" required> <br>
+        <!--    <input TYPE="hidden" name="numRecords"> <br>-->
+        <input TYPE="SUBMIT" VALUE="pay">
+    </form>
+
+
+<div id="pay_error_message"></div>
+<!-- include your own JS file -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type='text/javascript' src='payment.js'></script>
+
+</body>
+</html>
