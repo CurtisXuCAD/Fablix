@@ -167,8 +167,12 @@ public class IndexServlet extends HttpServlet {
                                 {
                                     previousItems.remove(i);
                                 }
-                                item = item + "-"+count;
-                                previousItems.set(i,item);
+                                else
+                                {
+                                    item = item + "-"+count;
+                                    previousItems.set(i,item);
+                                }
+
 
                             }
                             else if (condition.equals("delete"))

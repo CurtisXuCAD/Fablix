@@ -152,9 +152,9 @@ public class PaymentServlet extends HttpServlet {
 
 
                          System.out.println(insstatement);
-                         ResultSet rssss = insstatement.executeQuery();
+                          insstatement.executeUpdate();
 
-                         System.out.println(rssss);
+
                      }
 
                  }
