@@ -65,6 +65,10 @@ function handleResult(resultData) {
     );
 
     console.log("handleResult: populating movie info from resultData");
+
+    prev_url = resultData[1]["prev_url"];
+    document.getElementById("back-button-text").parentElement.href = prev_url;
+    console.log(prev_url);
 }
 
 /**
@@ -83,7 +87,7 @@ function handleCartInfo(cartEvent) {
         method: "POST",
         data: cart.serialize()
 
-});
+    });
 
     // clear input form
     cart[0].reset();

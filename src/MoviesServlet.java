@@ -53,9 +53,22 @@ public class MoviesServlet extends HttpServlet {
         String numRecords = (String)request.getParameter("numRecords");
         String startIndex = (String)request.getParameter("startIndex");
         String totalResults = (String)request.getParameter("totalResults");
-        String sortBy = (String)request.getParameter("sortBy");
-        String order = (String)request.getParameter("order");
+        String sortBy1 = (String)request.getParameter("sortBy1");
+        String order1 = (String)request.getParameter("order1");
+        String sortBy2 = (String)request.getParameter("sortBy2");
+        String order2 = (String)request.getParameter("order2");
 
+        //sort information to session
+        HttpSession session = request.getSession();
+        String current_url = "movie.html?name=" + name + "&director=" + director + "&stars=" +
+            stars + "&year=" + year + "&genre=" + genre + "&AZ=" +
+            az + "&numRecords=" + numRecords + "&startIndex=" +
+            startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+        session.setAttribute("prev_url", current_url);
+
+        System.out.println(current_url);
+        
         String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
 
         // Output stream to STDOUT
@@ -168,15 +181,31 @@ public class MoviesServlet extends HttpServlet {
                 rs1.close();
             }
 
-            if (!(sortBy == null || sortBy.equals("null"))) {
-                query += "order by " + sortBy + " " + order;
-                if(sortBy.equals("title")){
-                    query += ", rating";
-                }
-                else if(sortBy.equals("rating")){
-                    query += ", title";
+            // if (!(sortBy == null || sortBy.equals("null"))) {
+            //     query += "order by " + sortBy + " " + order;
+            //     if(sortBy.equals("title")){
+            //         query += ", rating";
+            //     }
+            //     else if(sortBy.equals("rating")){
+            //         query += ", title";
+            //     }
+            // }
+
+            if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                query += "order by " + sortBy1;
+                if(!(order1 == null || order1.equals("null"))){
+                    query += " " + order1;
                 }
             }
+
+            if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                query += ", " + sortBy2;
+                if(!(order2 == null || order2.equals("null"))){
+                    query += " " + order2;
+                }
+            }
+
+            
             
             query += queryResultLimit;
 
@@ -235,8 +264,10 @@ public class MoviesServlet extends HttpServlet {
             jsonObject.addProperty("numRecords", numRecords);
             jsonObject.addProperty("startIndex", startIndex);
             jsonObject.addProperty("totalResults", totalResults);
-            jsonObject.addProperty("sortBy", sortBy);
-            jsonObject.addProperty("order", order);
+            jsonObject.addProperty("sortBy1", sortBy1);
+            jsonObject.addProperty("order1", order1);
+            jsonObject.addProperty("sortBy2", sortBy2);
+            jsonObject.addProperty("order2", order2);
             jsonArray.add(jsonObject);
             rs.close();
             statement.close();

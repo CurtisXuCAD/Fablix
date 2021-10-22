@@ -108,6 +108,13 @@ public class SingleMovieServlet extends HttpServlet {
 
                 jsonArray.add(jsonObject);
             }
+
+            JsonObject json_prev_url = new JsonObject();
+            HttpSession session = request.getSession();
+            String prev_url = (String)session.getAttribute("prev_url");
+            json_prev_url.addProperty("prev_url", prev_url);
+            jsonArray.add(json_prev_url);
+            
             rs.close();
             statement.close();
 

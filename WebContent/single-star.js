@@ -9,6 +9,7 @@
  *      3. Populate the data to correct html elements.
  */
 
+let prev_url = '';
 
 /**
  * Retrieve parameter from request URL, matching by parameter name
@@ -71,6 +72,9 @@ function handleResult(resultData) {
 
     console.log("handleResult: populating movie table from resultData");
 
+    prev_url = resultData[1]["prev_url"];
+    document.getElementById("back-button-text").parentElement.href = prev_url;
+    console.log(prev_url);
     // Populate the star table
     // Find the empty table body by id "movie_table_body"
     // let movieTableBodyElement = jQuery("#movie_table_body");
@@ -101,9 +105,12 @@ function handleResult(resultData) {
     // }
 }
 
-/**
- * Once this .js is loaded, following scripts will be executed by the browser\
- */
+document.getElementById("back-button-text").addEventListener("click", () => {
+        window.location.replace(prev_url);
+    })
+    /**
+     * Once this .js is loaded, following scripts will be executed by the browser\
+     */
 
 // Get id from URL
 let starId = getParameterByName('id');

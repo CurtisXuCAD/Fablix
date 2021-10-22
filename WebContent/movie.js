@@ -105,14 +105,16 @@ function handleMovieResult(resultData) {
     htmlContent += '<div class="pagination">'
     let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
         "&numRecords=" + movieNum + "&startIndex=" + "0" + "&totalResults=" + totalResults +
-        "&sortBy=" + sortBy + "&order=" + order;
+        "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+        "&sortBy2=" + sortBy2 + "&order2=" + order2;
     htmlContent += '<a href="' + first_page_url + '">' + "&laquo;" + '</a>';
 
     for (let i = 0; i < Math.ceil(t / b); i++) {
         if (Math.abs(a - (b * i)) < 6 * b) {
             let page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                 "&numRecords=" + movieNum + "&startIndex=" + (b * i).toString() + "&totalResults=" + totalResults +
-                "&sortBy=" + sortBy + "&order=" + order;
+                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                "&sortBy2=" + sortBy2 + "&order2=" + order2;
 
             htmlContent += '<a href="' + page_url + '"';
             if (a == b * i) {
@@ -123,7 +125,8 @@ function handleMovieResult(resultData) {
     }
     let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
         "&numRecords=" + movieNum + "&startIndex=" + (Math.floor(t / b) * b).toString() + "&totalResults=" + totalResults +
-        "&sortBy=" + sortBy + "&order=" + order;
+        "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+        "&sortBy2=" + sortBy2 + "&order2=" + order2;
     htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
 
     htmlContent += '</div>';
@@ -137,7 +140,8 @@ function handleMovieResult(resultData) {
         }
         let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
             "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
-            "&sortBy=" + sortBy + "&order=" + order;
+            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+            "&sortBy2=" + sortBy2 + "&order2=" + order2;
         htmlContent +=
             '<div class = "link">' +
             '<a class="link-dec" href="' + prev_url + '">' +
@@ -152,7 +156,8 @@ function handleMovieResult(resultData) {
     if (next_index < t) {
         let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
             "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
-            "&sortBy=" + sortBy + "&order=" + order;
+            "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+            "&sortBy2=" + sortBy2 + "&order2=" + order2;
         htmlContent +=
             '<div class = "link">' +
             '<a class="link-dec" href="' + next_url + '">' +
@@ -163,47 +168,37 @@ function handleMovieResult(resultData) {
             '</div>';
     }
 
-
-
-    // htmlContent += "<form action=\"" +
-    //     prev_url +
-    //     "\"> \n" + "<button type=\"submit\">Prev Page</button>" + "</button>";
-
-    // htmlContent += "<form action=\"" +
-    //     next_url +
-    //     "\"> \n" + "<button type=\"submit\">Next Page</button>" + "</button>";
-
     paginationElement.append(htmlContent);
 
-    let titleHtml = document.getElementById("title");
-    let ratingHtml = document.getElementById("rating");
-    titleHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
-    ratingHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+    // let titleHtml = document.getElementById("title");
+    // let ratingHtml = document.getElementById("rating");
+    // titleHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
+    // ratingHtml.classList.remove("th-sort-asc", "th-sort-desc", "th-sort-none");
 
-    if (sortBy == null || sortBy == "null") {
-        titleHtml.classList.toggle("th-sort-none", 1);
-        ratingHtml.classList.toggle("th-sort-none", 1);
-    } else if (sortBy == "title") {
-        if (order == null) {
-            titleHtml.classList.toggle("th-sort-none", 1);
-        } else if (order == "asc") {
-            titleHtml.classList.toggle("th-sort-asc", 1);
-        } else {
-            titleHtml.classList.toggle("th-sort-desc", 1);
-        }
-        ratingHtml.classList.toggle("th-sort-none", 1);
-    } else if (sortBy == "rating") {
-        if (order == null) {
-            ratingHtml.classList.toggle("th-sort-none", 1);
-        } else if (order == "asc") {
-            ratingHtml.classList.toggle("th-sort-asc", 1);
-        } else {
-            ratingHtml.classList.toggle("th-sort-desc", 1);
-        }
-        titleHtml.classList.toggle("th-sort-none", 1);
-    }
+    // if (sortBy == null || sortBy == "null") {
+    //     titleHtml.classList.toggle("th-sort-none", 1);
+    //     ratingHtml.classList.toggle("th-sort-none", 1);
+    // } else if (sortBy == "title") {
+    //     if (order == null) {
+    //         titleHtml.classList.toggle("th-sort-none", 1);
+    //     } else if (order == "asc") {
+    //         titleHtml.classList.toggle("th-sort-asc", 1);
+    //     } else {
+    //         titleHtml.classList.toggle("th-sort-desc", 1);
+    //     }
+    //     ratingHtml.classList.toggle("th-sort-none", 1);
+    // } else if (sortBy == "rating") {
+    //     if (order == null) {
+    //         ratingHtml.classList.toggle("th-sort-none", 1);
+    //     } else if (order == "asc") {
+    //         ratingHtml.classList.toggle("th-sort-asc", 1);
+    //     } else {
+    //         ratingHtml.classList.toggle("th-sort-desc", 1);
+    //     }
+    //     titleHtml.classList.toggle("th-sort-none", 1);
+    // }
 
-
+    fixFilter();
 
 }
 
@@ -244,48 +239,175 @@ function handleCart(id, title) {
 
 
     popup.classList.add('open');
+}
 
+function fixFilter() {
+    if (order1 == "asc") {
+        order1 = 'asc';
+        order1_asc.classList.add("active");
+        order1_desc.classList.remove("active");
+    } else if (order1 == "desc") {
+        order1 = 'desc';
+        order1_desc.classList.add("active");
+        order1_asc.classList.remove("active");
+    }
 
+    if (order2 == "asc") {
+        order2 = 'asc';
+        order2_asc.classList.add("active");
+        order2_desc.classList.remove("active");
+    } else if (order2 == "desc") {
+        order2 = 'desc';
+        order2_desc.classList.add("active");
+        order2_asc.classList.remove("active");
+    }
 
+    if (sortBy1 == "title") {
+        sortFirstByTitle();
+    } else if (sortBy1 == "rating") {
+        sortFirstByRating();
+    } else {
+        setFilterToDefault();
+    }
 
+    document.getElementById("rangeValue").innerHTML = movieNum;
+    document.getElementById("slider").value = movieNum;
+}
+
+function setFilterToDefault() {
+    document.getElementById("movie_table").querySelectorAll("a").forEach((a) => {
+        a.classList.remove("active");
+    });
 }
 
 function closepop() {
     popup.classList.remove('open');
 }
 
+function rangeSlide(value) {
+    document.getElementById('rangeValue').innerHTML = value;
+    movieNum = value;
+}
 
-document.getElementById("title").addEventListener("click", () => {
-    const currentIsAscending = document.getElementById("title").classList.contains("th-sort-asc");
-    console.log(currentIsAscending);
-    sortBy = "title";
-    if (currentIsAscending) {
-        order = 'desc';
-    } else {
-        order = 'asc';
+function sortFirstByTitle() {
+    sortBy1_title.classList.remove("active");
+
+    sortBy1 = "title";
+    sortBy1_title.classList.add("active");
+    sortBy1_rating.classList.remove("active");
+
+    if (!(order1_asc.classList.contains("active") || order1_desc.classList.contains("active"))) {
+        order1 = 'asc';
+        order1_asc.classList.add("active");
     }
 
+
+    sortBy2 = 'rating';
+    sortBy2_rating.classList.add("active");
+    sortBy2_title.classList.remove("active");
+
+    if (!(order2_asc.classList.contains("active") || order2_desc.classList.contains("active"))) {
+        order2 = 'desc';
+        order2_desc.classList.add("active");
+    }
+
+}
+
+function sortFirstByRating() {
+    sortBy1_rating.classList.remove("active");
+
+    sortBy1 = "rating";
+    sortBy1_rating.classList.add("active");
+    sortBy1_title.classList.remove("active");
+
+    if (!(order1_asc.classList.contains("active") || order1_desc.classList.contains("active"))) {
+        order1 = 'desc';
+        order1_desc.classList.add("active");
+    }
+
+    sortBy2 = 'title';
+    sortBy2_title.classList.add("active");
+    sortBy2_rating.classList.remove("active");
+
+    if (!(order2_asc.classList.contains("active") || order2_desc.classList.contains("active"))) {
+        order2 = 'asc';
+        order2_asc.classList.add("active");
+    }
+}
+
+document.getElementById("sortBy1_title").addEventListener("click", () => sortFirstByTitle());
+
+document.getElementById("sortBy1_rating").addEventListener("click", () => sortFirstByRating());
+
+document.getElementById("sortBy2_title").addEventListener("click", () => sortFirstByRating());
+
+document.getElementById("sortBy2_rating").addEventListener("click", () => sortFirstByTitle());
+
+document.getElementById("order1_asc").addEventListener("click", () => {
+    order1 = 'asc';
+    order1_asc.classList.add("active");
+    order1_desc.classList.remove("active");
+});
+
+document.getElementById("order1_desc").addEventListener("click", () => {
+    order1 = 'desc';
+    order1_desc.classList.add("active");
+    order1_asc.classList.remove("active");
+});
+
+document.getElementById("order2_asc").addEventListener("click", () => {
+    order2 = 'asc';
+    order2_asc.classList.add("active");
+    order2_desc.classList.remove("active");
+});
+
+document.getElementById("order2_desc").addEventListener("click", () => {
+    order2 = 'desc';
+    order2_desc.classList.add("active");
+    order2_asc.classList.remove("active");
+});
+
+document.getElementById("sort_button").addEventListener("click", () => {
     window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
-        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order);
+        startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+        "&sortBy2=" + sortBy2 + "&order2=" + order2);
 });
 
-document.getElementById("rating").addEventListener("click", () => {
-    const currentIsAscending = document.getElementById("rating").classList.contains("th-sort-asc");
-    console.log(currentIsAscending);
-    sortBy = "rating";
-    if (currentIsAscending) {
-        order = 'desc';
-    } else {
-        order = 'asc';
-    }
+// document.getElementById("title").addEventListener("click", () => {
+//     const currentIsAscending = document.getElementById("title").classList.contains("th-sort-asc");
+//     console.log(currentIsAscending);
+//     sortBy = "title";
+//     if (currentIsAscending) {
+//         order = 'desc';
+//     } else {
+//         order = 'asc';
+//     }
 
-    window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
-        movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
-        movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
-        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order);
-});
+//     window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
+//         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
+//         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
+//         startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+// "&sortBy2=" + sortBy2 + "&order2=" + order2);
+// });
+
+// document.getElementById("rating").addEventListener("click", () => {
+//     const currentIsAscending = document.getElementById("rating").classList.contains("th-sort-asc");
+//     console.log(currentIsAscending);
+//     sortBy = "rating";
+//     if (currentIsAscending) {
+//         order = 'desc';
+//     } else {
+//         order = 'asc';
+//     }
+
+//     window.location.replace("movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" +
+//         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
+//         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
+//         startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+// "&sortBy2=" + sortBy2 + "&order2=" + order2);
+// });
 
 // document.querySelectorAll(".table-sortable th").forEach(headerCell => {
 //     headerCell.addEventListener("click", () => {
@@ -316,8 +438,10 @@ if (startIndex == null) {
     startIndex = 0;
 }
 let totalResults = getParameterByName('totalResults');
-let sortBy = getParameterByName('sortBy');
-let order = getParameterByName('order');
+let sortBy1 = getParameterByName('sortBy1');
+let sortBy2 = getParameterByName('sortBy2');
+let order1 = getParameterByName('order1');
+let order2 = getParameterByName('order2');
 // Makes the HTTP GET request and registers on success callback function handleMovieResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
@@ -325,6 +449,7 @@ jQuery.ajax({
     url: "api/movies?name=" + movieName + "&director=" + movieDirector + "&stars=" +
         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
-        startIndex + "&totalResults=" + totalResults + "&sortBy=" + sortBy + "&order=" + order, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
+        startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+        "&sortBy2=" + sortBy2 + "&order2=" + order2, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MoviesServlet
 });

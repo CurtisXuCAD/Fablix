@@ -12,171 +12,105 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <title>Movie List</title>
-    <style>
-
-
-        h1{
-            margin: 50px 100px 30px;
-        }
-        .table-box{
-            border-radius: 20px;
-            padding: 10px;
-            margin: 20px 100px 20px;
-            box-shadow: 0px 0px 30px rgba( 100,181,246, 1);
-            
-        }
-        .table-movie {
-
-            font-size: 15px;
-            border-collapse: collapse;
-            width: 100%;
-            
-        }
-        .table-movie thead th {
-            color: white;
-            background: #424242;
-            border-radius: 20px;
-            font-size: 18px;
-        }
-
-        .table-movie thead th:nth-child(even) {
-            background: #4fc3f7;
-        }
-
-        .table-movie tbody tr:nth-of-type(even) {
-            background-color: #f3f3f0;
-        }
-
-        .table-movie td, th{
-            text-align: center;
-            padding: 10px;
-        }
-
-        .button {
-            -webkit-appearance: button;
-            -moz-appearance: button;
-            appearance: button;
-
-            text-decoration: none;
-            color: initial;
-        }
-        .pagination {
-            display: inline-block;
-        }
-
-        .pagination a {
-            color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-        }
-        .popup { display: none; }
-        .popup.open { display: block; }
-        .background {
-
-            content: ' ';
-            top: 0;
-
-            right: 0;
-
-            left: 0;
-            bottom: 0;
-            position: fixed;
-        }
-        .popup .Succeful {
-            border: 2px solid #ccc;
-
-            width: 200px;
-            height: 200px;
-            display: grid;
-            align-items: center;
-            justify-content: center;
-            background: #fff1cc;
-            position: fixed;
-            top: 50vh;
-            left: 50vw;
-            transform: translate(-60%, -60%);
-        }
-        .pagination a.active {
-            background-color: #4fc3f7;
-            color: white;
-        }
-
-        .pagination a:hover:not(.active) {background-color: #ddd;}
-
-        .sortable_header {
-            cursor: pointer;
-        }
-
-        .table-movie .th-sort-asc::after{
-            content: "\25b4";
-        }
-
-        .table-movie .th-sort-desc::after{
-            content: "\25be";
-        }
-
-        .table-movie .th-sort-none::after{
-            content: " \2013";
-        }
-
-        {% comment %} .table-movie .th-sort-asc::after,
-        .table-movie .th-sort-desc::after{
-            margin-left: 5px;
-        } {% endcomment %}
-
-        {% comment %} .table-sortable .th-sort-asc,
-        .table-sortable .th-sort-desc{
-            background: rgba(0, 0, 0, 0.1);
-        } {% endcomment %}
-
-    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="movie.css" >
 </head>
 
-<h1>Movies</h1>
-<div class="popup">
-    <div class="background" onclick="closepop()"></div>
-    <div class="Succeful">Succeful!</div>
-</div>
+<div class="page">
+    <h1>Movies</h1>
+    <div class="popup">
+        <div class="background" onclick="closepop()"></div>
+        <div class="Succeful">Succeful!</div>
+    </div>
 
-<p id="demo"></p>
-<div class = "link">
-    <a class="link-dec" href="index.html">
-        <div class="back-button-text" align="center">
-            Checkout
-        </div>
-    </a>
-</div>
-<div class = "table-box">
-<!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
-<table id=movie_table class="table-movie">
-    <!-- Create a table header -->
-    <thead>
-    <tr>
+    <p id="demo"></p>
+    <div class = "link">
+        <a class="link-dec" href="index.html">
+            <div class="back-button-text" align="center">
+                Checkout
+            </div>
+        </a>
+    </div>
+
+
+    <div class="filter-box">
+        <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
         <!-- Titles of each column-->
-        <th id = "title" class = "sortable_header">Title</th>
-        <th>Year</th>
-        <th>Director</th>
-        <th>Genres</th>
-        <th>Stars</th>
-        <th id = "rating" class = "sortable_header">Rating</th>
-    </tr>
-    </thead>
-    <!-- Table body is left empty here, will be populated with the data retrieved with index.js -->
-    <!-- Again, id "movie_table_body" is useful for jQuery to find this html element -->
-    <tbody id=movie_table_body></tbody>
-</table>
+        <div class="filter_head">Filter:</div>
+        <table id="movie_table" class="filter_table">
+            <!-- sort first by -->
+            <tr>
+                <th id="sortBy1" colspan="2" class="sort_head">Sort First By:</th>
+            </tr>
 
-<form id=pagination></form>
+            <tr>
+                <th class="sort_button">
+                    <a id="sortBy1_title">Title</a> <a id="sortBy1_rating">Rating</a>
+                </th>
+                <th class="sort_button" >
+                    <a id="order1_asc">Asc</a> <a id = "order1_desc">Desc</a>
+                </th>
+            </tr>
+            <!-- sort second by -->
+            <tr>
+                <th id="sortBy2" colspan="2" class="sort_head">Sort Second By:</th>
+            </tr>
 
+            <tr>
+                <th class="sort_button">
+                    <a id="sortBy2_title">Title</a> <a id="sortBy2_rating">Rating</a>
+                </th>
+                <th class="sort_button" >
+                    <a id="order2_asc">Asc</a> <a id = "order2_desc">Desc</a>
+                </th>
+            </tr>
 
+            <!-- number of results -->
+            <tr>
+                <th id="numResults" colspan="2" class="sort_head">Results Per Page:</th>
+            </tr>
 
+            <tr>
+                <th colspan="2">
+                    <span id="rangeValue">20</span>
+                    <Input id="slider" type="range" value="20" min="1" max="100" onChange="rangeSlide(this.value)" onmousemove="rangeSlide(this.value)"></Input>
+                </th>
+            </tr>
+
+            <tr>
+                <th colspan="2">
+                    <button id="sort_button">Sort!</button>
+                </th>
+            </tr>
+
+        </table>
+    </div>
+    <div class = "table-box">
+        <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
+        <table id="movie_table" class="table-movie">
+            <!-- Create a table header -->
+            <thead>
+            <tr>
+                <!-- Titles of each column-->
+                <th id = "title" class = "sortable_header">Title</th>
+                <th>Year</th>
+                <th>Director</th>
+                <th>Genres</th>
+                <th>Stars</th>
+                <th id = "rating" class = "sortable_header">Rating</th>
+            </tr>
+            </thead>
+            <!-- Table body is left empty here, will be populated with the data retrieved with index.js -->
+            <!-- Again, id "movie_table_body" is useful for jQuery to find this html element -->
+            <tbody id="movie_table_body"> </tbody>
+        </table>
+
+        <form id="pagination"> </form>
+    </div>
+</div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -188,7 +122,5 @@
 <!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
      otherwise the url is relative to the root path-->
 <script src="movie.js"></script>
-</div>
-
 
 </html>
