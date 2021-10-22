@@ -10,24 +10,32 @@
     
 </head>
 <body>
-Payment
+
 
     <i class="fa fa-shopping-cart" id='cart_button'></i>
     <i class="fas fa-home" id='home'></i>
-<div id="total_price"></div>
+<div id="total_price3"></div>
 
 
 
-    <p id="pay_header"> Please Enter Card Info:</p>
+
+<div class="grey_form">
+<div class="pay_form">
+    <h3>Payment</h3>
     <form id = "place_order"  METHOD="Post">
-        First Name: <input TYPE="TEXT" name="fname" required> <br>
-        Last Name: <input TYPE="TEXT" name="lname" required> <br>
-        Card Number: <input TYPE="TEXT" name="card" required> <br>
-        Expiration Date: <input TYPE="date" name="exp" required> <br>
+        <label for="fname">Fisrt Name</label>
+        <input id = 'fname'TYPE="TEXT" name="fname" required> <br>
+        <label for="lname">Last Name</label>
+        <input id= 'lname'TYPE="TEXT" name="lname" required> <br>
+        <label for="card">Credit card number</label>
+        <input id = "card"TYPE="TEXT" name="card" required> <br>
+        <label for="exp">Exp Date</label>
+        <input id = "exp"TYPE="date" name="exp" required> <br>
         <!--    <input TYPE="hidden" name="numRecords"> <br>-->
-        <input TYPE="SUBMIT" VALUE="pay">
+        <input class = "checkout"TYPE="SUBMIT" VALUE="checkout">
     </form>
-
+</div>
+</div>
 
 <div id="pay_error_message"></div>
 <!-- include your own JS file -->

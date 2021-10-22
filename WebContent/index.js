@@ -27,7 +27,7 @@ function handleCartArray(resultArray) {
     let total_price = $("#total_price");
     let pay = $("#pay");
     // change it to html list
-    let res = "<ul>";
+    let res = "<ul class='order_list'>";
     let sale = "";
     let total = 0;
     for (let i = 0; i < resultArray.length; i++) {
@@ -35,7 +35,7 @@ function handleCartArray(resultArray) {
         const id = resultArray[i].split("-")[1];
         const quantity = resultArray[i].split("-")[2];
 
-        res += "<li>" + title + "     quantity : " + quantity + "     price : " + 10 * quantity + " <BUTTON id='increase'  onclick=\"handleCart('" + "increase" + "','" + id + "')\">increase</BUTTON><BUTTON id='decrease'  onclick=\"handleCart('" + "decrease" + "','" + id + "')\">decrease</BUTTON><BUTTON id='delete'  onclick=\"handleCart('" + "delete" + "','" + id + "')\">delete</BUTTON></li>";
+        res += "<li class='movie_info'>" + title +  " : $" + 10 * quantity + " <BUTTON id='decrease' class='bu_back' onclick=\"handleCart('" + "decrease" + "','" + id + "')\">-</BUTTON>" + "     " + quantity  + "     " +"<BUTTON id='increase' class='bu_back' onclick=\"handleCart('" + "increase" + "','" + id + "')\">+</BUTTON>" + "     " +"<BUTTON id='delete'  class='bu_back' onclick=\"handleCart('" + "delete" + "','" + id + "')\">delete</BUTTON></li>";
         total = total + 10 * quantity;
         sale += id + "-" + quantity;
         if (i !== resultArray.length - 1) {
@@ -44,7 +44,7 @@ function handleCartArray(resultArray) {
     }
     res += "</ul>";
 
-    let pes = "<p>Total Price:" + total + "</p>";
+    let pes = "<h3 class = 'total_price1' align='center'>Total Price : " + total + "</h3>";
     // clear the old array and show the new array in the frontend
     item_list.html("");
     item_list.append(res);
@@ -53,7 +53,7 @@ function handleCartArray(resultArray) {
     let pyy = "<form id=\"payment\" method=\"get\" action = \"payment.html\">\n" +
         "<input type = \"hidden\" name = \"price\" value =" + total + " >\n" +
         "<input type = \"hidden\" name = \"sale\" value =" + sale + " >\n" +
-        "        <input type=\"submit\" value=\"Pay\">\n" +
+        "        <input class = 'pay_style' align='center' type=\"submit\" value=\"pay\">\n" +
         "        </form>";
 
     pay.append(pyy);

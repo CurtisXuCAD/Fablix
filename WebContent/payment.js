@@ -7,7 +7,7 @@ function handleResult(resultData) {
 
     let total = $("#total_price");
 
-    let res = "<p>Total price: " + price + " </p>";
+    let res = "<h2>Total price: " + price + " </h2>";
     total.append(res);
 
 
