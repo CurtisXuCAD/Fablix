@@ -8,7 +8,7 @@ function handleResult(resultData) {
         res += "<h3>Total price: "+ price +" </h3>";
     res += "<h3>Sale ID: "+ sale +" </h3>";
     res += "<h3 align='center'>Oder Information </h3>";
-    for (let i = 0; i < Math.min(101 - 1, resultData.length - 1); i++) {
+    for (let i = 0; i < resultData.length; i++) {
         res += "<p>"+resultData[i]["movie_title"] +"</p>";
 
     }

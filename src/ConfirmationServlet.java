@@ -115,6 +115,7 @@ public class ConfirmationServlet extends HttpServlet {
 
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("movie_title", title);
+                System.out.println(title);
 
 
                 jsonArray.add(jsonObject);

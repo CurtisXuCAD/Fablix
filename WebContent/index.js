@@ -54,8 +54,8 @@ function handleCartArray(resultArray) {
     total_price.append(pes);
 
     let pyy = "<form id=\"payment\" method=\"get\" action = \"payment.html\">\n" +
-        "<input type = \"\" name = \"price\" value ="+ total +" >\n" +
-        "<input type = \"text\" name = \"sale\" value ="+ sale +" >\n" +
+        "<input type = \"hidden\" name = \"price\" value ="+ total +" >\n" +
+        "<input type = \"hidden\" name = \"sale\" value ="+ sale +" >\n" +
         "        <input type=\"submit\" value=\"Pay\">\n" +
         "        </form>";
 
