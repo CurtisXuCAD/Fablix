@@ -106,7 +106,7 @@ function handleMovieResult(resultData) {
                 rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
             }
 
-            rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id'] + "')\">add</BUTTON></th>";
+            rowHTML += "<th><BUTTON id='add_to_cart'  onclick=\"handleCart('" + resultData[i]['movie_id'] + "')\">Add To Cart</BUTTON></th>";
 
 
 
@@ -123,6 +123,43 @@ function handleMovieResult(resultData) {
         let htmlContent = "";
         var a = parseInt(startIndex);
         var b = parseInt(movieNum);
+
+        if (a > 0) {
+            var prev_index = (a - b).toString();
+            if (prev_index < 0) {
+                prev_index = 0;
+            }
+            let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
+                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            htmlContent +=
+                '<div class = "link">' +
+                '<a class="link-dec" href="' + prev_url + '">' +
+                '<div class="back-button-text" align="center">' +
+                '<< Prev Page' +
+                '</div>' +
+                '</a>' +
+                '</div>';
+        } else {
+            var prev_index = (a - b).toString();
+            if (prev_index < 0) {
+                prev_index = 0;
+            }
+            let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
+                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            htmlContent +=
+                '<div class = "link disabled">' +
+                '<a class="link-dec" href="' + prev_url + '">' +
+                '<div class="back-button-text" align="center">' +
+                '<< Prev Page' +
+                '</div>' +
+                '</a>' +
+                '</div>';
+        }
+
 
         htmlContent += '<div class="pagination">'
         let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
@@ -155,24 +192,7 @@ function handleMovieResult(resultData) {
 
 
 
-        if (a > 0) {
-            var prev_index = (a - b).toString();
-            if (prev_index < 0) {
-                prev_index = 0;
-            }
-            let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
-                "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
-                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                "&sortBy2=" + sortBy2 + "&order2=" + order2;
-            htmlContent +=
-                '<div class = "link">' +
-                '<a class="link-dec" href="' + prev_url + '">' +
-                '<div class="back-button-text" align="center">' +
-                'Prev Page' +
-                '</div>' +
-                '</a>' +
-                '</div>';
-        }
+
 
         var next_index = (a + b).toString();
         if (next_index < t) {
@@ -184,7 +204,20 @@ function handleMovieResult(resultData) {
                 '<div class = "link">' +
                 '<a class="link-dec" href="' + next_url + '">' +
                 '<div class="back-button-text" align="center">' +
-                'Next Page' +
+                'Next Page >>' +
+                '</div>' +
+                '</a>' +
+                '</div>';
+        } else {
+            let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
+                "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
+                "&sortBy1=" + sortBy1 + "&order1=" + order1 +
+                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            htmlContent +=
+                '<div class = "link disabled">' +
+                '<a class="link-dec" href="' + next_url + '">' +
+                '<div class="back-button-text" align="center">' +
+                'Next Page >>' +
                 '</div>' +
                 '</a>' +
                 '</div>';

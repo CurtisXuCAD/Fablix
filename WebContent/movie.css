@@ -4,6 +4,7 @@ h1 {
 
 .page {
     margin: 20px 2.5% 20px;
+    text-align: center;
 }
 
 .table-box {
@@ -71,6 +72,36 @@ th {
 
 .pagination a:hover:not(.active) {
     background-color: #ddd;
+}
+
+#pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.link {
+    background-color: #4fc3f7;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.link.disabled {
+    pointer-events: none;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.link-dec {
+    vertical-align: middle;
 }
 
 
@@ -194,6 +225,10 @@ th {
     color: #999;
 }
 
+#slider {
+    width: 200px;
+}
+
 #sort_button {
     background-color: #4fc3f7;
     border: none;
@@ -227,6 +262,18 @@ th {
     vertical-align: middle;
     padding: 3%;
     color: #666666;
+}
+
+#add_to_cart {
+    background-color: #424242;
+    border: none;
+    color: white;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
 }
 
 
