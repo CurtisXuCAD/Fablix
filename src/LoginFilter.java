@@ -59,10 +59,10 @@ public class LoginFilter implements Filter {
     }
 
     public void init(FilterConfig fConfig) {
-        allowedURIs.add("cs122b-fall21-team-6-war/login.html");
+        allowedURIs.add("login.html");
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
-        allowedURIs.add("cs122b-fall21-team-6-war/");
+        allowedURIs.add("fablix/");
         allowedURIs.add("login.css");
         allowedURIs.add("inception.jpg");
         allowedURIs.add("pic/login.html");
