@@ -15,7 +15,7 @@ function handleUserInfo(resultDataString) {
     console.log(resultDataString);
     let resultDataJson = JSON.parse(resultDataString);
     username = resultDataJson["username"];
-    $("#username").text("Username: " + username);
+    $("#username").text("Welcome to Fablix, " + username);
 }
 
 

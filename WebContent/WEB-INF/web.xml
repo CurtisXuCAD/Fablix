@@ -5,6 +5,8 @@
     <display-name>cs122b-fall21-team-6-project1</display-name>
     <welcome-file-list>
         <welcome-file>login.html</welcome-file>
+        <welcome-file>login.css</welcome-file>
+        <welcome-file>pic/Insepton.jpg</welcome-file>
     </welcome-file-list>
 
     <!-- Register the DataSource which defined in META-INF/context.xml-->
