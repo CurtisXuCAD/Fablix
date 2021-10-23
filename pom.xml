@@ -40,7 +40,7 @@
     </dependencies>
 
     <build>
-        <finalName>cs122b-fall21-team-6-project1</finalName>
+        <finalName>cs122b-fall21-team-6</finalName>
         <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
