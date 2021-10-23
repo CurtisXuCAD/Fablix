@@ -12,10 +12,9 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A servlet that takes input from a html <form> and talks to MySQL moviedbexample,
@@ -25,7 +24,18 @@ import java.sql.Statement;
 // Declaring a WebServlet called FormServlet, which maps to url "/form"
 @WebServlet(name = "MainServlet", urlPatterns = "/api/main")
 public class MainServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
+    // Create a dataSource which registered in web.
+    private DataSource dataSource;
+
+    public void init(ServletConfig config) {
+        try {
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Use http GET
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,26 +62,55 @@ public class MainServlet extends HttpServlet {
         String username = u.getUsername();
 
         session.setAttribute("prev_url","main.html");
-        // get the previous items in a ArrayList
-        // ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
-        // if (previousItems == null) {
-        //     previousItems = new ArrayList<>();
-        //     previousItems.add(item);
-        //     session.setAttribute("previousItems", previousItems);
-        // } else {
-        //     // prevent corrupted states through sharing under multi-threads
-        //     // will only be executed by one thread at a time
-        //     synchronized (previousItems) {
-        //         previousItems.add(item);
-        //     }
-        // }
-
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
         JsonObject responseJsonObject = new JsonObject();
 
-        // JsonArray previousItemsJsonArray = new JsonArray();
-        // previousItems.forEach(previousItemsJsonArray::add);
-        responseJsonObject.addProperty("username", username);
+        try (Connection conn = dataSource.getConnection())
+        {
+            // Get a connection from dataSource
 
-        response.getWriter().write(responseJsonObject.toString());
+            // Construct a query with parameter represented by "?"
+            Statement statement = conn.createStatement();
+
+            String query = "SELECT * FROM genres;";
+
+
+            ResultSet rs = statement.executeQuery(query);
+
+            JsonArray jsonArray = new JsonArray();
+            while (rs.next())
+            {
+                String g = rs.getString("name");
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("genres", g);
+
+                jsonArray.add(jsonObject);
+            }
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("genres", username);
+            jsonArray.add(jsonObject);
+            out.write(jsonArray.toString());
+            rs.close();
+            statement.close();
+
+            response.setStatus(200);
+        }
+
+        catch (Exception e) {
+            // Write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
+
+            // Log error to localhost log
+            request.getServletContext().log("Error:", e);
+            // Set response status to 500 (Internal Server Error)
+            response.setStatus(500);
+        }
+
+
+
     }
 }

@@ -11,10 +11,29 @@ function handleLoginResult(resultDataString) {
 
 }
 
-function handleUserInfo(resultDataString) {
-    console.log(resultDataString);
-    let resultDataJson = JSON.parse(resultDataString);
-    username = resultDataJson["username"];
+function handleUserInfo(resultData) {
+    console.log(resultData);
+
+    let genre_link =  $("#genres_links");
+    let rowHTML = "";
+    for (let i = 0; i <  resultData.length-1; i++) {
+
+        rowHTML +="<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=" + resultData[i]["genres"] + "\">\n" +
+            "                "+ resultData[i]["genres"]+"\n" +
+            "            </a>";
+
+
+
+        // Append the row created to the table body, which will refresh the page
+    }
+
+
+    genre_link.append(rowHTML);
+
+
+    username = resultData[resultData.length-1]["genres"];
+
+
     $("#username").text("Welcome to Fablix, " + username);
 }
 
