@@ -44,12 +44,13 @@ public class MainServlet extends HttpServlet {
                 // System.out.println("run");
                 if ("Logout".equals(action)) {
                     HttpSession session = request.getSession(true);
-                    // System.out.println("run1");
+                    System.out.println("run1");
     
                     // set the logged_in attribute
                     // Boolean logged_in = (Boolean) session.getAttribute("logged_in");
                     // logged_in = false;
                     session.setAttribute("logged_in", null);
+                    session.invalidate();
                     // response.sendRedirect("login.html");
                 }
     }
