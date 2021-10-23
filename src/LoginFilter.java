@@ -20,6 +20,14 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        String scheme = httpRequest.getScheme();
+        String serverName = httpRequest.getServerName();
+        int serverPort = httpRequest.getServerPort();
+        String contextPath = httpRequest.getContextPath();  // includes leading forward slash
+
+        String resultPath = scheme + "://" + serverName + ":" + serverPort + contextPath;
+        System.out.println("Result path: " + resultPath);
+
         System.out.println("LoginFilter: " + httpRequest.getRequestURI());
 
         // Check if this URL is allowed to access without logging in
@@ -29,7 +37,7 @@ public class LoginFilter implements Filter {
             // System.out.println(httpRequest.getSession().getAttribute("logged_in"));
             if(httpRequest.getSession().getAttribute("logged_in") != null) {
                 if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
-                    httpResponse.sendRedirect("main.html");
+                    httpResponse.sendRedirect(resultPath+"/main.html");
                     System.out.println("LoginFilter: to main");
                 }
             }
@@ -42,7 +50,7 @@ public class LoginFilter implements Filter {
             // Redirect to login page if the "user" attribute doesn't exist in session
             if (httpRequest.getSession().getAttribute("user") == null) {
                 System.out.println("LoginFilter: to login");
-                httpResponse.sendRedirect("login.html");
+                httpResponse.sendRedirect(resultPath+"/login.html");
             } else {
                 chain.doFilter(request, response);
             }
