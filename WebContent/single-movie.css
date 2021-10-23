@@ -11,6 +11,20 @@ html {
     background: white;
 }
 
+.button {
+    background-color: white;
+    border: none;
+    color: #4fc3f7;
+    padding: 6px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 0px 85% 0px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
 .back-button-text {
     border-radius: 20px;
     padding: 5px;
@@ -100,4 +114,9 @@ span {
 .fas.fa-home {
     font-size: 30px;
     cursor: pointer;
+}
+
+#cart {
+    margin: 40px 8% 0px;
+    align-content: center;
 }

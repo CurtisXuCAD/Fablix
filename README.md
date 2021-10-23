@@ -37,12 +37,17 @@ This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 ## Contribution
 - CurtisXuCAD (Chunzhi Xu)
 ```
-  Create movie list page
+  Build movie list page
   Beautify table
   GitHub setup
   AWS setup
   Create demo
   Bug fixing
+  Beautify Login, Main Page, Movie List Page
+  Jump Function using session
+  Query optimization
+  Pagination
+  Sorting
 ```
 
 - Silence-silence-silence (Haoting Ni)

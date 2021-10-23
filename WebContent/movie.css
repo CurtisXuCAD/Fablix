@@ -95,6 +95,7 @@ th {
 
 .popup {
     display: none;
+    border-radius: 5px;
 }
 
 .popup.open {
@@ -121,6 +122,7 @@ th {
     position: fixed;
     top: 50vh;
     left: 50vw;
+    font-size: 20px;
     transform: translate(-60%, -60%);
 }
 
@@ -234,10 +236,25 @@ th {
     color: #4fc3f7;
     font-size: 30px;
     cursor: pointer;
+    margin: 20px;
 }
 
 .fas.fa-home {
     color: #4fc3f7;
     font-size: 30px;
     cursor: pointer;
+    margin: 20px;
+}
+
+.a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 10%;
+}
+
+.b {
+    margin-top: 2%;
+    display: flex;
+    justify-content: space-around;
 }
