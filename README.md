@@ -31,7 +31,7 @@ This is a UCI CS122B Project1 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
  Any movies contain all key words entered in the text bars.
  
  If title has key word A, director has key word B, stars has key word C:
- Mysql script: where movie.title Like %A% and movie.director LIKE %B% and stars.name LIKE %c%
+ Mysql script: where movie.title Like %A% and movie.director LIKE %B% and stars.name LIKE %C%
  ```
 
 ## Contribution
