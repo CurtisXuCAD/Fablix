@@ -137,6 +137,7 @@ public class SingleMovieServlet extends HttpServlet {
                 jsonObject.addProperty("star_name", movie_snames);
                 jsonObject.addProperty("genres_name", movie_gnames);
                 jsonObject.addProperty("movie_title", movieTitle);
+                movieName = movieTitle;
                 jsonObject.addProperty("movie_year", movieYear);
                 jsonObject.addProperty("movie_director", movieDirector);
                 jsonObject.addProperty("movie_rating", movie_rating);
