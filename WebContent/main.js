@@ -15,6 +15,7 @@ function handleUserInfo(resultData) {
     console.log(resultData);
 
     let genre_link =  $("#genres_links");
+    let char_link =  $("#char_links");
     let rowHTML = "";
     for (let i = 0; i <  resultData.length-1; i++) {
 
@@ -26,9 +27,22 @@ function handleUserInfo(resultData) {
 
         // Append the row created to the table body, which will refresh the page
     }
+    let res = "";
+    for (var i = 65; i <= 90; i++) {
+        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ="+String.fromCharCode(i)+"\">\n" +
+            "        "+String.fromCharCode(i)+"\n" +
+            "    </a>";
+    }
+
+    for (var x = 0; x <= 9; x++) {
+        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ="+x+"\">\n" +
+            "        "+x+"\n" +
+            "    </a>";
+    }
 
 
     genre_link.append(rowHTML);
+    char_link.append(res);
 
 
     username = resultData[resultData.length-1]["genres"];
