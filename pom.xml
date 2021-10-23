@@ -40,7 +40,7 @@
     </dependencies>
 
     <build>
-        <finalName>cs122b-fall21-team-6</finalName>
+        <finalName>fablix</finalName>
         <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
