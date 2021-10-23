@@ -29,7 +29,7 @@ label {
 }
 
 .checkout {
-    background-color: #04AA6D;
+    background-color: #4fc3f7;
     color: white;
     padding: 12px;
     margin: 10px 0;
@@ -41,7 +41,7 @@ label {
 }
 
 .checkout:hover {
-    background-color: #45a049;
+    background-color: #4fc3f7;
 }
 .total_price3{
     alignment: center;

@@ -82,10 +82,10 @@ span {
     border: 2px solid #ccc;
     width: 200px;
     height: 200px;
-    display: grid;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff1cc;
+    background: #9af3ff;
     position: fixed;
     top: 50vh;
     left: 50vw;

@@ -44,7 +44,7 @@ function handleCartArray(resultArray) {
     }
     res += "</ul>";
 
-    let pes = "<h3 class = 'total_price1' align='center'>Total Price : " + total + "</h3>";
+    let pes = "<h2 class = 'total_price1' align='center'>Total Price : " + total + "</h2>";
     // clear the old array and show the new array in the frontend
     item_list.html("");
     item_list.append(res);
@@ -53,7 +53,7 @@ function handleCartArray(resultArray) {
     let pyy = "<form id=\"payment\" method=\"get\" action = \"payment.html\">\n" +
         "<input type = \"hidden\" name = \"price\" value =" + total + " >\n" +
         "<input type = \"hidden\" name = \"sale\" value =" + sale + " >\n" +
-        "        <input class = 'pay_style' align='center' type=\"submit\" value=\"pay\">\n" +
+        "        <input class = 'pay_style'  type=\"submit\" value=\"pay\">\n" +
         "        </form>";
 
     pay.append(pyy);
