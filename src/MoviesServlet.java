@@ -138,20 +138,21 @@ public class MoviesServlet extends HttpServlet {
         // }
 
         if (!(sortBy1 == null || sortBy1.equals("null"))) {
-            query += " order by " + sortBy1;
+            query += " order by ? " + sortBy1;
             if(!(order1 == null || order1.equals("null"))){
-                query += " " + order1;
+                query += " ? " + order1;
             }
         }
 
         if (!(sortBy2 == null || sortBy2.equals("null"))) {
-            query += ", " + sortBy2;
+            query += ", ? " + sortBy2;
             if(!(order2 == null || order2.equals("null"))){
-                query += " " + order2;
+                query += " ? " + order2;
             }
         }
 
-        String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
+        // String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
+        String queryResultLimit = " limit ? " + " offset ? " + " ";
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -218,14 +219,18 @@ public class MoviesServlet extends HttpServlet {
             //try to get total results at first time
             if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
                 String count_query = "select count(*) as c from (" + query + ") as fc";
+                System.out.println(count_query); 
                 PreparedStatement count_statement = conn.prepareStatement(count_query);
+                int ps_idex = 0;
                 if (!(genre.equals("null") || genre == null || genre.equals(""))){
                     count_statement.setString(1, "%"+genre+"%");
+                    ps_idex = 1;
                 }
                 else if(!(az.equals("null") || az == null || az.equals(""))){
                     if (!az.equals("*"))
                     {
                         count_statement.setString(1, az+"%");
+                        ps_idex = 1;
                     }
                 }
                 else
@@ -235,13 +240,34 @@ public class MoviesServlet extends HttpServlet {
                         count_statement.setString(2, "%"+name+"%");
                         count_statement.setString(3, year);
                         count_statement.setString(4, "%"+director+"%");
+                        ps_idex = 4;
                     }
                     else{
                         count_statement.setString(1, "%"+name+"%");
                         count_statement.setString(2, year);
                         count_statement.setString(3, "%"+director+"%");
+                        ps_idex = 3;
                     }
-                }    
+                }
+
+                if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                    count_statement.setString(++ps_idex,sortBy1);
+                    System.out.print("pi: ");
+                    System.out.println(ps_idex);
+                    if(!(order1 == null || order1.equals("null"))){
+                        count_statement.setString(++ps_idex,order1);
+                        System.out.print("pi: ");
+                        System.out.println(ps_idex);
+                    }
+                }
+        
+                if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                    count_statement.setString(++ps_idex,sortBy2);
+                    if(!(order2 == null || order2.equals("null"))){
+                        count_statement.setString(++ps_idex,order2);
+                    }
+                }   
+
                 ResultSet rs1 = count_statement.executeQuery();
                 while (rs1.next()) {
                     totalResults = rs1.getString("c");
@@ -257,13 +283,16 @@ public class MoviesServlet extends HttpServlet {
 
             PreparedStatement statement = conn.prepareStatement(query);
 
+            int ps_idex = 0;
             if (!(genre.equals("null") || genre == null || genre.equals(""))){
                 statement.setString(1, "%"+genre+"%");
+                ps_idex = 1;
             }
             else if(!(az.equals("null") || az == null || az.equals(""))){
                 if (!az.equals("*"))
                 {
                     statement.setString(1, az+"%");
+                    ps_idex = 1;
                 }
             }
             else
@@ -273,13 +302,36 @@ public class MoviesServlet extends HttpServlet {
                     statement.setString(2, "%"+name+"%");
                     statement.setString(3, year);
                     statement.setString(4, "%"+director+"%");
+                    ps_idex = 4;
                 }
                 else{
                     statement.setString(1, "%"+name+"%");
                     statement.setString(2, year);
                     statement.setString(3, "%"+director+"%");
+                    ps_idex = 3;
                 }
             }
+
+            if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                statement.setString(++ps_idex,sortBy1);
+                if(!(order1 == null || order1.equals("null"))){
+                    statement.setString(++ps_idex,order1);
+                }
+            }
+    
+            if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                statement.setString(++ps_idex,sortBy2);
+                if(!(order2 == null || order2.equals("null"))){
+                    statement.setString(++ps_idex,order2);
+                }
+            }
+
+            System.out.print("pi: ");
+            System.out.println(ps_idex);
+            statement.setInt(++ps_idex,Integer.parseInt(numRecords));
+            System.out.print("pi: ");
+            System.out.println(ps_idex);
+            statement.setInt(++ps_idex,Integer.parseInt(startIndex));
 
             ResultSet rs = statement.executeQuery();
 

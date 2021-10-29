@@ -74,6 +74,8 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.css");
         allowedURIs.add("inception.jpg");
         allowedURIs.add("pic/login.html");
+        allowedURIs.add("_dashboard.html");
+        allowedURIs.add("_dashboard");
     }
 
     public void destroy() {
