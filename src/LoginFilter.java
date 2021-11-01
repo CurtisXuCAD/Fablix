@@ -35,15 +35,16 @@ public class LoginFilter implements Filter {
             System.out.println("isAllow");
             // Keep default action: pass along the filter chain
             // System.out.println(httpRequest.getSession().getAttribute("logged_in"));
-            if(httpRequest.getSession().getAttribute("logged_in") != null) {
-                if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
-                    httpResponse.sendRedirect(resultPath+"/main.html");
-                    System.out.println("LoginFilter: to main");
-                }
-            }
-            else{
+            //if(httpRequest.getSession().getAttribute("logged_in") != null) {
+//                if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
+//                    httpResponse.sendRedirect(resultPath+"/main.html");
+//                    System.out.println("LoginFilter: to main");
+//                }
+            //}
+           // else{
+           // httpResponse.sendRedirect(resultPath+"/main.html");
                 chain.doFilter(request, response);
-            }
+           // }
         }
         else{
             // System.out.println("NoAllow");
@@ -63,7 +64,8 @@ public class LoginFilter implements Filter {
          Always allow your own login related requests(html, js, servlet, etc..)
          You might also want to allow some CSS files, etc..
          */
-        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
+//        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
+        return true;
     }
 
     public void init(FilterConfig fConfig) {
@@ -74,8 +76,10 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.css");
         allowedURIs.add("inception.jpg");
         allowedURIs.add("pic/login.html");
+        allowedURIs.add("api/_dashboard");
         allowedURIs.add("_dashboard.html");
-        allowedURIs.add("_dashboard");
+        allowedURIs.add("_dashboard.js");
+
     }
 
     public void destroy() {

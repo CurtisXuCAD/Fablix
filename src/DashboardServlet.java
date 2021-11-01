@@ -16,8 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "DashboardServlet", urlPatterns = "/api/_dashboard")
+public class DashboardServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
     // Create a dataSource which registered in web.xml
@@ -39,7 +39,6 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
         String email = request.getParameter("username");
         String password = request.getParameter("password");
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
@@ -52,6 +51,7 @@ public class LoginServlet extends HttpServlet {
 
 
         JsonObject responseJsonObject = new JsonObject();
+        System.out.println("??");
         try {
             RecaptchaVerifyUtils.verify(gRecaptchaResponse);
         } catch (Exception e) {
@@ -68,69 +68,71 @@ public class LoginServlet extends HttpServlet {
         try (Connection conn = dataSource.getConnection())
         {
             // Get a connection from dataSource
-
+            System.out.println("???");
             // Construct a query with parameter represented by "?"
 
 
-                String query = "SELECT * FROM moviedb.customers where email = ?";
+            String query = "SELECT * FROM moviedb.employees where email = ?";
 
-                // Declare our statement
-                PreparedStatement statement = conn.prepareStatement(query);
+            // Declare our statement
+            PreparedStatement statement = conn.prepareStatement(query);
 
-                // Set the parameter represented by "?" in the query to the id we get from url,
-                // num 1 indicates the first "?" in the query
-                statement.setString(1, email);
-                // statement.setString(2, password);
+            // Set the parameter represented by "?" in the query to the id we get from url,
+            // num 1 indicates the first "?" in the query
+            statement.setString(1, email);
+            // statement.setString(2, password);
 
 
-                // Perform the query
-                ResultSet rs = statement.executeQuery();
+            // Perform the query
+            ResultSet rs = statement.executeQuery();
 
-                if (rs.next()) {
-                    // Have this user:
-                    String encryptedPassword = rs.getString("password");
-                    boolean success = false;
-                    success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
-                    if(success){
-                        System.out.println("Correct");
-                        HttpSession session = request.getSession(true);
+            if (rs.next()) {
+                // Have this user:
+                String encryptedPassword = rs.getString("password");
+                boolean success = false;
+                success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+                System.out.println(password);
+                System.out.println(encryptedPassword);
+                if(success){
+                    System.out.println("Correct");
+                    HttpSession session = request.getSession(true);
 
-                        String id = rs.getString("id");
-                        String firstName = rs.getString("firstName");
-                        String lastName = rs.getString("lastName");
-                        String ccId = rs.getString("ccId");
-                        String address = rs.getString("address");
-                        // set this user into the session
-                        session.setAttribute("ID", id);
-                        session.setAttribute("user", new User(id, email, firstName, lastName, ccId, address));
 
-                        // set the logged_in attribute
-                        Boolean logged_in = (Boolean) session.getAttribute("logged_in");
-                        logged_in = true;
-                        session.setAttribute("logged_in", logged_in);
+                    String firstName = rs.getString("fullName");
 
-                        responseJsonObject.addProperty("status", "success");
-                        responseJsonObject.addProperty("message", "success");
-                    }
-                    else{
-                        //incorrect password
-                        responseJsonObject.addProperty("status", "fail");
-                        // Log to localhost log
-                        request.getServletContext().log("Login failed");
-                        responseJsonObject.addProperty("message", "Incorrect Username or Password");
-                    }
-                } else {
-                    // Login fail
 
+
+
+
+                    session.setAttribute("user", new User(firstName, email, firstName, "", "", ""));
+
+                    // set the logged_in attribute
+                    Boolean logged_in = (Boolean) session.getAttribute("logged_in");
+                    logged_in = true;
+                    session.setAttribute("logged_in", logged_in);
+
+                    responseJsonObject.addProperty("status", "employee_success");
+                    responseJsonObject.addProperty("message", "employee_success");
+                }
+                else{
+                    //incorrect password
                     responseJsonObject.addProperty("status", "fail");
                     // Log to localhost log
                     request.getServletContext().log("Login failed");
-                    // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-                    // responseJsonObject.addProperty("message", "user with email " + email + " doesn't exist");
                     responseJsonObject.addProperty("message", "Incorrect Username or Password");
                 }
-                rs.close();
-                statement.close();
+            } else {
+                // Login fail
+
+                responseJsonObject.addProperty("status", "fail");
+                // Log to localhost log
+                request.getServletContext().log("Login failed");
+                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
+                // responseJsonObject.addProperty("message", "user with email " + email + " doesn't exist");
+                responseJsonObject.addProperty("message", "Incorrect Username or Password");
+            }
+            rs.close();
+            statement.close();
 
 
 
@@ -153,7 +155,6 @@ public class LoginServlet extends HttpServlet {
             // Set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
-
 
     }
 

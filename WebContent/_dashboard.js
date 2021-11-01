@@ -12,12 +12,13 @@ function handleLoginResult(resultDataString) {
     console.log(resultDataJson["status"]);
 
     // If login succeeds, it will redirect the user to index.html
-    if (resultDataJson["status"] === "success") {
+   if (resultDataJson["status"] === "employee_success") {
 
-        window.location.replace("main.html");
+        window.location.replace("dashboard.html");
     }
+
     else {
-        // If login fails, the web page will display 
+        // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"
         console.log("show error message");
         console.log(resultDataJson["message"]);
@@ -39,7 +40,7 @@ function submitLoginForm(formSubmitEvent) {
     formSubmitEvent.preventDefault();
 
     $.ajax(
-        "api/login", {
+        "api/_dashboard", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
             data: login_form.serialize(),
@@ -51,6 +52,6 @@ function submitLoginForm(formSubmitEvent) {
 // Bind the submit action of the form to a handler function
 login_form.submit(submitLoginForm);
 
-$.ajax("api/login", {
+$.ajax("api/_dashboard", {
     method: "GET"
 });
