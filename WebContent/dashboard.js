@@ -78,6 +78,53 @@ function submitLoginForm1(formSubmitEvent) {
     );
 }
 
+function handleResult(resultData) {
+
+    console.log("handleResult: handle price");
+
+    let total = jQuery("#metadata");
+
+     let res = "";
+
+    for (let i = 0; i < resultData.length; i++) {
+        res += "<h2>" + resultData[i]["table_title"] + " : </h2>";
+        res += "<table> <tr> <th> Field </th> <th> Type </th> <th> Null </th> <th> Key </th> <th> Default </th> <th> Extra </th> </tr>" ;
+        const f = resultData[i]["Field"].split("-");
+        const t = resultData[i]["Type"].split("-");
+        const n = resultData[i]["NULL"].split("-");
+        const k = resultData[i]["Key"].split("-");
+        const d = resultData[i]["Default"].split("-");
+        const e = resultData[i]["Extra"].split("-");
+
+        for (let j = 0; j < f.length; j++) {
+            res+= "<tr>";
+            res += "<td> " + f[j]+ "</td>";
+            res += "<td> " + t[j]+ "</td>";
+            res += "<td> " + n[j]+ "</td>";
+            res += "<td> " + k[j]+ "</td>";
+            res += "<td> " + d[j]+ "</td>";
+            res += "<td> " + e[j]+ "</td>";
+            res+= "</tr>";
+
+        }
+
+
+        res += "</table>";
+
+    }
+
+
+    total.append(res);
+
+}
+
+jQuery.ajax({
+    dataType: "json", // Setting return data type
+    method: "POST", // Setting request method
+    url: "api/dashboard",
+    success: (resultData) => handleResult(resultData)
+});
+
 // Bind the submit action of the form to a handler function
 add_form.submit(submitLoginForm);
 star_form.submit(submitLoginForm1);
