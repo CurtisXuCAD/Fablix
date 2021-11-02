@@ -24,6 +24,7 @@ function handleLoginResult(resultDataString) {
         console.log("show error message");
         console.log(resultDataJson["message"]);
         add_form[0].reset();
+        star_form[0].reset();
         $("#message").text(resultDataJson["message"]);
 
         popup.classList.add('open');

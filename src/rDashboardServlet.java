@@ -105,9 +105,9 @@ public class rDashboardServlet extends HttpServlet
                 stmt.setString(4, star);
                 stmt.setString(5, genre);
                 stmt.setString(6,"@outvalue");
-                stmt.setString(6,"@outvalue1");
-                stmt.setString(6,"@outvalue2");
-                stmt.setString(6,"@outvalue3");
+                stmt.setString(7,"@outvalue1");
+                stmt.setString(8,"@outvalue2");
+                stmt.setString(9,"@outvalue3");
 
                 // statement.setString(2, password);
 
