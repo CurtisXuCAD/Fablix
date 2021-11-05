@@ -2521,12 +2521,17 @@ RM5|Song of Songs|1933|Mamoulian
 RM6|Queen Christina|1933|Mamoulian
 RM--|Oklahoma|1934|Mamoulian
 RM7|We Live Again|1934|Mamoulian
+<<<<<<< HEAD
 tt499473|Becky Sharp|1935|Mamoulian
+=======
+tt499471|Becky Sharp|1935|Mamoulian
+>>>>>>> 1b57952f5f7b8d848faee385ffa0fde41418fa76
 RM9|The Gay Desperado|1936|Mamoulian
 RM10|High, Wide, and Handsome|1937|Mamoulian
 RM11|Golden Boy|1939|Mamoulian
 RM12|The Mark of Zorro|1940|Mamoulian
 RM13|Blood and Sand|1940|Mamoulian
+<<<<<<< HEAD
 tt499474|Rings on her Fingers|1942|Mamoulian
 tt499475|Summer Holiday|1948|Mamoulian
 tt499476|Silk Stockings|1957|Mamoulian
@@ -2542,6 +2547,23 @@ tt499485|The Dark Mirror|1946|R.Siodmak
 tt499486|Criss Cross|1948|R.Siodmak
 tt499482|The Spiral Staircase|1948|R.Siodmak
 tt499487|The Crimson Pirate|1952|R.Siodmak
+=======
+tt499472|Rings on her Fingers|1942|Mamoulian
+tt499473|Summer Holiday|1948|Mamoulian
+tt499474|Silk Stockings|1957|Mamoulian
+tt499475|Menschen am Sonntag|1929|R.Siodmak
+tt499476|Pi`eges|1939|R.Siodmak
+tt499477|Son of Dracula|1943|R.Siodmak
+tt499478|Cobra Woman|1944|R.Siodmak
+tt499479|Phantom Lady|1944|R.Siodmak
+tt499480|The Spiral Staircase|1945|R.Siodmak
+tt499481|Nocturne|1946|R.Siodmak
+tt499482|The Killers|1946|R.Siodmak
+tt499483|The Dark Mirror|1946|R.Siodmak
+tt499484|Criss Cross|1948|R.Siodmak
+tt499480|The Spiral Staircase|1948|R.Siodmak
+tt499485|The Crimson Pirate|1952|R.Siodmak
+>>>>>>> 1b57952f5f7b8d848faee385ffa0fde41418fa76
 ThF5|Whoppee|1930|Freeland
 ThF6|Be Yourself|1930|Freeland
 ThF11|Love Affair|1932|Freeland
@@ -12088,4 +12110,8 @@ SMg10|Bridget Jones's Diary|2001|Maguire
 JeN10|I am Sam|2001|Jes.Nelson
 TFd10|In the Bedroom|2001|Jes.Nelson
 JSx0|Never Never|2002|Jes.Nelson
+<<<<<<< HEAD
 MFo10|The Hurricane|2002|Jes.Nelson
+=======
+MFo10|Monster's Ball|2002|Jes.Nelson
+>>>>>>> 1b57952f5f7b8d848faee385ffa0fde41418fa76
