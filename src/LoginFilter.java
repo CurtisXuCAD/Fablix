@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class LoginFilter implements Filter {
     private final ArrayList<String> allowedURIs = new ArrayList<>();
     private final ArrayList<String> dashboardURIs = new ArrayList<>();
+    private final ArrayList<String> notAllowedDashboardURIs = new ArrayList<>();
 
     /**
      * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
@@ -59,6 +60,9 @@ public class LoginFilter implements Filter {
                     httpResponse.sendRedirect(resultPath+"/login.html");
                 }
             } else {
+                if ((Boolean) httpRequest.getSession().getAttribute("admin") == false && notAllowedDashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
+                    httpResponse.sendRedirect(resultPath+"/main.html");
+                }
                 chain.doFilter(request, response);
             }
         }
@@ -85,8 +89,12 @@ public class LoginFilter implements Filter {
         allowedURIs.add("api/_dashboard");
         allowedURIs.add("_dashboard.html");
         allowedURIs.add("_dashboard.js");
+        allowedURIs.add("_dashboard");
 
         dashboardURIs.add("_dashboard");
+
+        notAllowedDashboardURIs.add("dashboard.html");
+        notAllowedDashboardURIs.add("dashboard");
     }
 
     public void destroy() {

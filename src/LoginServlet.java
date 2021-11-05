@@ -105,9 +105,9 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("user", new User(id, email, firstName, lastName, ccId, address));
 
                         // set the logged_in attribute
-                        Boolean logged_in = (Boolean) session.getAttribute("logged_in");
-                        logged_in = true;
-                        session.setAttribute("logged_in", logged_in);
+//                        Boolean admin = (Boolean) session.getAttribute("logged_in");
+                        Boolean admin = false;
+                        session.setAttribute("admin", admin);
 
                         responseJsonObject.addProperty("status", "success");
                         responseJsonObject.addProperty("message", "success");

@@ -107,9 +107,9 @@ public class DashboardServlet extends HttpServlet {
                     session.setAttribute("user", new User(firstName, email, firstName, "", "", ""));
 
                     // set the logged_in attribute
-                    Boolean logged_in = (Boolean) session.getAttribute("logged_in");
-                    logged_in = true;
-                    session.setAttribute("logged_in", logged_in);
+//                    Boolean logged_in = (Boolean) session.getAttribute("logged_in");
+                    Boolean admin = true;
+                    session.setAttribute("admin", admin);
 
                     responseJsonObject.addProperty("status", "employee_success");
                     responseJsonObject.addProperty("message", "employee_success");
