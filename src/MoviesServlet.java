@@ -223,7 +223,7 @@ public class MoviesServlet extends HttpServlet {
                 PreparedStatement count_statement = conn.prepareStatement(count_query);
                 int ps_idex = 0;
                 if (!(genre.equals("null") || genre == null || genre.equals(""))){
-                    count_statement.setString(1, "%"+genre+"%");
+                    count_statement.setString(1, genre);
                     ps_idex = 1;
                 }
                 else if(!(az.equals("null") || az == null || az.equals(""))){
@@ -285,7 +285,7 @@ public class MoviesServlet extends HttpServlet {
 
             int ps_idex = 0;
             if (!(genre.equals("null") || genre == null || genre.equals(""))){
-                statement.setString(1, "%"+genre+"%");
+                statement.setString(1, genre);
                 ps_idex = 1;
             }
             else if(!(az.equals("null") || az == null || az.equals(""))){

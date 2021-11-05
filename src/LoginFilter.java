@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @WebFilter(filterName = "LoginFilter", urlPatterns = "/*")
 public class LoginFilter implements Filter {
     private final ArrayList<String> allowedURIs = new ArrayList<>();
+    private final ArrayList<String> dashboardURIs = new ArrayList<>();
 
     /**
      * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
@@ -51,7 +52,12 @@ public class LoginFilter implements Filter {
             // Redirect to login page if the "user" attribute doesn't exist in session
             if (httpRequest.getSession().getAttribute("user") == null) {
                 System.out.println("LoginFilter: to login");
-                httpResponse.sendRedirect(resultPath+"/login.html");
+                if(dashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
+                    httpResponse.sendRedirect(resultPath+"/_dashboard.html");
+                }
+                else{
+                    httpResponse.sendRedirect(resultPath+"/login.html");
+                }
             } else {
                 chain.doFilter(request, response);
             }
@@ -64,8 +70,8 @@ public class LoginFilter implements Filter {
          Always allow your own login related requests(html, js, servlet, etc..)
          You might also want to allow some CSS files, etc..
          */
-//        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
-        return true;
+        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
+        // return true;
     }
 
     public void init(FilterConfig fConfig) {
@@ -80,6 +86,7 @@ public class LoginFilter implements Filter {
         allowedURIs.add("_dashboard.html");
         allowedURIs.add("_dashboard.js");
 
+        dashboardURIs.add("_dashboard");
     }
 
     public void destroy() {

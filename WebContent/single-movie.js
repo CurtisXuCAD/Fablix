@@ -44,16 +44,22 @@ function handleResult(resultData) {
 
     let snames = resultData[0]["star_name"];
     let html_content = "";
-    const id_name_array = snames.split(', ');
-    for (let j = 0; j < id_name_array.length; j++) {
-        const star_id = id_name_array[j].split("-")[0];
-        const star_name = id_name_array[j].split("-")[1];
-        html_content +=
-            '<a href="single-star.html?id=' + star_id + '">' +
-            star_name + // display star_name for the link text
-            '</a>' + ', '
+    if(snames == "null" || snames == null){
+        const id_name_array = []
+        html_content += "N/A";
     }
-    html_content = html_content.slice(0, -2);
+    else {
+        const id_name_array = snames.split(', ');
+        for (let j = 0; j < id_name_array.length; j++) {
+            const star_id = id_name_array[j].split("-")[0];
+            const star_name = id_name_array[j].split("-")[1];
+            html_content +=
+                '<a href="single-star.html?id=' + star_id + '">' +
+                star_name + // display star_name for the link text
+                '</a>' + ', '
+        }
+        html_content = html_content.slice(0, -2);
+    }
 
     let gnames = resultData[0]["genres_name"];
     let gnames_html_content = "";
