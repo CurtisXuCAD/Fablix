@@ -77,13 +77,6 @@ public class MoviesServlet extends HttpServlet {
         String query = "";
         //start building query
         if(!(genre.equals("null") || genre == null || genre.equals(""))) {
-            // query += "SELECT m.id, m.title, m.year, m.director \n" +
-            // "from movies as m, stars as s, stars_in_movies as sim \n" +
-            // "where m.title LIKE '%sth%'' \n" +
-            // "and m.year like '%'' \n" +
-            // "and m.director LIKE '%%'' \n" +
-            // "and sim.movieId = m.id and s.id = sim.starId and s.name LIKE '%%' \n" +
-            // "group by m.id";
             query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
             "from movies as m LEFT join ratings as r on r.movieId = m.id, genres as g, genres_in_movies as gim \n" +
             "where g.name like ? and gim.genreId = g.id and m.id = gim.movieId \n" +
@@ -126,16 +119,6 @@ public class MoviesServlet extends HttpServlet {
         }
 
         if (year.equals("")){year = "%";}
-        // if (genre.equals("null"))
-        // {
-        //     genre = "";
-
-        // }
-
-        // if (az.equals("null"))
-        // {
-        //     az = "";
-        // }
 
         if (!(sortBy1 == null || sortBy1.equals("null"))) {
             query += " order by ? " + sortBy1;
@@ -158,63 +141,6 @@ public class MoviesServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
-
-            /*String query;
-
-            if (!genre.equals(""))
-            {
-                query = "SELECT m.id, m.title, m.year, m.director, \n" +
-                        "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
-                        "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) separator ', '), ', ' , 3) as snames, \n" +
-                        "            r.rating \n" +
-                        "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
-                        "            \n" +
-                        "            (SELECT m.id\n" +
-                        "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
-                        "\t\t\twhere sm.movieId = m.id and s.id = sm.starId and g.name like ? and\n" +
-                        "\t\t\tm.id = gim.movieId  and gim.genreId = g.id and m.id = r.movieId \n" +
-                        "\t\t\tgroup by m.id) as m1\n" +
-                        "            \n" +
-                        "            \n" +
-                        "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
-                        "            group by m.id ";
-            }
-
-            else
-            {
-                if (az.equals("*"))
-                {
-                    query = "SELECT m.id, m.title, m.year, m.director,\n" +
-                            "                        substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
-                            "                                    substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name then -1 end separator ', '), ', ' , 3) as snames,\n" +
-                            "                                  r.rating \n" +
-                            "                        FROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
-                            "                        where m.title not REGEXP '^[0-9A-Za-z]' and sm.movieId = m.id and s.id = sm.starId  and\n" +
-                            "                       m.id = gim.movieId and gim.genreId = g.id and m.id = r.movieId \n" +
-                            "                       group by m.id";
-                }
-                else
-                {
-                    query = "SELECT m.id, m.title, m.year, m.director, \n" +
-                            "substring_index(group_concat(DISTINCT g.name separator ', '), ', ' , 3) as gnames, \n" +
-                            "            substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by case when s.name like ? then -1 end separator ', '), ', ' , 3) as snames, \n" +
-                            "            r.rating \n" +
-                            "            from movies as m, genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim , \n" +
-                            "            \n" +
-                            "            (SELECT m.id\n" +
-                            "\t\t\tFROM movies as m, stars_in_movies as sm, stars as s,genres as g, genres_in_movies as gim, ratings as r\n" +
-                            "\t\t\twhere m.title LIKE ? and m.year like ? and m.director LIKE ? and sm.movieId = m.id and s.id = sm.starId and s.name LIKE ? and\n" +
-                            "\t\t\tm.id = gim.movieId  and m.title LIKE ? and gim.genreId = g.id and m.id = r.movieId \n" +
-                            "\t\t\tgroup by m.id) as m1\n" +
-                            "            \n" +
-                            "            \n" +
-                            "            where m.id = m1.id and m1.id = gim.movieId and m1.id = sim.movieId and gim.genreId = g.id and sim.starId = s.id and m1.id = r.movieId \n" +
-                            "            group by m.id ";
-                }
-
-
-
-            }*/
 
             //try to get total results at first time
             if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
@@ -344,31 +270,6 @@ public class MoviesServlet extends HttpServlet {
                 String movie_year= rs.getString("year");
                 String movie_director = rs.getString("director");
                 String movie_rating = rs.getString("rating");
-                // System.out.println("movie_rating: "+movie_rating);
-                
-                // String sub_query = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames, \n" +
-                // "substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames, \n" +
-                // "r.rating as rating\n" +
-                // "from genres as g, genres_in_movies as gim, ratings as r, stars as s, stars_in_movies as sim \n" +
-                // "where gim.genreId = g.id and gim.movieId = ? \n" +
-                // "and sim.starId = s.id and sim.movieId = ? \n" +
-                // "and r.movieId = ?";
-
-                // PreparedStatement single_info_statement = conn.prepareStatement(sub_query);
-                // single_info_statement.setString(1, movie_id);
-                // single_info_statement.setString(2, movie_id);
-                // single_info_statement.setString(3, movie_id);
-
-                // ResultSet sub_rs = single_info_statement.executeQuery();
-                // String movie_gnames = "";
-                // String movie_snames = "";
-                // String movie_rating = "";
-                // if(sub_rs.next()){
-                //     movie_gnames= sub_rs.getString("gnames");
-                //     movie_snames= sub_rs.getString("snames");
-                //     movie_rating= sub_rs.getString("rating");
-                // }
-                // sub_rs.close();
 
                 String sub_query_gnames = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames \n" +
                 "from genres as g, genres_in_movies as gim \n" +
@@ -393,18 +294,6 @@ public class MoviesServlet extends HttpServlet {
                     movie_snames= snames_rs.getString("snames");
                 }
                 snames_rs.close();
-
-                // String sub_query_rating = "select r.rating as rating\n" +
-                // "from ratings as r \n" +
-                // "where r.movieId = ?";
-                // PreparedStatement rating_statement = conn.prepareStatement(sub_query_rating);
-                // rating_statement.setString(1, movie_id);
-                // ResultSet rating_rs = rating_statement.executeQuery();
-                // String movie_rating = "null";
-                // if(rating_rs.next()){
-                //     movie_rating= rating_rs.getString("rating");
-                // }
-                // rating_rs.close();
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
