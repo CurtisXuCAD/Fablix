@@ -187,7 +187,7 @@ public class rDashboardServlet extends HttpServlet
             {
                 System.out.println("sas22dsa");
                 Statement statement = conn.createStatement();
-                String query = "(select concat( 'nm',  LPAD((convert((SELECT SUBSTRING_INDEX((select max(id) from stars),'m',-1)), unsigned ) + 1), 7 ,0)) as max);";
+                String query = "(select concat( 'nm',  LPAD((convert((SELECT SUBSTRING_INDEX((select max(id) from stars where id like \"nm%\" and CHAR_LENGTH(id)=9 ),'m',-1)), unsigned ) + 1), 7 ,0)) as max);";
                 ResultSet rs = statement.executeQuery(query);
                 String maxid = "";
                 if (rs.next())
