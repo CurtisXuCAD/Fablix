@@ -201,14 +201,14 @@ public class MoviesXmlParser extends DefaultHandler{
 
 		try{
 			String dir = System.getProperty("user.dir");
-			Path path = Paths.get(dir+"\\csv");
+			Path path = Paths.get(dir+"/csv");
 			Files.createDirectory(path);
 		}catch (IOException e){
 			System.out.println("Dir error: "+ e.getMessage());
 		}
 
 		try {
-			FileWriter csvWriter = new FileWriter("csv\\genres.csv");
+			FileWriter csvWriter = new FileWriter("csv/genres.csv");
 
 			for (String g : genresTable) {
 				if (!genreToGid.containsKey(g)) {
@@ -228,8 +228,8 @@ public class MoviesXmlParser extends DefaultHandler{
 		}
 
 		try {
-			FileWriter csvWriter = new FileWriter("csv\\movies.csv");
-			FileWriter csvWriter2 = new FileWriter("csv\\genres_in_movies.csv");
+			FileWriter csvWriter = new FileWriter("csv/movies.csv");
+			FileWriter csvWriter2 = new FileWriter("csv/genres_in_movies.csv");
 
 			for (Movie m : myMovies) {
 				csvWriter.append(m.toCSV());
@@ -254,7 +254,7 @@ public class MoviesXmlParser extends DefaultHandler{
 		}
 
 		try {
-			FileWriter csvWriter = new FileWriter("csv\\stars_in_movies.csv");
+			FileWriter csvWriter = new FileWriter("csv/stars_in_movies.csv");
 			Integer addionalStarNum = 0;
 			for (var entry : movieToActors.entrySet()) {
 				if (movieTitledirToId.containsKey(entry.getKey())) {
@@ -295,7 +295,7 @@ public class MoviesXmlParser extends DefaultHandler{
 		}
 
 		try {
-			FileWriter csvWriter = new FileWriter("csv\\stars.csv");
+			FileWriter csvWriter = new FileWriter("csv/stars.csv");
 
 			for (Star s : myStars) {
 				csvWriter.append(s.toCSV());
@@ -310,12 +310,12 @@ public class MoviesXmlParser extends DefaultHandler{
 
 
 		String dir = System.getProperty("user.dir");
-		dir += "\\csv";
+		dir += "/csv";
 		System.out.println(dir);
 		Connection conn = DriverManager.getConnection(url, username, pawssword);
 		Statement statement = conn.createStatement();
-		String csvDir = dir + "\\movies.csv";
-		csvDir = csvDir.replace("\\", "\\\\");
+		String csvDir = dir + "/movies.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
 		System.out.println(csvDir);
 		String sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
 				"REPLACE\n" +
@@ -337,8 +337,8 @@ public class MoviesXmlParser extends DefaultHandler{
 		System.out.println("ok");
 
 
-		csvDir = dir + "\\genres.csv";
-		csvDir = csvDir.replace("\\", "\\\\");
+		csvDir = dir + "/genres.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
 		System.out.println(csvDir);
 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
 				"REPLACE\n" +
@@ -351,8 +351,8 @@ public class MoviesXmlParser extends DefaultHandler{
 		statement.execute(sql);
 		System.out.println("ok");
 
-		csvDir = dir + "\\genres_in_movies.csv";
-		csvDir = csvDir.replace("\\", "\\\\");
+		csvDir = dir + "/genres_in_movies.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
 		System.out.println(csvDir);
 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
 				"REPLACE\n" +
@@ -365,8 +365,8 @@ public class MoviesXmlParser extends DefaultHandler{
 		statement.execute(sql);
 		System.out.println("ok");
 
-		csvDir = dir + "\\stars.csv";
-		csvDir = csvDir.replace("\\", "\\\\");
+		csvDir = dir + "/stars.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
 		System.out.println(csvDir);
 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
 				"REPLACE\n" +
@@ -381,8 +381,8 @@ public class MoviesXmlParser extends DefaultHandler{
 		statement.execute(sql);
 		System.out.println("ok");
 
-		csvDir = dir + "\\stars_in_movies.csv";
-		csvDir = csvDir.replace("\\", "\\\\");
+		csvDir = dir + "/stars_in_movies.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
 		System.out.println(csvDir);
 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
 				"REPLACE\n" +
@@ -399,7 +399,7 @@ public class MoviesXmlParser extends DefaultHandler{
 
 		try{
 			String fdir = System.getProperty("user.dir");
-			FileUtils.deleteDirectory(new File(fdir+"\\csv"));
+			FileUtils.deleteDirectory(new File(fdir+"/csv"));
 
 		}catch (IOException e){
 			System.out.println("Delete dir error: "+e.getMessage());
