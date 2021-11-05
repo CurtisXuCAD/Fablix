@@ -8,7 +8,7 @@ DECLARE starId varchar(15);
     if not exists (select * from movies as m where m.title = title and m.director = director and m.year = year ) then
 
 		
-			SET movieId =  (select concat( 'tt',  LPAD((convert((SELECT SUBSTRING_INDEX((select max(id) from movies),'t',-1)), unsigned ) + 1), 7 ,0)));
+			SET movieId =  (select concat( 'tt',  LPAD((convert((SELECT SUBSTRING_INDEX((select max(id) from movies where id like "tt%" and CHAR_LENGTH(id)=9 ),'t',-1)), unsigned ) + 1), 7 ,0)));
 			INSERT INTO movies Value (movieId, title,year ,director);				
 			SET generatedmovie = movieId;
     
