@@ -3,9 +3,9 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
 ---
 ## Video Demo Link
-**https://youtu.be/HkKdf7C6H0U**
+**https://youtu.be/sbC18EC8CJo**
 ## Application URL
-**http://ec2-3-101-58-84.us-west-1.compute.amazonaws.com:8080/fablix/**
+**https://ec2-13-57-58-242.us-west-1.compute.amazonaws.com:8443/fablix/**
 
 ## How to deploy your application with Tomcat
 - On AWS Server clone the project1
