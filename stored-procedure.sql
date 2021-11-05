@@ -18,7 +18,7 @@ DECLARE starId varchar(15);
 			INSERT INTO stars_in_movies values(starId, movieId);
 			SET generatedstar = starId;
 			else
-			INSERT INTO stars_in_movies values((select id from stars where name = star), movieId);
+			INSERT INTO stars_in_movies values((select id from stars where name = star limit 1), movieId);
 			SET generatedstar =(select id from stars where name = star);
 			end if;
     
