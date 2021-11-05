@@ -33,6 +33,19 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
  If title has key word A, director has key word B, stars has key word C:
  Mysql script: where movie.title Like %A% and movie.director LIKE %B% and stars.name LIKE %C%
  ```
+## Prepared Statement
+```
+[a relative link](cs122b-fall21-team-6/src/DashboardServlet.java)
+```
+## Two parsing time optimization strategies
+```
+
+```
+
+## Inconsistent data report
+```
+
+```
 
 ## Contribution
 - CurtisXuCAD (Chunzhi Xu)
@@ -48,6 +61,9 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
   Query optimization
   Pagination
   Sorting
+  HTTPS
+  Password Encryption
+  XML Parsing
 ```
 
 - Silence-silence-silence (Haoting Ni)
@@ -67,4 +83,7 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
   Confirmation Page
   Add to Cart
   Beautify Shopping Cart, Payment Page, Confirmation Page
+  reCAPTCHA
+  Prepared Statedment
+  Employee Dashboard
 ```
