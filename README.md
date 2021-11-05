@@ -35,16 +35,24 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
  ```
 ## Prepared Statement
 We use Prepared Statement mainly in MoviesServlet.java, every url parameter and user input will finally put into a prepared statement which protect the database from sql attack.
+
 <a href="src/PaymentServlet.java">PaymentServlet.java</a>
 
 Others:
 <a href="src/DashboardServlet.java">DashboardServlet.java</a>
+
 <a href="src/ConfirmationServlet.java">ConfirmationServlet.java</a>
+
 <a href="src/IndexServlet.java">IndexServlet.java</a>
+
 <a href="src/LoginServlet.java">LoginServlet.java</a>
+
 <a href="src/MoviesServlet.java">MoviesServlet.java</a>
+
 <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
+
 <a href="src/SingleMovieServlet.java">SingleMovieServlet.java</a>
+
 <a href="src/SingleStarServlet.java">SingleStarServlet.java</a>
 ## Two parsing time optimization strategies
 1. I load the original data we need from database to help use check if the new data is already exist or not immediately when we finish reading each element. Thus, we need less query when we process the data.
