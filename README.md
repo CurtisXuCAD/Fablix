@@ -34,9 +34,9 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
  Mysql script: where movie.title Like %A% and movie.director LIKE %B% and stars.name LIKE %C%
  ```
 ## Prepared Statement
-```
-[a relative link](src/DashboardServlet.java)
-```
+
+<a href="src/DashboardServlet.java">This is a link</a>
+
 ## Two parsing time optimization strategies
 ```
 
