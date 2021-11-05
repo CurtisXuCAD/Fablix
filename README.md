@@ -42,7 +42,7 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 <a href="src/MoviesServlet.java">MoviesServlet.java</a>
 <a href="src/PaymentServlet.java">PaymentServlet.java</a>
 <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
-<a href="src/SingleMoviesServlet.java">SingleMoviesServlet.java</a>
+<a href="src/SingleMovieServlet.java">SingleMovieServlet.java</a>
 <a href="src/SingleStarServlet.java">SingleStarServlet.java</a>
 ## Two parsing time optimization strategies
 ```
