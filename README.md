@@ -35,7 +35,7 @@ This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
  ```
 ## Prepared Statement
 ```
-[a relative link](cs122b-fall21-team-6/src/DashboardServlet.java)
+[a relative link](src/DashboardServlet.java)
 ```
 ## Two parsing time optimization strategies
 ```
