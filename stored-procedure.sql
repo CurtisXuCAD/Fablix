@@ -19,7 +19,7 @@ DECLARE starId varchar(15);
 			SET generatedstar = starId;
 			else
 			INSERT INTO stars_in_movies values((select id from stars where name = star limit 1), movieId);
-			SET generatedstar =(select id from stars where name = star);
+			SET generatedstar =(select id from stars where name = star limit 1);
 			end if;
     
 			if not exists (select * from genres as g where g.name = genre ) then
