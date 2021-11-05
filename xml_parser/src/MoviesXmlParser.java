@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class MoviesXmlParser extends DefaultHandler{
-	String url = "jdbc:mysql://localhost:3306/moviedb";
+	String url = "jdbc:mysql://localhost:3306/moviedb?allowLoadLocalInfile=true";
 	String username = "mytestuser";
 	String pawssword = "My6$Password";
 	String beginMovieId = "nmo0";
@@ -27,34 +27,32 @@ public class MoviesXmlParser extends DefaultHandler{
 	Integer beginGenreId = 100;
 	private String tempVal;
 	private String currentDir;
+    private Integer myMovieSize;
+    private Integer myStarSize;
+
 
     HashMap<String, Movie> currentMovies;
     ArrayList<Movie> myMovies;
     ArrayList<Movie> brokenMovies;
-	ArrayList<String> genresOfMovie;
-	HashSet<String> genresTable;
-	HashMap<String, Integer> genreToGid;
-	private Movie tempMovie;
-	HashMap<String, String> movieTitledirToId;
-	HashMap<String, String> starNameToId;
-	HashSet<String> gidmid;
-	HashSet<String> sidmid;
+    ArrayList<String> genresOfMovie;
+    HashSet<String> genresTable;
+    HashMap<String, Integer> genreToGid;
+    private Movie tempMovie;
+    HashMap<String, String> movieTitledirToId;
+    HashSet<String> gidmid;
 
+    HashMap<String, String> starNameToId;
+	// HashSet<String> sidmid;
 	ArrayList<Star> myStars;
 	HashMap<String, String> starNameYearToId;
 	ArrayList<Star> brokenStars;
-	ArrayList<Star> brokenSubStarsInRelation;
     private Star tempStar;
 
-
-//	HashMap movieToId;
-
-
-	// Movie - > Stars
+	ArrayList<Star> brokenSubStarsInRelation;
 	String tempMovieTitle;
 	ArrayList<String> tempStars;
 	String tempDirector;
-	Map<String, ArrayList<String>> movieToActors;
+	HashMap<String, ArrayList<String>> movieToActors;
 
     public MoviesXmlParser(){
 		currentMovies = new HashMap<>();
@@ -64,148 +62,221 @@ public class MoviesXmlParser extends DefaultHandler{
 		genresTable = new HashSet<>();
 		genreToGid = new HashMap<>();
 		movieTitledirToId = new HashMap<>();
-		starNameToId = new HashMap<>();
 		gidmid = new HashSet<>();
-		sidmid = new HashSet<>();
 
+		starNameToId = new HashMap<>();
+		// sidmid = new HashSet<>();
 		myStars = new ArrayList<>();
 		starNameYearToId = new HashMap<>();
 		brokenStars = new ArrayList<>();
 
 		movieToActors = new HashMap<String, ArrayList<String>>();
-
 		tempMovieTitle = "";
 		tempStars = new ArrayList<>();
 		brokenSubStarsInRelation = new ArrayList<>();
 		tempDirector = "";
-		initSqlInfo();
     }
 
-	public void initSqlInfo(){
-		try(Connection conn = DriverManager.getConnection(url,username,pawssword)){
-			String query = "SELECT MAX(id) FROM movies;";
-			PreparedStatement statement = conn.prepareStatement(query);
-			ResultSet rs = statement.executeQuery();
+// 	public void initSqlInfo(){
+// 		try(Connection conn = DriverManager.getConnection(url,username,pawssword)){
+// 			String query = "SELECT MAX(id) FROM movies;";
+// 			PreparedStatement statement = conn.prepareStatement(query);
+// 			ResultSet rs = statement.executeQuery();
 
-			if (rs.next()) {
-				beginMovieId = rs.getString(1);
-				System.out.println(beginMovieId);
-			}
+// 			if (rs.next()) {
+// 				beginMovieId = rs.getString(1);
+// 				System.out.println(beginMovieId);
+// 			}
 
-			query = "SELECT MAX(id) FROM stars;";
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
+// 			query = "SELECT MAX(id) FROM stars;";
+// 			statement = conn.prepareStatement(query);
+// 			rs = statement.executeQuery();
 
-			if (rs.next()) {
-				beginStarId = rs.getString(1);
-				System.out.println(beginStarId);
-			}
+// 			if (rs.next()) {
+// 				beginStarId = rs.getString(1);
+// 				System.out.println(beginStarId);
+// 			}
 
-			query = "SELECT id, title as t, director as dir FROM movies;";
-			System.out.println("reading movies from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
-			while (rs.next()){
-				String id = rs.getString("id");
-				String t = rs.getString("t");
-				String dir = rs.getString("dir");
-				movieTitledirToId.put(t+"|"+dir,id);
-			}
-			System.out.println(movieTitledirToId.size());
+// 			query = "SELECT id, title as t, director as dir FROM movies;";
+// 			System.out.println("reading movies from current database......");
+// 			statement = conn.prepareStatement(query);
+// 			rs = statement.executeQuery();
+// 			while (rs.next()){
+// 				String id = rs.getString("id");
+// 				String t = rs.getString("t");
+// 				String dir = rs.getString("dir");
+// 				movieTitledirToId.put(t+"|"+dir,id);
+// 			}
+// 			System.out.println(movieTitledirToId.size());
 
-			query = "SELECT id, name as n, birthYear as b FROM stars;";
-			System.out.println("reading stars from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
-			while (rs.next()){
-				String id = rs.getString("id");
-				String n = rs.getString("n");
-				String b = rs.getString("b");
-				if( b == null || b.equals("null")){
-					b = "";
-				}
-//				if (starNameYearToId.containsKey(n+"|"+b)){
-//					System.out.println(n+"|"+b);
-//				}
-				starNameYearToId.put(n+"|"+b,id);
-				starNameToId.put(n,id);
-			}
-			System.out.println(starNameYearToId.size());
+// // 			query = "SELECT id, name as n, birthYear as b FROM stars;";
+// // 			System.out.println("reading stars from current database......");
+// // 			statement = conn.prepareStatement(query);
+// // 			rs = statement.executeQuery();
+// // 			while (rs.next()){
+// // 				String id = rs.getString("id");
+// // 				String n = rs.getString("n");
+// // 				String b = rs.getString("b");
+// // 				if( b == null || b.equals("null")){
+// // 					b = "";
+// // 				}
+// // //				if (starNameYearToId.containsKey(n+"|"+b)){
+// // //					System.out.println(n+"|"+b);
+// // //				}
+// // 				starNameYearToId.put(n+"|"+b,id);
+// // 				starNameToId.put(n,id);
+// // 			}
+// // 			System.out.println(starNameYearToId.size());
 
 
-			query = "SELECT MAX(id) FROM genres;";
-			System.out.println("reading id in genres from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
+// 			query = "SELECT MAX(id) FROM genres;";
+// 			System.out.println("reading id in genres from current database......");
+// 			statement = conn.prepareStatement(query);
+// 			rs = statement.executeQuery();
 
-			if (rs.next()) {
-				beginGenreId = rs.getInt(1);
-				System.out.println(beginGenreId);
-			}
+// 			if (rs.next()) {
+// 				beginGenreId = rs.getInt(1);
+// 				System.out.println(beginGenreId);
+// 			}
 
-			query = "SELECT id, name as g FROM genres;";
-			System.out.println("reading genres from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
-			while (rs.next()){
-				Integer id = rs.getInt("id");
-				String g = rs.getString("g");
-				genreToGid.put(g,id);
-			}
-			System.out.println(genreToGid.size());
+// 			query = "SELECT id, name as g FROM genres;";
+// 			System.out.println("reading genres from current database......");
+// 			statement = conn.prepareStatement(query);
+// 			rs = statement.executeQuery();
+// 			while (rs.next()){
+// 				Integer id = rs.getInt("id");
+// 				String g = rs.getString("g");
+// 				genreToGid.put(g,id);
+// 			}
+// 			System.out.println(genreToGid.size());
 
-			query = "SELECT * FROM genres_in_movies;";
-			System.out.println("reading genres_in_movies from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
-			while (rs.next()){
-				String gid = rs.getString("genreId");
-				String mid = rs.getString("movieId");
-				gidmid.add(gid+"|"+mid);
-			}
-			System.out.println(gidmid.size());
+// 			query = "SELECT * FROM genres_in_movies;";
+// 			System.out.println("reading genres_in_movies from current database......");
+// 			statement = conn.prepareStatement(query);
+// 			rs = statement.executeQuery();
+// 			while (rs.next()){
+// 				String gid = rs.getString("genreId");
+// 				String mid = rs.getString("movieId");
+// 				gidmid.add(gid+"|"+mid);
+// 			}
+// 			System.out.println(gidmid.size());
 
-			query = "SELECT * FROM stars_in_movies;";
-			System.out.println("reading stars_in_movies from current database......");
-			statement = conn.prepareStatement(query);
-			rs = statement.executeQuery();
-			while (rs.next()){
-				String sid = rs.getString("starId");
-				String mid = rs.getString("movieId");
-				sidmid.add(sid+"|"+mid);
-			}
-			System.out.println(sidmid.size());
+// 			// query = "SELECT * FROM stars_in_movies;";
+// 			// System.out.println("reading stars_in_movies from current database......");
+// 			// statement = conn.prepareStatement(query);
+// 			// rs = statement.executeQuery();
+// 			// while (rs.next()){
+// 			// 	String sid = rs.getString("starId");
+// 			// 	String mid = rs.getString("movieId");
+// 			// 	sidmid.add(sid+"|"+mid);
+// 			// }
+// 			// System.out.println(sidmid.size());
 
-		} catch (Exception e) {
-			System.out.println("Connection Invalid"+  e.getMessage());
-		}
-	}
+// 		} catch (Exception e) {
+// 			System.out.println("Connection Invalid"+  e.getMessage());
+// 		}
+// 	}
 
     public void runParser(){
-        parseMain();
-		parseStar();
-		parseMovieToStar();
+        runMain();
+        runStar();
+        runMTS();
 
-		try{
-			processDatabase();
-		}
-		catch (SQLException e){
-			System.out.println("Connection Invalid"+  e.getMessage());
-		}
+        // printInconsistencyData();
+        // parseMain();
+		// System.out.println("Main done");
+		// // parseStar();
+		// // System.out.println("Star done");
+		// // parseMovieToStar();
+		// // System.out.println("MTS done");
+
+		// try{
+		// 	processDatabase();
+		// }
+		// catch (SQLException e){
+		// 	System.out.println("Connection Invalid"+  e.getMessage());
+		// }
 
 		printInconsistencyData();
     }
 
-	public void processDatabase() throws SQLException {
-		System.out.println("processing data");
+    public void runMain(){
+        try(Connection conn = DriverManager.getConnection(url,username,pawssword)){
+            String query = "SELECT MAX(id) FROM movies;";
+            PreparedStatement statement = conn.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
 
-		try{
-			String dir = System.getProperty("user.dir");
-			Path path = Paths.get(dir+"/csv");
-			Files.createDirectory(path);
-		}catch (IOException e){
-			System.out.println("Dir error: "+ e.getMessage());
-		}
+            if (rs.next()) {
+                beginMovieId = rs.getString(1);
+                System.out.println(beginMovieId);
+            }
+
+            query = "SELECT MAX(id) FROM stars;";
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                beginStarId = rs.getString(1);
+                System.out.println(beginStarId);
+            }
+
+            query = "SELECT id, title as t, director as dir FROM movies;";
+            System.out.println("reading movies from current database......");
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()){
+                String id = rs.getString("id");
+                String t = rs.getString("t");
+                String dir = rs.getString("dir");
+                movieTitledirToId.put(t+"|"+dir,id);
+            }
+            System.out.println(movieTitledirToId.size());
+
+            query = "SELECT MAX(id) FROM genres;";
+            System.out.println("reading id in genres from current database......");
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                beginGenreId = rs.getInt(1);
+                System.out.println(beginGenreId);
+            }
+
+            query = "SELECT id, name as g FROM genres;";
+            System.out.println("reading genres from current database......");
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()){
+                Integer id = rs.getInt("id");
+                String g = rs.getString("g");
+                genreToGid.put(g,id);
+            }
+            System.out.println(genreToGid.size());
+
+            query = "SELECT * FROM genres_in_movies;";
+            System.out.println("reading genres_in_movies from current database......");
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()){
+                String gid = rs.getString("genreId");
+                String mid = rs.getString("movieId");
+                gidmid.add(gid+"|"+mid);
+            }
+            System.out.println(gidmid.size());
+
+        } catch (Exception e) {
+            System.out.println("Connection Invalid"+  e.getMessage());
+        }
+
+        parseMain();
+
+        try{
+            String dir = System.getProperty("user.dir");
+            Path path = Paths.get(dir+"/csv");
+            Files.createDirectory(path);
+        }catch (IOException e){
+            System.out.println("Dir error: "+ e.getMessage());
+        }
 
 		try {
 			FileWriter csvWriter = new FileWriter("csv/genres.csv");
@@ -218,6 +289,7 @@ public class MoviesXmlParser extends DefaultHandler{
 					csvWriter.append("|");
 					csvWriter.append(g);
 					csvWriter.append("\n");
+					csvWriter.flush();
 				}
 			}
 
@@ -234,6 +306,7 @@ public class MoviesXmlParser extends DefaultHandler{
 			for (Movie m : myMovies) {
 				csvWriter.append(m.toCSV());
 				csvWriter.append("\n");
+				csvWriter.flush();
 
 				for (String g : m.getGenres()) {
 					if (!gidmid.contains(String.valueOf(genreToGid.get(g)) + "|" + m.getId())) {
@@ -241,6 +314,7 @@ public class MoviesXmlParser extends DefaultHandler{
 						csvWriter2.append("|");
 						csvWriter2.append(m.getId());
 						csvWriter2.append("\n");
+						csvWriter2.flush();
 					}
 				}
 			}
@@ -253,7 +327,166 @@ public class MoviesXmlParser extends DefaultHandler{
 			System.out.println("File error: " + e.getMessage());
 		}
 
+        try {
+            String dir = System.getProperty("user.dir");
+            dir += "/csv";
+            System.out.println(dir);
+            Connection conn = DriverManager.getConnection(url, username, pawssword);
+            Statement statement = conn.createStatement();
+            String csvDir = dir + "/movies.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
+            System.out.println(csvDir);
+            String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+                    "REPLACE\n" +
+                    "INTO TABLE movies\n" +
+                    "FIELDS TERMINATED BY '|' \n" +
+                    "ENCLOSED BY '\"' \n" +
+                    "LINES TERMINATED BY '\\n'";
+
+            System.out.println(sql);
+            statement.execute("SET FOREIGN_KEY_CHECKS=0");
+//		ResultSet rs = statement.executeQuery("SELECT count(*) from	movies;");
+//		rs.next();
+//		System.out.println(rs.getString(1));
+            statement.execute(sql);
+//		rs = statement.executeQuery("SELECT count(*) from	movies;");
+//		rs.next();
+//		System.out.println(rs.getString(1));
+            statement.execute("SET FOREIGN_KEY_CHECKS=1");
+            System.out.println("ok");
+
+
+            csvDir = dir + "/genres.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
+            System.out.println(csvDir);
+            sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+                    "REPLACE\n" +
+                    "INTO TABLE genres\n" +
+                    "FIELDS TERMINATED BY '|' \n" +
+                    "ENCLOSED BY '\"' \n" +
+                    "LINES TERMINATED BY '\\n'";
+
+            System.out.println(sql);
+            statement.execute(sql);
+            System.out.println("ok");
+
+            csvDir = dir + "/genres_in_movies.csv";
+//		csvDir = csvDir.replace("\\", "\\\\");
+            System.out.println(csvDir);
+            sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+                    "REPLACE\n" +
+                    "INTO TABLE genres_in_movies\n" +
+                    "FIELDS TERMINATED BY '|' \n" +
+                    "ENCLOSED BY '\"' \n" +
+                    "LINES TERMINATED BY '\\n'";
+
+            System.out.println(sql);
+            statement.execute(sql);
+            System.out.println("ok");
+        }
+        catch (SQLException e){
+            System.out.println("SQL ERROR: "+e.getMessage());
+        }
+
+        currentMovies = new HashMap<>();
+        myMovieSize = myMovies.size();
+        myMovies = new ArrayList<>();
+        genresOfMovie = new ArrayList<>();
+        genresTable = new HashSet<>();
+        genreToGid = new HashMap<>();
+        gidmid = new HashSet<>();
+    }
+
+    public void runStar(){
+        try(Connection conn = DriverManager.getConnection(url,username,pawssword)){
+            String query = "SELECT id, name as n, birthYear as b FROM stars;";
+			System.out.println("reading stars from current database......");
+            PreparedStatement statement = conn.prepareStatement(query);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()){
+				Thread.sleep(1);
+				String id = rs.getString("id");
+				String n = rs.getString("n");
+				String b = rs.getString("b");
+				if( b == null || b.equals("null")){
+					b = "";
+				}
+//				if (starNameYearToId.containsKey(n+"|"+b)){
+//					System.out.println(n+"|"+b);
+//				}
+				starNameYearToId.put(n+"|"+b,id);
+				starNameToId.put(n,id);
+			}
+			System.out.println(starNameYearToId.size());
+        } catch (Exception e) {
+            System.out.println("Connection Invalid"+  e.getMessage());
+        }
+
+        parseStar();
+
 		try {
+			FileWriter csvWriter = new FileWriter("csv/stars.csv");
+
+			for (Star s : myStars) {
+				csvWriter.append(s.toCSV());
+				csvWriter.append("\n");
+				csvWriter.flush();
+			}
+
+			csvWriter.flush();
+			csvWriter.close();
+		} catch (IOException e) {
+			System.out.println("File error: " + e.getMessage());
+		}
+
+        try {
+            String dir = System.getProperty("user.dir");
+            dir += "/csv";
+            System.out.println(dir);
+            Connection conn = DriverManager.getConnection(url, username, pawssword);
+            Statement statement = conn.createStatement();
+            String csvDir = dir + "/stars.csv";
+        //		csvDir = csvDir.replace("\\", "\\\\");
+            System.out.println(csvDir);
+            String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+                    "REPLACE\n" +
+                    "INTO TABLE stars\n" +
+                    "FIELDS TERMINATED BY '|' \n" +
+                    "ENCLOSED BY '\"' \n" +
+                    "LINES TERMINATED BY '\\n' \n" +
+                    "(id, name, @vbirthYear)\n" +
+                    "SET birthYear = NULLIF(@vbirthYear,'')";
+
+            System.out.println(sql);
+            statement.execute(sql);
+            System.out.println("ok");
+        }
+        catch (SQLException e){
+            System.out.println("SQL ERROR: "+e.getMessage());
+        }
+
+		starNameYearToId = new HashMap<>();
+    }
+
+    public void runMTS(){
+        // try(Connection conn = DriverManager.getConnection(url,username,pawssword)){
+        //     String query = "SELECT * FROM stars_in_movies;";
+        //     System.out.println("reading stars_in_movies from current database......");
+        //     PreparedStatement statement = conn.prepareStatement(query);
+        //     ResultSet rs = statement.executeQuery();
+        //     while (rs.next()){
+        //         String sid = rs.getString("starId");
+        //         String mid = rs.getString("movieId");
+        //         sidmid.add(sid+"|"+mid);
+        //     }
+        //     // System.out.println(sidmid.size());
+        // } catch (Exception e) {
+        //     System.out.println("Connection Invalid"+  e.getMessage());
+        // }
+
+        parseMovieToStar();
+
+        try {
 			FileWriter csvWriter = new FileWriter("csv/stars_in_movies.csv");
 			Integer addionalStarNum = 0;
 			for (var entry : movieToActors.entrySet()) {
@@ -261,12 +494,13 @@ public class MoviesXmlParser extends DefaultHandler{
 					String id = movieTitledirToId.get(entry.getKey());
 					for (String s : entry.getValue()) {
 						if (starNameToId.containsKey(s)) {
-							if (!sidmid.contains(starNameToId.get(s) + "|" + id)) {
+							// if (!sidmid.contains(starNameToId.get(s) + "|" + id)) {
 								csvWriter.append(starNameToId.get(s));
 								csvWriter.append("|");
 								csvWriter.append(id);
 								csvWriter.append("\n");
-							}
+								csvWriter.flush();
+							// }
 						} else {
 							String[] part = beginStarId.split("(?<=\\D)(?=\\d)");
 							int idNum = Integer.parseInt(part[1]) + 1;
@@ -283,6 +517,7 @@ public class MoviesXmlParser extends DefaultHandler{
 							csvWriter.append("|");
 							csvWriter.append(id);
 							csvWriter.append("\n");
+							csvWriter.flush();
 						}
 					}
 				}
@@ -294,117 +529,263 @@ public class MoviesXmlParser extends DefaultHandler{
 			System.out.println("File error: " + e.getMessage());
 		}
 
-		try {
-			FileWriter csvWriter = new FileWriter("csv/stars.csv");
 
-			for (Star s : myStars) {
-				csvWriter.append(s.toCSV());
-				csvWriter.append("\n");
-			}
+        try {
+            String dir = System.getProperty("user.dir");
+            dir += "/csv";
+            System.out.println(dir);
+            Connection conn = DriverManager.getConnection(url, username, pawssword);
+            Statement statement = conn.createStatement();
+            String csvDir = dir + "/stars_in_movies.csv";
+    //		csvDir = csvDir.replace("\\", "\\\\");
+            System.out.println(csvDir);
+            String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+                    "REPLACE\n" +
+                    "INTO TABLE stars_in_movies\n" +
+                    "FIELDS TERMINATED BY '|' \n" +
+                    "ENCLOSED BY '\"' \n" +
+                    "LINES TERMINATED BY '\\n'";
 
-			csvWriter.flush();
-			csvWriter.close();
-		} catch (IOException e) {
-			System.out.println("File error: " + e.getMessage());
-		}
+            System.out.println(sql);
+            statement.execute("SET FOREIGN_KEY_CHECKS=0");
+            statement.execute(sql);
+            statement.execute("SET FOREIGN_KEY_CHECKS=1");
+            System.out.println("ok");
+        }
+        catch (SQLException e){
+            System.out.println("SQL ERROR: "+e.getMessage());
+        }
+
+		// try{
+		// 	String fdir = System.getProperty("user.dir");
+		// 	FileUtils.deleteDirectory(new File(fdir+"/csv"));
+
+		// }catch (IOException e){
+		// 	System.out.println("Delete dir error: "+e.getMessage());
+		// }
+
+        myStarSize = myStars.size();
+        myStars = new ArrayList<>();
+        starNameToId = new HashMap<>();
+        // sidmid = new HashSet<>();
+
+        movieToActors = new HashMap<String, ArrayList<String>>();
+        tempStars = new ArrayList<>();
+    }
+
+// 	public void processDatabase() throws SQLException {
+// 		System.out.println("processing data");
+
+// 		try{
+// 			String dir = System.getProperty("user.dir");
+// 			System.out.println(dir+"/csv");
+// 			Path path = Paths.get(dir+"/csv");
+// 			Files.createDirectory(path);
+// 		}catch (IOException e){
+// 			System.out.println("Dir error: "+ e.getMessage());
+// 		}
+
+// 		try {
+// 			FileWriter csvWriter = new FileWriter("csv/genres.csv");
+
+// 			for (String g : genresTable) {
+// 				if (!genreToGid.containsKey(g)) {
+// 					beginGenreId++;
+// 					genreToGid.put(g, beginGenreId);
+// 					csvWriter.append(String.valueOf(beginGenreId));
+// 					csvWriter.append("|");
+// 					csvWriter.append(g);
+// 					csvWriter.append("\n");
+// 					csvWriter.flush();
+// 				}
+// 			}
+
+// 			csvWriter.flush();
+// 			csvWriter.close();
+// 		} catch (IOException e) {
+// 			System.out.println("File error: " + e.getMessage());
+// 		}
+
+// 		try {
+// 			FileWriter csvWriter = new FileWriter("csv/movies.csv");
+// 			FileWriter csvWriter2 = new FileWriter("csv/genres_in_movies.csv");
+
+// 			for (Movie m : myMovies) {
+// 				csvWriter.append(m.toCSV());
+// 				csvWriter.append("\n");
+// 				csvWriter.flush();
+
+// 				for (String g : m.getGenres()) {
+// 					if (!gidmid.contains(String.valueOf(genreToGid.get(g)) + "|" + m.getId())) {
+// 						csvWriter2.append(String.valueOf(genreToGid.get(g)));
+// 						csvWriter2.append("|");
+// 						csvWriter2.append(m.getId());
+// 						csvWriter2.append("\n");
+// 						csvWriter2.flush();
+// 					}
+// 				}
+// 			}
+
+// 			csvWriter.flush();
+// 			csvWriter.close();
+// 			csvWriter2.flush();
+// 			csvWriter2.close();
+// 		} catch (IOException e) {
+// 			System.out.println("File error: " + e.getMessage());
+// 		}
+
+// // 		try {
+// // 			FileWriter csvWriter = new FileWriter("csv/stars_in_movies.csv");
+// // 			Integer addionalStarNum = 0;
+// // 			for (var entry : movieToActors.entrySet()) {
+// // 				if (movieTitledirToId.containsKey(entry.getKey())) {
+// // 					String id = movieTitledirToId.get(entry.getKey());
+// // 					for (String s : entry.getValue()) {
+// // 						if (starNameToId.containsKey(s)) {
+// // 							if (!sidmid.contains(starNameToId.get(s) + "|" + id)) {
+// // 								csvWriter.append(starNameToId.get(s));
+// // 								csvWriter.append("|");
+// // 								csvWriter.append(id);
+// // 								csvWriter.append("\n");
+// // 							}
+// // 						} else {
+// // 							String[] part = beginStarId.split("(?<=\\D)(?=\\d)");
+// // 							int idNum = Integer.parseInt(part[1]) + 1;
+// // 							String newId = part[0] + idNum;
+// // 							beginStarId = newId;
+// // 							starNameToId.put(s, newId);
+// // 							Star newStar = new Star();
+// // 							newStar.setId(newId);
+// // 							newStar.setName(s);
+// // 							myStars.add(newStar);
+// // 							addionalStarNum++;
+
+// // 							csvWriter.append(starNameToId.get(s));
+// // 							csvWriter.append("|");
+// // 							csvWriter.append(id);
+// // 							csvWriter.append("\n");
+// // 						}
+// // 					}
+// // 				}
+// // 			}
+// // 			System.out.println("Addtional Star Num: " + addionalStarNum);
+// // 			csvWriter.flush();
+// // 			csvWriter.close();
+// // 		} catch (IOException e) {
+// // 			System.out.println("File error: " + e.getMessage());
+// // 		}
+
+// // 		try {
+// // 			FileWriter csvWriter = new FileWriter("csv/stars.csv");
+
+// // 			for (Star s : myStars) {
+// // 				csvWriter.append(s.toCSV());
+// // 				csvWriter.append("\n");
+// // 			}
+
+// // 			csvWriter.flush();
+// // 			csvWriter.close();
+// // 		} catch (IOException e) {
+// // 			System.out.println("File error: " + e.getMessage());
+// // 		}
 
 
-		String dir = System.getProperty("user.dir");
-		dir += "/csv";
-		System.out.println(dir);
-		Connection conn = DriverManager.getConnection(url, username, pawssword);
-		Statement statement = conn.createStatement();
-		String csvDir = dir + "/movies.csv";
-//		csvDir = csvDir.replace("\\", "\\\\");
-		System.out.println(csvDir);
-		String sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
-				"REPLACE\n" +
-				"INTO TABLE movies\n" +
-				"FIELDS TERMINATED BY '|' \n" +
-				"ENCLOSED BY '\"' \n" +
-				"LINES TERMINATED BY '\\n'";
+// 		String dir = System.getProperty("user.dir");
+// 		dir += "/csv";
+// 		System.out.println(dir);
+// 		Connection conn = DriverManager.getConnection(url, username, pawssword);
+// 		Statement statement = conn.createStatement();
+// 		String csvDir = dir + "/movies.csv";
+// //		csvDir = csvDir.replace("\\", "\\\\");
+// 		System.out.println(csvDir);
+// 		String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+// 				"REPLACE\n" +
+// 				"INTO TABLE movies\n" +
+// 				"FIELDS TERMINATED BY '|' \n" +
+// 				"ENCLOSED BY '\"' \n" +
+// 				"LINES TERMINATED BY '\\n'";
 
-		System.out.println(sql);
-		statement.execute("SET FOREIGN_KEY_CHECKS=0");
-//		ResultSet rs = statement.executeQuery("SELECT count(*) from	movies;");
-//		rs.next();
-//		System.out.println(rs.getString(1));
-		statement.execute(sql);
-//		rs = statement.executeQuery("SELECT count(*) from	movies;");
-//		rs.next();
-//		System.out.println(rs.getString(1));
-		statement.execute("SET FOREIGN_KEY_CHECKS=1");
-		System.out.println("ok");
+// 		System.out.println(sql);
+// 		statement.execute("SET FOREIGN_KEY_CHECKS=0");
+// //		ResultSet rs = statement.executeQuery("SELECT count(*) from	movies;");
+// //		rs.next();
+// //		System.out.println(rs.getString(1));
+// 		statement.execute(sql);
+// //		rs = statement.executeQuery("SELECT count(*) from	movies;");
+// //		rs.next();
+// //		System.out.println(rs.getString(1));
+// 		statement.execute("SET FOREIGN_KEY_CHECKS=1");
+// 		System.out.println("ok");
 
 
-		csvDir = dir + "/genres.csv";
-//		csvDir = csvDir.replace("\\", "\\\\");
-		System.out.println(csvDir);
-		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
-				"REPLACE\n" +
-				"INTO TABLE genres\n" +
-				"FIELDS TERMINATED BY '|' \n" +
-				"ENCLOSED BY '\"' \n" +
-				"LINES TERMINATED BY '\\n'";
+// 		csvDir = dir + "/genres.csv";
+// //		csvDir = csvDir.replace("\\", "\\\\");
+// 		System.out.println(csvDir);
+// 		sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+// 				"REPLACE\n" +
+// 				"INTO TABLE genres\n" +
+// 				"FIELDS TERMINATED BY '|' \n" +
+// 				"ENCLOSED BY '\"' \n" +
+// 				"LINES TERMINATED BY '\\n'";
 
-		System.out.println(sql);
-		statement.execute(sql);
-		System.out.println("ok");
+// 		System.out.println(sql);
+// 		statement.execute(sql);
+// 		System.out.println("ok");
 
-		csvDir = dir + "/genres_in_movies.csv";
-//		csvDir = csvDir.replace("\\", "\\\\");
-		System.out.println(csvDir);
-		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
-				"REPLACE\n" +
-				"INTO TABLE genres_in_movies\n" +
-				"FIELDS TERMINATED BY '|' \n" +
-				"ENCLOSED BY '\"' \n" +
-				"LINES TERMINATED BY '\\n'";
+// 		csvDir = dir + "/genres_in_movies.csv";
+// //		csvDir = csvDir.replace("\\", "\\\\");
+// 		System.out.println(csvDir);
+// 		sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+// 				"REPLACE\n" +
+// 				"INTO TABLE genres_in_movies\n" +
+// 				"FIELDS TERMINATED BY '|' \n" +
+// 				"ENCLOSED BY '\"' \n" +
+// 				"LINES TERMINATED BY '\\n'";
 
-		System.out.println(sql);
-		statement.execute(sql);
-		System.out.println("ok");
+// 		System.out.println(sql);
+// 		statement.execute(sql);
+// 		System.out.println("ok");
 
-		csvDir = dir + "/stars.csv";
-//		csvDir = csvDir.replace("\\", "\\\\");
-		System.out.println(csvDir);
-		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
-				"REPLACE\n" +
-				"INTO TABLE stars\n" +
-				"FIELDS TERMINATED BY '|' \n" +
-				"ENCLOSED BY '\"' \n" +
-				"LINES TERMINATED BY '\\n' \n" +
-				"(id, name, @vbirthYear)\n" +
-				"SET birthYear = NULLIF(@vbirthYear,'')";
+// // 		csvDir = dir + "/stars.csv";
+// // //		csvDir = csvDir.replace("\\", "\\\\");
+// // 		System.out.println(csvDir);
+// // 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
+// // 				"REPLACE\n" +
+// // 				"INTO TABLE stars\n" +
+// // 				"FIELDS TERMINATED BY '|' \n" +
+// // 				"ENCLOSED BY '\"' \n" +
+// // 				"LINES TERMINATED BY '\\n' \n" +
+// // 				"(id, name, @vbirthYear)\n" +
+// // 				"SET birthYear = NULLIF(@vbirthYear,'')";
 
-		System.out.println(sql);
-		statement.execute(sql);
-		System.out.println("ok");
+// // 		System.out.println(sql);
+// // 		statement.execute(sql);
+// // 		System.out.println("ok");
 
-		csvDir = dir + "/stars_in_movies.csv";
-//		csvDir = csvDir.replace("\\", "\\\\");
-		System.out.println(csvDir);
-		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
-				"REPLACE\n" +
-				"INTO TABLE stars_in_movies\n" +
-				"FIELDS TERMINATED BY '|' \n" +
-				"ENCLOSED BY '\"' \n" +
-				"LINES TERMINATED BY '\\n'";
+// // 		csvDir = dir + "/stars_in_movies.csv";
+// // //		csvDir = csvDir.replace("\\", "\\\\");
+// // 		System.out.println(csvDir);
+// // 		sql = "LOAD DATA INFILE '" + csvDir + "'\n" +
+// // 				"REPLACE\n" +
+// // 				"INTO TABLE stars_in_movies\n" +
+// // 				"FIELDS TERMINATED BY '|' \n" +
+// // 				"ENCLOSED BY '\"' \n" +
+// // 				"LINES TERMINATED BY '\\n'";
 
-		System.out.println(sql);
-		statement.execute("SET FOREIGN_KEY_CHECKS=0");
-		statement.execute(sql);
-		statement.execute("SET FOREIGN_KEY_CHECKS=1");
-		System.out.println("ok");
+// // 		System.out.println(sql);
+// // 		statement.execute("SET FOREIGN_KEY_CHECKS=0");
+// // 		statement.execute(sql);
+// // 		statement.execute("SET FOREIGN_KEY_CHECKS=1");
+// // 		System.out.println("ok");
 
-		try{
-			String fdir = System.getProperty("user.dir");
-			FileUtils.deleteDirectory(new File(fdir+"/csv"));
+// // 		try{
+// // 			String fdir = System.getProperty("user.dir");
+// // 			FileUtils.deleteDirectory(new File(fdir+"/csv"));
 
-		}catch (IOException e){
-			System.out.println("Delete dir error: "+e.getMessage());
-		}
-	}
+// // 		}catch (IOException e){
+// // 			System.out.println("Delete dir error: "+e.getMessage());
+// // 		}
+// 	}
 
     private void parseMain() {
 
@@ -461,8 +842,8 @@ public class MoviesXmlParser extends DefaultHandler{
 //		System.out.println("\n2600 Badly Formatted value Found\n");
 		try{
 			FileWriter reprotWriter = new FileWriter("inconsistency_report.txt");
-			System.out.println("No of Movies " + myMovies.size());
-			System.out.println("No of Stars " + myStars.size());
+			System.out.println("No of Movies " + myMovieSize);
+			System.out.println("No of Stars " + myStarSize);
 
 
 			String out = "Badly Formatted Stars (actor): " + brokenStars.size() + " Total\n";
@@ -470,6 +851,7 @@ public class MoviesXmlParser extends DefaultHandler{
 			for(Star s: brokenStars){
 				reprotWriter.append(s.toString());
 				reprotWriter.append("\n");
+				reprotWriter.flush();
 			}
 			reprotWriter.append("\n");
 
@@ -478,6 +860,7 @@ public class MoviesXmlParser extends DefaultHandler{
 			for(Movie m: brokenMovies){
 				reprotWriter.append(m.toString());
 				reprotWriter.append("\n");
+				reprotWriter.flush();
 			}
 			reprotWriter.append("\n");
 
@@ -486,6 +869,7 @@ public class MoviesXmlParser extends DefaultHandler{
 			for(Star s: brokenSubStarsInRelation){
 				reprotWriter.append(s.toString());
 				reprotWriter.append("\n");
+				reprotWriter.flush();
 			}
 
 //			out = genresTable.toString();
@@ -555,7 +939,9 @@ public class MoviesXmlParser extends DefaultHandler{
 			tempMovie.setId(tempVal);
 		}
         else if (qName.equalsIgnoreCase("t")){
-			tempMovie.setTitle(tempVal);
+			if(tempMovie != null){
+				tempMovie.setTitle(tempVal);		
+			}
 		}
         else if (qName.equalsIgnoreCase("year")){
 			try {
