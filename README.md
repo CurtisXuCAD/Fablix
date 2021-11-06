@@ -1,9 +1,10 @@
 # CS122B-Fall21-Team-6
-This is a UCI CS122B Project2 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
+This is a UCI CS122B Project3 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
+### Note2: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
 ---
 ## Video Demo Link
-**https://youtu.be/sbC18EC8CJo**
+**https://youtu.be/lbSoraMGclA**
 ## Application URL
 **https://ec2-13-57-58-242.us-west-1.compute.amazonaws.com:8443/fablix/**
 
