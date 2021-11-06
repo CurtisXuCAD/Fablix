@@ -424,47 +424,6 @@ public class MoviesXmlParser extends DefaultHandler{
 
         parseStar();
 
-		try {
-			FileWriter csvWriter = new FileWriter("csv/stars.csv");
-
-			for (Star s : myStars) {
-				csvWriter.append(s.toCSV());
-				csvWriter.append("\n");
-				csvWriter.flush();
-			}
-
-			csvWriter.flush();
-			csvWriter.close();
-		} catch (IOException e) {
-			System.out.println("File error: " + e.getMessage());
-		}
-
-        try {
-            String dir = System.getProperty("user.dir");
-            dir += "/csv";
-            System.out.println(dir);
-            Connection conn = DriverManager.getConnection(url, username, pawssword);
-            Statement statement = conn.createStatement();
-            String csvDir = dir + "/stars.csv";
-        //		csvDir = csvDir.replace("\\", "\\\\");
-            System.out.println(csvDir);
-            String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
-                    "REPLACE\n" +
-                    "INTO TABLE stars\n" +
-                    "FIELDS TERMINATED BY '|' \n" +
-                    "ENCLOSED BY '\"' \n" +
-                    "LINES TERMINATED BY '\\n' \n" +
-                    "(id, name, @vbirthYear)\n" +
-                    "SET birthYear = NULLIF(@vbirthYear,'')";
-
-            System.out.println(sql);
-            statement.execute(sql);
-            System.out.println("ok");
-        }
-        catch (SQLException e){
-            System.out.println("SQL ERROR: "+e.getMessage());
-        }
-
 		starNameYearToId = new HashMap<>();
     }
 
@@ -563,6 +522,47 @@ public class MoviesXmlParser extends DefaultHandler{
 		// }catch (IOException e){
 		// 	System.out.println("Delete dir error: "+e.getMessage());
 		// }
+
+		try {
+			FileWriter csvWriter = new FileWriter("csv/stars.csv");
+
+			for (Star s : myStars) {
+				csvWriter.append(s.toCSV());
+				csvWriter.append("\n");
+				csvWriter.flush();
+			}
+
+			csvWriter.flush();
+			csvWriter.close();
+		} catch (IOException e) {
+			System.out.println("File error: " + e.getMessage());
+		}
+
+		try {
+			String dir = System.getProperty("user.dir");
+			dir += "/csv";
+			System.out.println(dir);
+			Connection conn = DriverManager.getConnection(url, username, pawssword);
+			Statement statement = conn.createStatement();
+			String csvDir = dir + "/stars.csv";
+			//		csvDir = csvDir.replace("\\", "\\\\");
+			System.out.println(csvDir);
+			String sql = "LOAD DATA LOCAL INFILE '" + csvDir + "'\n" +
+					"REPLACE\n" +
+					"INTO TABLE stars\n" +
+					"FIELDS TERMINATED BY '|' \n" +
+					"ENCLOSED BY '\"' \n" +
+					"LINES TERMINATED BY '\\n' \n" +
+					"(id, name, @vbirthYear)\n" +
+					"SET birthYear = NULLIF(@vbirthYear,'')";
+
+			System.out.println(sql);
+			statement.execute(sql);
+			System.out.println("ok");
+		}
+		catch (SQLException e){
+			System.out.println("SQL ERROR: "+e.getMessage());
+		}
 
         myStarSize = myStars.size();
         myStars = new ArrayList<>();
