@@ -169,3 +169,38 @@ body {
     background: linear-gradient(to left, #BBD2C5, #536976, #292E49);
     text-align: center;
 }
+
+.g1 {
+    /*margin: 20px;*/
+    /*margin-top: 100px;*/
+    /*bottom: 50px;*/
+    /*display: block;*/
+    width: 200px;
+    height: 60px;
+    font: 900 30px '';
+    text-decoration: none;
+    line-height: 50px;
+    border-radius: 30px;
+    background: linear-gradient(to left, #BBD2C5, #536976, #292E49);
+
+}
+
+.e1 {
+    width: 230px;
+    margin: 20px 0;
+    outline: none;
+    border: 0;
+    padding: 10px;
+    border-bottom: 3px solid rgb(80, 80, 170);
+    font: 900 16px '';
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+
+

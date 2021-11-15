@@ -57,7 +57,7 @@ public class MoviesServlet extends HttpServlet {
         String order1 = (String)request.getParameter("order1");
         String sortBy2 = (String)request.getParameter("sortBy2");
         String order2 = (String)request.getParameter("order2");
-
+        String fullsearch = (String)request.getParameter("fullSearch");
         System.out.println(stars);
 
         //sort information to session
@@ -66,7 +66,7 @@ public class MoviesServlet extends HttpServlet {
             stars + "&year=" + year + "&genre=" + genre + "&AZ=" +
             az + "&numRecords=" + numRecords + "&startIndex=" +
             startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            "&sortBy2=" + sortBy2 + "&order2=" + order2 + "&fullSearch=" + fullsearch;
         session.setAttribute("prev_url", current_url);
 
         if(sortBy1.equals("rating")){ sortBy1 = "ISNULL(rating), "+sortBy1;}
@@ -76,270 +76,393 @@ public class MoviesServlet extends HttpServlet {
         
         String query = "";
         //start building query
-        if(!(genre.equals("null") || genre == null || genre.equals(""))) {
-            query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
-            "from movies as m LEFT join ratings as r on r.movieId = m.id, genres as g, genres_in_movies as gim \n" +
-            "where g.name like ? and gim.genreId = g.id and m.id = gim.movieId \n" +
-            "group by m.id";
+        System.out.println(fullsearch);
+        if(!(fullsearch.equals("null") || fullsearch == null || fullsearch.equals("")))
+        {
+            PrintWriter out = response.getWriter();
+            try (Connection conn = dataSource.getConnection()) {
+                // Get a connection from dataSource
+
+                String[] parse = fullsearch.split(" ");
+                query = "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                        "                            from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                        "                            where MATCH (m.title) AGAINST (? IN boolean mode) ";
+                String tmp = "";
+
+                for (int i = 0; i < parse.length; i++)
+                {
+                    tmp += "+" + parse[i] + "* ";
+                }
+
+
+                System.out.println(query);
+                // Declare our statement
+                PreparedStatement statement = conn.prepareStatement(query);
+
+                // Set the parameter represented by "?" in the query to the id we get from url,
+                // num 1 indicates the first "?" in the query
+                statement.setString(1, tmp);
+
+                // Perform the query
+                ResultSet rs = statement.executeQuery();
+
+                JsonArray jsonArray = new JsonArray();
+
+                // Iterate through each row of rs
+                while (rs.next()) {
+
+                    String movie_id = rs.getString("id");
+                    String movie_title = rs.getString("title");
+                    String movie_year= rs.getString("year");
+                    String movie_director = rs.getString("director");
+                    String movie_rating = rs.getString("rating");
+
+                    String sub_query_gnames = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames \n" +
+                            "from genres as g, genres_in_movies as gim \n" +
+                            "where gim.genreId = g.id and gim.movieId = ? ";
+                    PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
+                    gnames_statement.setString(1, movie_id);
+                    ResultSet gnames_rs = gnames_statement.executeQuery();
+                    String movie_gnames = "null";
+                    if(gnames_rs.next()){
+                        movie_gnames= gnames_rs.getString("gnames");
+                    }
+                    gnames_rs.close();
+
+                    String sub_query_snames = "select substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames \n" +
+                            "from stars as s, stars_in_movies as sim \n" +
+                            "where sim.starId = s.id and sim.movieId = ? ";
+                    PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
+                    snames_statement.setString(1, movie_id);
+                    ResultSet snames_rs = snames_statement.executeQuery();
+                    String movie_snames = "null";
+                    if(snames_rs.next()){
+                        movie_snames= snames_rs.getString("snames");
+                    }
+                    snames_rs.close();
+
+                    // Create a JsonObject based on the data we retrieve from rs
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("movie_id", movie_id);
+                    jsonObject.addProperty("movie_title", movie_title);
+                    jsonObject.addProperty("movie_year", movie_year);
+                    jsonObject.addProperty("movie_director", movie_director);
+                    jsonObject.addProperty("movie_gnames", movie_gnames);
+                    jsonObject.addProperty("movie_snames", movie_snames);
+                    jsonObject.addProperty("movie_rating", movie_rating);
+
+                    jsonArray.add(jsonObject);
+                }
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("numRecords", numRecords);
+                jsonObject.addProperty("startIndex", startIndex);
+                jsonObject.addProperty("totalResults", totalResults);
+                jsonObject.addProperty("sortBy1", sortBy1);
+                jsonObject.addProperty("order1", order1);
+                jsonObject.addProperty("sortBy2", sortBy2);
+                jsonObject.addProperty("order2", order2);
+                jsonArray.add(jsonObject);
+                rs.close();
+                statement.close();
+
+                // Log to localhost log
+                request.getServletContext().log("getting " + jsonArray.size() + " results");
+
+                // Write JSON string to output
+                out.write(jsonArray.toString());
+                // Set response status to 200 (OK)
+                response.setStatus(200);
+
+
+            } catch (Exception e) {
+                // Write error message JSON object to output
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("errorMessage", e.getMessage());
+                out.write(jsonObject.toString());
+
+                // Log error to localhost log
+                request.getServletContext().log("Error:", e);
+                // Set response status to 500 (Internal Server Error)
+                response.setStatus(500);
+            } finally {
+                out.close();
+            }
+
+
+
+
         }
-        else if(!(az.equals("null") || az == null || az.equals(""))){
-            if (az.equals("*"))
-            {                
+        else
+        {
+            if(!(genre.equals("null") || genre == null || genre.equals(""))) {
                 query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
-                "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
-                "where m.title not REGEXP \'^[0-9A-Za-z]\' " +
-                "group by m.id";
+                        "from movies as m LEFT join ratings as r on r.movieId = m.id, genres as g, genres_in_movies as gim \n" +
+                        "where g.name like ? and gim.genreId = g.id and m.id = gim.movieId \n" +
+                        "group by m.id";
+            }
+            else if(!(az.equals("null") || az == null || az.equals(""))){
+                if (az.equals("*"))
+                {
+                    query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                            "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                            "where m.title not REGEXP \'^[0-9A-Za-z]\' " +
+                            "group by m.id";
+                }
+                else{
+                    query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                            "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                            "where m.title like ? \n" +
+                            "group by m.id";
+                }
             }
             else{
-                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
-                "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
-                "where m.title like ? \n" +
-                "group by m.id";
+                if(!(stars.equals("null") || stars == null || stars.equals(""))){
+                    query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                            "from movies as m LEFT join ratings as r on r.movieId = m.id, (SELECT movieId FROM stars as s, stars_in_movies as sim \n" +
+                            "where sim.starId = s.id and s.name LIKE ? group by movieId) as mid \n" +
+                            "where mid.movieId = m.id \n" +
+                            "and m.title LIKE ? \n" +
+                            "and m.year like ? \n" +
+                            "and m.director LIKE ? \n" +
+                            "group by m.id";
+                }
+                else{
+                    query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                            "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
+                            "where m.title LIKE ? \n" +
+                            "and m.year like ? \n" +
+                            "and m.director LIKE ? \n" +
+                            "group by m.id";
+                }
             }
-        }
-        else{
-            if(!(stars.equals("null") || stars == null || stars.equals(""))){
-                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
-                "from movies as m LEFT join ratings as r on r.movieId = m.id, (SELECT movieId FROM stars as s, stars_in_movies as sim \n" +
-                "where sim.starId = s.id and s.name LIKE ? group by movieId) as mid \n" +
-                "where mid.movieId = m.id \n" +
-                "and m.title LIKE ? \n" +
-                "and m.year like ? \n" +
-                "and m.director LIKE ? \n" +
-                "group by m.id";
+
+            if (year.equals("")){year = "%";}
+
+            if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                query += " order by ? " + sortBy1;
+                if(!(order1 == null || order1.equals("null"))){
+                    query += " ? " + order1;
+                }
             }
-            else{
-                query += "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
-                    "from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
-                    "where m.title LIKE ? \n" +
-                    "and m.year like ? \n" +
-                    "and m.director LIKE ? \n" +
-                    "group by m.id";
+
+            if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                query += ", ? " + sortBy2;
+                if(!(order2 == null || order2.equals("null"))){
+                    query += " ? " + order2;
+                }
             }
-        }
 
-        if (year.equals("")){year = "%";}
+            // String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
+            String queryResultLimit = " limit ? " + " offset ? " + " ";
 
-        if (!(sortBy1 == null || sortBy1.equals("null"))) {
-            query += " order by ? " + sortBy1;
-            if(!(order1 == null || order1.equals("null"))){
-                query += " ? " + order1;
-            }
-        }
+            // Output stream to STDOUT
+            PrintWriter out = response.getWriter();
+            // Get a connection from dataSource and let resource manager close the connection after usage.
+            try (Connection conn = dataSource.getConnection()) {
 
-        if (!(sortBy2 == null || sortBy2.equals("null"))) {
-            query += ", ? " + sortBy2;
-            if(!(order2 == null || order2.equals("null"))){
-                query += " ? " + order2;
-            }
-        }
+                //try to get total results at first time
+                if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
+                    String count_query = "select count(*) as c from (" + query + ") as fc";
+                    System.out.println(count_query);
+                    PreparedStatement count_statement = conn.prepareStatement(count_query);
+                    int ps_idex = 0;
+                    if (!(genre.equals("null") || genre == null || genre.equals(""))){
+                        count_statement.setString(1, genre);
+                        ps_idex = 1;
+                    }
+                    else if(!(az.equals("null") || az == null || az.equals(""))){
+                        if (!az.equals("*"))
+                        {
+                            count_statement.setString(1, az+"%");
+                            ps_idex = 1;
+                        }
+                    }
+                    else
+                    {
+                        if(!(stars.equals("null") || stars == null || stars.equals(""))){
+                            count_statement.setString(1, "%"+stars+"%");
+                            count_statement.setString(2, "%"+name+"%");
+                            count_statement.setString(3, year);
+                            count_statement.setString(4, "%"+director+"%");
+                            ps_idex = 4;
+                        }
+                        else{
+                            count_statement.setString(1, "%"+name+"%");
+                            count_statement.setString(2, year);
+                            count_statement.setString(3, "%"+director+"%");
+                            ps_idex = 3;
+                        }
+                    }
 
-        // String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
-        String queryResultLimit = " limit ? " + " offset ? " + " ";
+                    if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                        count_statement.setString(++ps_idex,sortBy1);
+                        System.out.print("pi: ");
+                        System.out.println(ps_idex);
+                        if(!(order1 == null || order1.equals("null"))){
+                            count_statement.setString(++ps_idex,order1);
+                            System.out.print("pi: ");
+                            System.out.println(ps_idex);
+                        }
+                    }
 
-        // Output stream to STDOUT
-        PrintWriter out = response.getWriter();
-        // Get a connection from dataSource and let resource manager close the connection after usage.
-        try (Connection conn = dataSource.getConnection()) {
+                    if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                        count_statement.setString(++ps_idex,sortBy2);
+                        if(!(order2 == null || order2.equals("null"))){
+                            count_statement.setString(++ps_idex,order2);
+                        }
+                    }
 
-            //try to get total results at first time
-            if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
-                String count_query = "select count(*) as c from (" + query + ") as fc";
-                System.out.println(count_query); 
-                PreparedStatement count_statement = conn.prepareStatement(count_query);
+                    ResultSet rs1 = count_statement.executeQuery();
+                    while (rs1.next()) {
+                        totalResults = rs1.getString("c");
+                    }
+                    rs1.close();
+                }
+
+                System.out.println(totalResults);
+
+                query += queryResultLimit;
+
+                System.out.println(query);
+
+                PreparedStatement statement = conn.prepareStatement(query);
+
                 int ps_idex = 0;
                 if (!(genre.equals("null") || genre == null || genre.equals(""))){
-                    count_statement.setString(1, genre);
+                    statement.setString(1, genre);
                     ps_idex = 1;
                 }
                 else if(!(az.equals("null") || az == null || az.equals(""))){
                     if (!az.equals("*"))
                     {
-                        count_statement.setString(1, az+"%");
+                        statement.setString(1, az+"%");
                         ps_idex = 1;
                     }
                 }
                 else
-                {            
+                {
                     if(!(stars.equals("null") || stars == null || stars.equals(""))){
-                        count_statement.setString(1, "%"+stars+"%");
-                        count_statement.setString(2, "%"+name+"%");
-                        count_statement.setString(3, year);
-                        count_statement.setString(4, "%"+director+"%");
+                        statement.setString(1, "%"+stars+"%");
+                        statement.setString(2, "%"+name+"%");
+                        statement.setString(3, year);
+                        statement.setString(4, "%"+director+"%");
                         ps_idex = 4;
                     }
                     else{
-                        count_statement.setString(1, "%"+name+"%");
-                        count_statement.setString(2, year);
-                        count_statement.setString(3, "%"+director+"%");
+                        statement.setString(1, "%"+name+"%");
+                        statement.setString(2, year);
+                        statement.setString(3, "%"+director+"%");
                         ps_idex = 3;
                     }
                 }
 
                 if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                    count_statement.setString(++ps_idex,sortBy1);
-                    System.out.print("pi: ");
-                    System.out.println(ps_idex);
+                    statement.setString(++ps_idex,sortBy1);
                     if(!(order1 == null || order1.equals("null"))){
-                        count_statement.setString(++ps_idex,order1);
-                        System.out.print("pi: ");
-                        System.out.println(ps_idex);
+                        statement.setString(++ps_idex,order1);
                     }
                 }
-        
+
                 if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                    count_statement.setString(++ps_idex,sortBy2);
+                    statement.setString(++ps_idex,sortBy2);
                     if(!(order2 == null || order2.equals("null"))){
-                        count_statement.setString(++ps_idex,order2);
+                        statement.setString(++ps_idex,order2);
                     }
-                }   
-
-                ResultSet rs1 = count_statement.executeQuery();
-                while (rs1.next()) {
-                    totalResults = rs1.getString("c");
                 }
-                rs1.close();
-            }
 
-            System.out.println(totalResults);
-   
-            query += queryResultLimit;
+                System.out.print("pi: ");
+                System.out.println(ps_idex);
+                statement.setInt(++ps_idex,Integer.parseInt(numRecords));
+                System.out.print("pi: ");
+                System.out.println(ps_idex);
+                statement.setInt(++ps_idex,Integer.parseInt(startIndex));
 
-            System.out.println(query);
+                ResultSet rs = statement.executeQuery();
 
-            PreparedStatement statement = conn.prepareStatement(query);
+                JsonArray jsonArray = new JsonArray();
 
-            int ps_idex = 0;
-            if (!(genre.equals("null") || genre == null || genre.equals(""))){
-                statement.setString(1, genre);
-                ps_idex = 1;
-            }
-            else if(!(az.equals("null") || az == null || az.equals(""))){
-                if (!az.equals("*"))
-                {
-                    statement.setString(1, az+"%");
-                    ps_idex = 1;
+                // Iterate through each row of rs
+                while (rs.next()) {
+                    String movie_id = rs.getString("id");
+                    String movie_title = rs.getString("title");
+                    String movie_year= rs.getString("year");
+                    String movie_director = rs.getString("director");
+                    String movie_rating = rs.getString("rating");
+
+                    String sub_query_gnames = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames \n" +
+                            "from genres as g, genres_in_movies as gim \n" +
+                            "where gim.genreId = g.id and gim.movieId = ? ";
+                    PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
+                    gnames_statement.setString(1, movie_id);
+                    ResultSet gnames_rs = gnames_statement.executeQuery();
+                    String movie_gnames = "null";
+                    if(gnames_rs.next()){
+                        movie_gnames= gnames_rs.getString("gnames");
+                    }
+                    gnames_rs.close();
+
+                    String sub_query_snames = "select substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames \n" +
+                            "from stars as s, stars_in_movies as sim \n" +
+                            "where sim.starId = s.id and sim.movieId = ? ";
+                    PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
+                    snames_statement.setString(1, movie_id);
+                    ResultSet snames_rs = snames_statement.executeQuery();
+                    String movie_snames = "null";
+                    if(snames_rs.next()){
+                        movie_snames= snames_rs.getString("snames");
+                    }
+                    snames_rs.close();
+
+                    // Create a JsonObject based on the data we retrieve from rs
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("movie_id", movie_id);
+                    jsonObject.addProperty("movie_title", movie_title);
+                    jsonObject.addProperty("movie_year", movie_year);
+                    jsonObject.addProperty("movie_director", movie_director);
+                    jsonObject.addProperty("movie_gnames", movie_gnames);
+                    jsonObject.addProperty("movie_snames", movie_snames);
+                    jsonObject.addProperty("movie_rating", movie_rating);
+
+                    jsonArray.add(jsonObject);
                 }
-            }
-            else
-            {            
-                if(!(stars.equals("null") || stars == null || stars.equals(""))){
-                    statement.setString(1, "%"+stars+"%");
-                    statement.setString(2, "%"+name+"%");
-                    statement.setString(3, year);
-                    statement.setString(4, "%"+director+"%");
-                    ps_idex = 4;
-                }
-                else{
-                    statement.setString(1, "%"+name+"%");
-                    statement.setString(2, year);
-                    statement.setString(3, "%"+director+"%");
-                    ps_idex = 3;
-                }
-            }
 
-            if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                statement.setString(++ps_idex,sortBy1);
-                if(!(order1 == null || order1.equals("null"))){
-                    statement.setString(++ps_idex,order1);
-                }
-            }
-    
-            if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                statement.setString(++ps_idex,sortBy2);
-                if(!(order2 == null || order2.equals("null"))){
-                    statement.setString(++ps_idex,order2);
-                }
-            }
-
-            System.out.print("pi: ");
-            System.out.println(ps_idex);
-            statement.setInt(++ps_idex,Integer.parseInt(numRecords));
-            System.out.print("pi: ");
-            System.out.println(ps_idex);
-            statement.setInt(++ps_idex,Integer.parseInt(startIndex));
-
-            ResultSet rs = statement.executeQuery();
-
-            JsonArray jsonArray = new JsonArray();
-
-            // Iterate through each row of rs
-            while (rs.next()) {
-                String movie_id = rs.getString("id");
-                String movie_title = rs.getString("title");
-                String movie_year= rs.getString("year");
-                String movie_director = rs.getString("director");
-                String movie_rating = rs.getString("rating");
-
-                String sub_query_gnames = "select substring_index(group_concat(DISTINCT g.name order by g.name asc separator ', '), ', ' , 3) as gnames \n" +
-                "from genres as g, genres_in_movies as gim \n" +
-                "where gim.genreId = g.id and gim.movieId = ? ";
-                PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
-                gnames_statement.setString(1, movie_id);
-                ResultSet gnames_rs = gnames_statement.executeQuery();
-                String movie_gnames = "null";
-                if(gnames_rs.next()){
-                    movie_gnames= gnames_rs.getString("gnames");
-                }
-                gnames_rs.close();
-
-                String sub_query_snames = "select substring_index(group_concat(DISTINCT CONCAT_WS('-', s.id, s.name) order by s.name asc separator ', '), ', ' , 3) as snames \n" +
-                "from stars as s, stars_in_movies as sim \n" +
-                "where sim.starId = s.id and sim.movieId = ? ";
-                PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
-                snames_statement.setString(1, movie_id);
-                ResultSet snames_rs = snames_statement.executeQuery();
-                String movie_snames = "null";
-                if(snames_rs.next()){
-                    movie_snames= snames_rs.getString("snames");
-                }
-                snames_rs.close();
-
-                // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("movie_id", movie_id);
-                jsonObject.addProperty("movie_title", movie_title);
-                jsonObject.addProperty("movie_year", movie_year);
-                jsonObject.addProperty("movie_director", movie_director);
-                jsonObject.addProperty("movie_gnames", movie_gnames);
-                jsonObject.addProperty("movie_snames", movie_snames);
-                jsonObject.addProperty("movie_rating", movie_rating);
-
+                jsonObject.addProperty("numRecords", numRecords);
+                jsonObject.addProperty("startIndex", startIndex);
+                jsonObject.addProperty("totalResults", totalResults);
+                jsonObject.addProperty("sortBy1", sortBy1);
+                jsonObject.addProperty("order1", order1);
+                jsonObject.addProperty("sortBy2", sortBy2);
+                jsonObject.addProperty("order2", order2);
                 jsonArray.add(jsonObject);
+                rs.close();
+                statement.close();
+
+                // Log to localhost log
+                request.getServletContext().log("getting " + jsonArray.size() + " results");
+
+                // Write JSON string to output
+                out.write(jsonArray.toString());
+                // Set response status to 200 (OK)
+                response.setStatus(200);
+
+            } catch (Exception e) {
+
+                // Write error message JSON object to output
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("errorMessage", e.getMessage());
+                out.write(jsonObject.toString());
+
+                // Set response status to 500 (Internal Server Error)
+                response.setStatus(500);
+            } finally {
+                out.close();
             }
-            
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("numRecords", numRecords);
-            jsonObject.addProperty("startIndex", startIndex);
-            jsonObject.addProperty("totalResults", totalResults);
-            jsonObject.addProperty("sortBy1", sortBy1);
-            jsonObject.addProperty("order1", order1);
-            jsonObject.addProperty("sortBy2", sortBy2);
-            jsonObject.addProperty("order2", order2);
-            jsonArray.add(jsonObject);
-            rs.close();
-            statement.close();
 
-            // Log to localhost log
-            request.getServletContext().log("getting " + jsonArray.size() + " results");
 
-            // Write JSON string to output
-            out.write(jsonArray.toString());
-            // Set response status to 200 (OK)
-            response.setStatus(200);
-
-        } catch (Exception e) {
-
-            // Write error message JSON object to output
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("errorMessage", e.getMessage());
-            out.write(jsonObject.toString());
-
-            // Set response status to 500 (Internal Server Error)
-            response.setStatus(500);
-        } finally {
-            out.close();
         }
+
 
         // Always remember to close db connection after usage. Here it's done by try-with-resources
 

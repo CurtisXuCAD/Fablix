@@ -8,6 +8,9 @@
 </head>
 
 <body>
+
+
+
     <div class="head_a">
 
         <h1 id="username"> Welcome to Fablix, </h1>
@@ -20,6 +23,17 @@
     </div>
     <div class="a">
         <div class="b">
+
+            <h1 class="search_head">Main Search: </h1>
+
+            <form  id="main_search_form" ACTION="movie.html" METHOD="GET">
+                <input  class = "e1"TYPE="TEXT" name="fullSearch" id="autocomplete">
+                <input  class="g1" TYPE="SUBMIT" VALUE="Search">
+            </form>
+
+
+
+
             <h1 class="genres_head"> Genres </h1>
 
             <div class="links" id="genres_links">
@@ -34,7 +48,7 @@
         </div>
 
         <div class="c">
-            <h1 class="search_head">Search: </h1>
+            <h1 class="search_head">Detail Search: </h1>
             <form class="d" id="search_form" ACTION="movie.html" METHOD="GET">
                 <h3> Title: </h3>
                 <input class="e" TYPE="TEXT" placeholder="Title" name="name" />
@@ -263,6 +277,12 @@
     <!-- include jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- include our own JS file -->
+    <!-- include jquery autocomplete JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
+
+    <!-- Bootstrap for CSS -->
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>-->
+
     <script src="main.js"></script>
 
 </body>

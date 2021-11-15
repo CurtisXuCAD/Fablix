@@ -489,6 +489,7 @@ document.getElementById("sort_button").addEventListener("click", () => {
  * Once this .js is loaded, following scripts will be executed by the browser
  */
 let movieName = getParameterByName('name');
+let main_Search = getParameterByName('fullSearch');
 let movieDirector = getParameterByName('director');
 let movieStars = getParameterByName('stars');
 let movieYear = getParameterByName('year');
@@ -515,6 +516,7 @@ jQuery.ajax({
         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
         startIndex + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-        "&sortBy2=" + sortBy2 + "&order2=" + order2, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
+        "&sortBy2=" + sortBy2 + "&order2=" + order2 + "&fullSearch=" + main_Search, // Setting request url, which is mapped by MoviesServlet in MoviesServlet.java
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MoviesServlet
 });
+

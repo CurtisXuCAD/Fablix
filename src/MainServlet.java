@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 /**
  * A servlet that takes input from a html <form> and talks to MySQL moviedbexample,
@@ -28,6 +29,8 @@ public class MainServlet extends HttpServlet {
 
     // Create a dataSource which registered in web.
     private DataSource dataSource;
+
+    public static HashMap<Integer, String> superHeroMap = new HashMap<>();
 
     public void init(ServletConfig config) {
         try {
@@ -53,6 +56,118 @@ public class MainServlet extends HttpServlet {
                     session.invalidate();
                     // response.sendRedirect("login.html");
                 }
+
+            try {
+                // setup the response json arrray
+                JsonArray jsonArray = new JsonArray();
+
+                // get the query string from parameter
+                String query = request.getParameter("query");
+
+                // return the empty json array if query is null or empty
+                if (query == null || query.trim().isEmpty()) {
+                    response.getWriter().write(jsonArray.toString());
+                    return;
+                }
+
+                // search on superheroes and add the results to JSON Array
+                // this example only does a substring match
+                // TODO: in project 4, you should do full text search with MySQL to find the matches on movies and stars
+
+                String fullsearch = query;
+                PrintWriter out = response.getWriter();
+                try (Connection conn = dataSource.getConnection()) {
+                    // Get a connection from dataSource
+
+                    String[] parse = fullsearch.split(" ");
+                    query = "SELECT id, title \n" +
+                            "    from movies  \n" +
+                            "   where MATCH (title) AGAINST (? IN boolean mode) ";
+                    String tmp = "";
+
+                    for (int i = 0; i < parse.length; i++)
+                    {
+                        tmp += "+" + parse[i] + "* ";
+                    }
+
+
+
+                    // Declare our statement
+                    PreparedStatement statement = conn.prepareStatement(query);
+
+                    System.out.println(statement);
+                    // Set the parameter represented by "?" in the query to the id we get from url,
+                    // num 1 indicates the first "?" in the query
+                    statement.setString(1, tmp);
+
+                    // Perform the query
+                    System.out.println(statement);
+                    ResultSet rs = statement.executeQuery();
+
+
+                    // Iterate through each row of rs
+                    while (rs.next()) {
+
+                        String movie_id = rs.getString("id");
+                        String movie_title = rs.getString("title");
+
+                        // Create a JsonObject based on the data we retrieve from rs
+
+
+
+                        jsonArray.add(generateJsonObject(movie_id,movie_title));
+                    }
+
+
+
+                    rs.close();
+                    statement.close();
+
+
+
+                    // Write JSON string to output
+                    out.write(jsonArray.toString());
+                    // Set response status to 200 (OK)
+                    response.setStatus(200);
+
+
+                } catch (Exception e) {
+                    // Write error message JSON object to output
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("errorMessage", e.getMessage());
+                    out.write(jsonObject.toString());
+
+                    // Log error to localhost log
+                    request.getServletContext().log("Error:", e);
+                    // Set response status to 500 (Internal Server Error)
+                    response.setStatus(500);
+                } finally {
+                    out.close();
+                }
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                response.sendError(500, e.getMessage());
+            }
+
+
+
+
+
+
+    }
+
+    private static JsonObject generateJsonObject(String ID, String Name) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", Name);
+
+        JsonObject additionalDataJsonObject = new JsonObject();
+        additionalDataJsonObject.addProperty("ID", ID);
+
+        jsonObject.add("data", additionalDataJsonObject);
+        return jsonObject;
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
