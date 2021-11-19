@@ -4,9 +4,9 @@ This is a UCI CS122B Project4 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting
 ### Note2: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
 ---
 ## Video Demo Link
-**https://youtu.be/lbSoraMGclA**
+**https://youtu.be/V__NT6QTdew**
 ## Application URL
-**https://ec2-13-57-58-242.us-west-1.compute.amazonaws.com:8443/fablix/**
+**https://ec2-54-151-116-40.us-west-1.compute.amazonaws.com:8443/fablix/**
 
 ## How to deploy your application with Tomcat
 - On AWS Server clone the project1
