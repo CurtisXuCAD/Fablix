@@ -43,6 +43,10 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("username");
         String password = request.getParameter("password");
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        String deviceTag = request.getParameter("deviceTag");
+        if(deviceTag == null) {
+            deviceTag = "";
+        }
         // System.out.println("Login Post");
         // The log message can be found in localhost log
         request.getServletContext().log("GetUser: " + email);
@@ -52,17 +56,19 @@ public class LoginServlet extends HttpServlet {
 
 
         JsonObject responseJsonObject = new JsonObject();
-        try {
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-        } catch (Exception e) {
-            responseJsonObject.addProperty("status", "fail");
-            // Log to localhost log
-            request.getServletContext().log("Login failed");
-            // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-            // responseJsonObject.addProperty("message", "user with email " + email + " doesn't exist");
-            responseJsonObject.addProperty("message", "Verification Failed");
-            out.write(responseJsonObject.toString());
-            return;
+        if(!deviceTag.equals("Android")) {
+            try {
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            } catch (Exception e) {
+                responseJsonObject.addProperty("status", "fail");
+                // Log to localhost log
+                request.getServletContext().log("Login failed");
+                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
+                // responseJsonObject.addProperty("message", "user with email " + email + " doesn't exist");
+                responseJsonObject.addProperty("message", "Verification Failed");
+                out.write(responseJsonObject.toString());
+                return;
+            }
         }
 
         try (Connection conn = dataSource.getConnection())
