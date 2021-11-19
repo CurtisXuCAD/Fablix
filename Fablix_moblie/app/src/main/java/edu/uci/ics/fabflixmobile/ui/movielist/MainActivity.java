@@ -28,6 +28,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private EditText searchTitle;
+    private TextView message;
 
     /*
       In Android, localhost is the address of the device or the emulator.
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String numRecords = "20";
     private final String startIndex = "0";
-    private final String searchURL = "movies?director=&stars=&year=&genre=null&AZ=null&sortBy1=null&order1=null&sortBy2=null&order2=null&numRecords=" + numRecords + "&startIndex=" + startIndex + "&name=";
+    private final String searchURL = "movies?name=&director=&stars=&year=&genre=null&AZ=null&sortBy1=null&order1=null&sortBy2=null&order2=null&numRecords=" + numRecords + "&startIndex=" + startIndex + "&fullSearch=";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,13 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         searchTitle = binding.searchTitle;
         final Button searchButton = binding.searchButton;
+        message = binding.message;
 
         //assign a listener to call a function to handle the user request when clicking a button
-        searchButton.setOnClickListener(view -> login());
+        searchButton.setOnClickListener(view -> search());
     }
 
     @SuppressLint("SetTextI18n")
-    public void login() {
+    public void search() {
         String url = searchURL + searchTitle.getText().toString();
 //        message.setText("Searching");
         // use the same network queue across our application
@@ -72,19 +74,23 @@ public class MainActivity extends AppCompatActivity {
                     //  upon different response value.
                     Log.d("search.success", response);
                     try{
-                        JSONObject re = new JSONObject(response);
-                        if(re.getString("status").equals("success")){
+                        JSONArray re = new JSONArray(response);
+//                        re.getJSONObject(0);
+                        if(re.length() > 1){
+                            Log.d("search.success", response);
 //                            message.setText("Login Success");
                             //Complete and destroy login activity once successful
                             finish();
                             // initialize the activity(page)/destination
                             Intent MovieListPage = new Intent(MainActivity.this, MovieListActivity.class);
+                            MovieListPage.putExtra("resultData", response);
+                            MovieListPage.putExtra("searchTitle", searchTitle.getText().toString());
                             // activate the list page.
                             startActivity(MovieListPage);
                         }
                         else {
-                            Log.d("search.fail", response);
-//                            message.setText(re.getString("message"));
+//                            Log.d("search.fail", response);
+                            message.setText("No Result Found");
                         }
                     }catch (JSONException err){
                         Log.d("search.error", err.toString());

@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                             //Complete and destroy login activity once successful
                             finish();
                             // initialize the activity(page)/destination
-                            Intent SearchMainPage = new Intent(LoginActivity.this, MovieListActivity.class);
+                            Intent SearchMainPage = new Intent(LoginActivity.this, MainActivity.class);
                             // activate the list page.
                             startActivity(SearchMainPage);
                         }
