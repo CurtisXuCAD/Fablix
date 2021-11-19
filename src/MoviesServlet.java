@@ -54,8 +54,10 @@ public class MoviesServlet extends HttpServlet {
         String startIndex = (String)request.getParameter("startIndex");
         String totalResults = (String)request.getParameter("totalResults");
         String sortBy1 = (String)request.getParameter("sortBy1");
+        String sortBy1_bk = sortBy1;
         String order1 = (String)request.getParameter("order1");
         String sortBy2 = (String)request.getParameter("sortBy2");
+        String sortBy2_bk = sortBy2;
         String order2 = (String)request.getParameter("order2");
         String fullsearch = (String)request.getParameter("fullSearch");
         System.out.println(stars);
@@ -72,6 +74,35 @@ public class MoviesServlet extends HttpServlet {
         if(sortBy1.equals("rating")){ sortBy1 = "ISNULL(rating), "+sortBy1;}
         if(sortBy2.equals("rating")){ sortBy2 = "ISNULL(rating), "+sortBy2;}
 
+        if(!(sortBy1_bk.equals("title") || sortBy1_bk.equals("rating") || sortBy1_bk == null || sortBy1_bk.equals("null"))){
+            PrintWriter out = response.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", "SQL Attack Alert");
+            out.write(jsonObject.toString());
+            response.setStatus(500);
+            return;}
+        if(!(sortBy2_bk.equals("title") || sortBy2_bk.equals("rating") || sortBy2_bk == null || sortBy2_bk.equals("null"))){
+            PrintWriter out = response.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", "SQL Attack Alert");
+            out.write(jsonObject.toString());
+            response.setStatus(500);
+            return;}
+        if(!(order1.equals("asc") || order1.equals("desc") || order1 == null || order1.equals("null"))){
+            PrintWriter out = response.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", "SQL Attack Alert");
+            out.write(jsonObject.toString());
+            response.setStatus(500);
+            return;}
+        if(!(order2.equals("asc") || order2.equals("desc") || order2 == null || order2.equals("null"))){
+            PrintWriter out = response.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", "SQL Attack Alert");
+            out.write(jsonObject.toString());
+            response.setStatus(500);
+            return;}
+
         // System.out.println(current_url);
         
         String query = "";
@@ -84,9 +115,24 @@ public class MoviesServlet extends HttpServlet {
                 // Get a connection from dataSource
 
                 String[] parse = fullsearch.split(" ");
-                query = "SELECT m.id, m.title, m.year, m.director, r.rating \n" +
+                query = "SELECT m.id, m.title as title, m.year, m.director, r.rating as rating\n" +
                         "                            from movies as m LEFT join ratings as r on r.movieId = m.id \n" +
                         "                            where MATCH (m.title) AGAINST (? IN boolean mode) ";
+
+                if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                    query += " order by " + sortBy1;
+                    if(!(order1 == null || order1.equals("null"))){
+                        query += " " + order1;
+                    }
+                }
+
+                if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                    query += ", " + sortBy2;
+                    if(!(order2 == null || order2.equals("null"))){
+                        query += " " + order2;
+                    }
+                }
+
                 String tmp = "";
 
                 for (int i = 0; i < parse.length; i++)
@@ -94,6 +140,41 @@ public class MoviesServlet extends HttpServlet {
                     tmp += "+" + parse[i] + "* ";
                 }
 
+                //get total number of results
+                if(totalResults == null || totalResults.equals("null") || totalResults.equals("")){
+                    String count_query = "select count(*) as c from (" + query + ") as fc";
+                    System.out.println(count_query);
+                    PreparedStatement count_statement = conn.prepareStatement(count_query);
+                    count_statement.setString(1, tmp);
+                    int ps_idex = 1;
+                    if (!(sortBy1 == null || sortBy1.equals("null"))) {
+                        count_statement.setString(++ps_idex,sortBy1);
+                        System.out.print("pi: ");
+                        System.out.println(ps_idex);
+                        if(!(order1 == null || order1.equals("null"))){
+                            count_statement.setString(++ps_idex,order1);
+                            System.out.print("pi: ");
+                            System.out.println(ps_idex);
+                        }
+                    }
+
+                    if (!(sortBy2 == null || sortBy2.equals("null"))) {
+                        count_statement.setString(++ps_idex,sortBy2);
+                        if(!(order2 == null || order2.equals("null"))){
+                            count_statement.setString(++ps_idex,order2);
+                        }
+                    }
+
+                    ResultSet rs1 = count_statement.executeQuery();
+                    while (rs1.next()) {
+                        totalResults = rs1.getString("c");
+                    }
+                    rs1.close();
+                }
+
+
+                // String queryResultLimit = " limit " + numRecords + " offset " + startIndex + " ";
+                query += " limit ? " + " offset ? " + " ";
 
                 System.out.println(query);
                 // Declare our statement
@@ -102,6 +183,28 @@ public class MoviesServlet extends HttpServlet {
                 // Set the parameter represented by "?" in the query to the id we get from url,
                 // num 1 indicates the first "?" in the query
                 statement.setString(1, tmp);
+                int ps_idex = 1;
+//                if (!(sortBy1 == null || sortBy1.equals("null"))) {
+//                    statement.setString(++ps_idex,sortBy1);
+//                    if(!(order1 == null || order1.equals("null"))){
+//                        statement.setString(++ps_idex,order1);
+//                    }
+//                }
+//
+//                if (!(sortBy2 == null || sortBy2.equals("null"))) {
+//                    statement.setString(++ps_idex,sortBy2);
+//                    if(!(order2 == null || order2.equals("null"))){
+//                        statement.setString(++ps_idex,order2);
+//                    }
+//                }
+
+                System.out.print("pi: ");
+                System.out.println(ps_idex);
+                statement.setInt(++ps_idex,Integer.parseInt(numRecords));
+                System.out.print("pi: ");
+                System.out.println(ps_idex);
+                statement.setInt(++ps_idex,Integer.parseInt(startIndex));
+
 
                 // Perform the query
                 ResultSet rs = statement.executeQuery();
@@ -158,9 +261,9 @@ public class MoviesServlet extends HttpServlet {
                 jsonObject.addProperty("numRecords", numRecords);
                 jsonObject.addProperty("startIndex", startIndex);
                 jsonObject.addProperty("totalResults", totalResults);
-                jsonObject.addProperty("sortBy1", sortBy1);
+                jsonObject.addProperty("sortBy1", sortBy1_bk);
                 jsonObject.addProperty("order1", order1);
-                jsonObject.addProperty("sortBy2", sortBy2);
+                jsonObject.addProperty("sortBy2", sortBy2_bk);
                 jsonObject.addProperty("order2", order2);
                 jsonArray.add(jsonObject);
                 rs.close();
@@ -240,16 +343,16 @@ public class MoviesServlet extends HttpServlet {
             if (year.equals("")){year = "%";}
 
             if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                query += " order by ? " + sortBy1;
+                query += " order by " + sortBy1;
                 if(!(order1 == null || order1.equals("null"))){
-                    query += " ? " + order1;
+                    query += " " + order1;
                 }
             }
 
             if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                query += ", ? " + sortBy2;
+                query += ", " + sortBy2;
                 if(!(order2 == null || order2.equals("null"))){
-                    query += " ? " + order2;
+                    query += " " + order2;
                 }
             }
 
@@ -295,23 +398,23 @@ public class MoviesServlet extends HttpServlet {
                         }
                     }
 
-                    if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                        count_statement.setString(++ps_idex,sortBy1);
-                        System.out.print("pi: ");
-                        System.out.println(ps_idex);
-                        if(!(order1 == null || order1.equals("null"))){
-                            count_statement.setString(++ps_idex,order1);
-                            System.out.print("pi: ");
-                            System.out.println(ps_idex);
-                        }
-                    }
-
-                    if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                        count_statement.setString(++ps_idex,sortBy2);
-                        if(!(order2 == null || order2.equals("null"))){
-                            count_statement.setString(++ps_idex,order2);
-                        }
-                    }
+//                    if (!(sortBy1 == null || sortBy1.equals("null"))) {
+//                        count_statement.setString(++ps_idex,sortBy1);
+//                        System.out.print("pi: ");
+//                        System.out.println(ps_idex);
+//                        if(!(order1 == null || order1.equals("null"))){
+//                            count_statement.setString(++ps_idex,order1);
+//                            System.out.print("pi: ");
+//                            System.out.println(ps_idex);
+//                        }
+//                    }
+//
+//                    if (!(sortBy2 == null || sortBy2.equals("null"))) {
+//                        count_statement.setString(++ps_idex,sortBy2);
+//                        if(!(order2 == null || order2.equals("null"))){
+//                            count_statement.setString(++ps_idex,order2);
+//                        }
+//                    }
 
                     ResultSet rs1 = count_statement.executeQuery();
                     while (rs1.next()) {
@@ -357,19 +460,19 @@ public class MoviesServlet extends HttpServlet {
                     }
                 }
 
-                if (!(sortBy1 == null || sortBy1.equals("null"))) {
-                    statement.setString(++ps_idex,sortBy1);
-                    if(!(order1 == null || order1.equals("null"))){
-                        statement.setString(++ps_idex,order1);
-                    }
-                }
-
-                if (!(sortBy2 == null || sortBy2.equals("null"))) {
-                    statement.setString(++ps_idex,sortBy2);
-                    if(!(order2 == null || order2.equals("null"))){
-                        statement.setString(++ps_idex,order2);
-                    }
-                }
+//                if (!(sortBy1 == null || sortBy1.equals("null"))) {
+//                    statement.setString(++ps_idex,sortBy1);
+//                    if(!(order1 == null || order1.equals("null"))){
+//                        statement.setString(++ps_idex,order1);
+//                    }
+//                }
+//
+//                if (!(sortBy2 == null || sortBy2.equals("null"))) {
+//                    statement.setString(++ps_idex,sortBy2);
+//                    if(!(order2 == null || order2.equals("null"))){
+//                        statement.setString(++ps_idex,order2);
+//                    }
+//                }
 
                 System.out.print("pi: ");
                 System.out.println(ps_idex);

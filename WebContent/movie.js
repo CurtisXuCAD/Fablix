@@ -132,7 +132,8 @@ function handleMovieResult(resultData) {
             let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                 "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
                 "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+                "&sortBy2=" + sortBy2 + "&order2=" + order2
+                + "&fullSearch=" + main_Search;
             htmlContent +=
                 '<div class = "link">' +
                 '<a class="link-dec" href="' + prev_url + '">' +
@@ -149,7 +150,8 @@ function handleMovieResult(resultData) {
             let prev_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                 "&numRecords=" + movieNum + "&startIndex=" + prev_index + "&totalResults=" + totalResults +
                 "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+                "&sortBy2=" + sortBy2 + "&order2=" + order2
+                + "&fullSearch=" + main_Search;
             htmlContent +=
                 '<div class = "link disabled">' +
                 '<a class="link-dec" href="' + prev_url + '">' +
@@ -165,7 +167,8 @@ function handleMovieResult(resultData) {
         let first_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
             "&numRecords=" + movieNum + "&startIndex=" + "0" + "&totalResults=" + totalResults +
             "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            "&sortBy2=" + sortBy2 + "&order2=" + order2
+            + "&fullSearch=" + main_Search;
         htmlContent += '<a href="' + first_page_url + '">' + "&laquo;" + '</a>';
 
         for (let i = 0; i < Math.ceil(t / b); i++) {
@@ -173,7 +176,8 @@ function handleMovieResult(resultData) {
                 let page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                     "&numRecords=" + movieNum + "&startIndex=" + (b * i).toString() + "&totalResults=" + totalResults +
                     "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                    "&sortBy2=" + sortBy2 + "&order2=" + order2;
+                    "&sortBy2=" + sortBy2 + "&order2=" + order2
+                    + "&fullSearch=" + main_Search;
 
                 htmlContent += '<a href="' + page_url + '"';
                 if (a == b * i) {
@@ -185,7 +189,8 @@ function handleMovieResult(resultData) {
         let last_page_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
             "&numRecords=" + movieNum + "&startIndex=" + (Math.floor((t - 1) / b) * b).toString() + "&totalResults=" + totalResults +
             "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-            "&sortBy2=" + sortBy2 + "&order2=" + order2;
+            "&sortBy2=" + sortBy2 + "&order2=" + order2
+            + "&fullSearch=" + main_Search;
         htmlContent += '<a href="' + last_page_url + '">' + "&raquo;" + '</a>';
 
         htmlContent += '</div>';
@@ -199,7 +204,8 @@ function handleMovieResult(resultData) {
             let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                 "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
                 "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+                "&sortBy2=" + sortBy2 + "&order2=" + order2
+                + "&fullSearch=" + main_Search;
             htmlContent +=
                 '<div class = "link">' +
                 '<a class="link-dec" href="' + next_url + '">' +
@@ -212,7 +218,8 @@ function handleMovieResult(resultData) {
             let next_url = "movie.html?name=" + movieName + "&director=" + movieDirector + "&stars=" + movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" + movieAZ +
                 "&numRecords=" + movieNum + "&startIndex=" + next_index + "&totalResults=" + totalResults +
                 "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-                "&sortBy2=" + sortBy2 + "&order2=" + order2;
+                "&sortBy2=" + sortBy2 + "&order2=" + order2
+                + "&fullSearch=" + main_Search;
             htmlContent +=
                 '<div class = "link disabled">' +
                 '<a class="link-dec" href="' + next_url + '">' +
@@ -437,7 +444,7 @@ document.getElementById("sort_button").addEventListener("click", () => {
         movieStars + "&year=" + movieYear + "&genre=" + movieGenre + "&AZ=" +
         movieAZ + "&numRecords=" + movieNum + "&startIndex=" +
         "0" + "&totalResults=" + totalResults + "&sortBy1=" + sortBy1 + "&order1=" + order1 +
-        "&sortBy2=" + sortBy2 + "&order2=" + order2);
+        "&sortBy2=" + sortBy2 + "&order2=" + order2 + "&fullSearch=" + main_Search);
 });
 
 // document.getElementById("title").addEventListener("click", () => {
