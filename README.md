@@ -1,5 +1,5 @@
 # CS122B-Fall21-Team-6
-This is a UCI CS122B Project3 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
+This is a UCI CS122B Project4 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
 ### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
 ### Note2: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
 ---
@@ -76,6 +76,8 @@ Others:
   XML Parsing
   Prepared Statedment
   Fixing Query & Statedment
+  Android App -- Fablix Mobile
+  Fixing Pagination & Sorting for full-text search result
 ```
 
 - Silence-silence-silence (Haoting Ni)
@@ -98,4 +100,6 @@ Others:
   reCAPTCHA
   Prepared Statedment
   Employee Dashboard
+  Full-text Search
+  Autocomplete
 ```

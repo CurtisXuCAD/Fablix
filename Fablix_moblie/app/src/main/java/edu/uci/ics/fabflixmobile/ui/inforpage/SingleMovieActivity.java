@@ -22,10 +22,10 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 public class SingleMovieActivity extends AppCompatActivity {
-    private final String host = "10.0.2.2";
-    private final String port = "8080";
+    private final String host = "ec2-54-151-116-40.us-west-1.compute.amazonaws.com";
+    private final String port = "8443";
     private final String domain = "fablix";
-    private final String baseURL = "http://" + host + ":" + port + "/" + domain;
+    private final String baseURL = "https://" + host + ":" + port + "/" + domain;
 
     private String searchTitle;
     private String prev_url_string;

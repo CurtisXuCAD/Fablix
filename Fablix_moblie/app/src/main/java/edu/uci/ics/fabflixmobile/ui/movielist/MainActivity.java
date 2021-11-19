@@ -34,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
       In Android, localhost is the address of the device or the emulator.
       To connect to your machine, you need to use the below IP address
      */
-    private final String host = "10.0.2.2";
-    private final String port = "8080";
+    private final String host = "ec2-54-151-116-40.us-west-1.compute.amazonaws.com";
+    private final String port = "8443";
     private final String domain = "fablix";
-    private final String baseURL = "http://" + host + ":" + port + "/" + domain;
+    private final String baseURL = "https://" + host + ":" + port + "/" + domain;
 
     private final String numRecords = "20";
     private final String startIndex = "0";
