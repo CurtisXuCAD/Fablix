@@ -15,15 +15,15 @@ function handleLoginResult(resultDataString) {
 }
 
 function handleUserInfo(resultData) {
-    console.log(resultData);
+    // console.log(resultData);
 
-    let genre_link =  $("#genres_links");
-    let char_link =  $("#char_links");
+    let genre_link = $("#genres_links");
+    let char_link = $("#char_links");
     let rowHTML = "";
-    for (let i = 0; i <  resultData.length-1; i++) {
+    for (let i = 0; i < resultData.length - 1; i++) {
 
-        rowHTML +="<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=" + resultData[i]["genres"] + "\">\n" +
-            "                "+ resultData[i]["genres"]+"\n" +
+        rowHTML += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=" + resultData[i]["genres"] + "\">\n" +
+            "                " + resultData[i]["genres"] + "\n" +
             "            </a>";
 
 
@@ -32,14 +32,14 @@ function handleUserInfo(resultData) {
     }
     let res = "";
     for (var i = 65; i <= 90; i++) {
-        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ="+String.fromCharCode(i)+"\">\n" +
-            "        "+String.fromCharCode(i)+"\n" +
+        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ=" + String.fromCharCode(i) + "\">\n" +
+            "        " + String.fromCharCode(i) + "\n" +
             "    </a>";
     }
 
     for (var x = 0; x <= 9; x++) {
-        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ="+x+"\">\n" +
-            "        "+x+"\n" +
+        res += "<a class=\"link-dec\" href=\"movie.html?name=&director=&stars=&year=&genre=&AZ=" + x + "\">\n" +
+            "        " + x + "\n" +
             "    </a>";
     }
 
@@ -48,7 +48,7 @@ function handleUserInfo(resultData) {
     char_link.append(res);
 
 
-    username = resultData[resultData.length-1]["genres"];
+    username = resultData[resultData.length - 1]["genres"];
 
 
     $("#username").text("Welcome to Fablix, " + username);
@@ -100,7 +100,7 @@ search_form.submit(handleAdvanceSearch);
 
 $('#autocomplete').autocomplete({
     // documentation of the lookup function can be found under the "Custom lookup function" section
-    lookup: function (query, doneCallback) {
+    lookup: function(query, doneCallback) {
         handleLookup(query, doneCallback)
     },
     onSelect: function(suggestion) {
@@ -109,9 +109,9 @@ $('#autocomplete').autocomplete({
     // set delay time
     deferRequestBy: 300,
 
-    minChars : 3
-    // there are some other parameters that you might want to use to satisfy all the requirements
-    // TODO: add other parameters, such as minimum characters
+    minChars: 3
+        // there are some other parameters that you might want to use to satisfy all the requirements
+        // TODO: add other parameters, such as minimum characters
 });
 
 function handleLookup(query, doneCallback) {
@@ -120,16 +120,13 @@ function handleLookup(query, doneCallback) {
 
     // TODO: if you want to check past query results first, you can do it here
 
-    if (query in cacheHash)
-    {
+    if (query in cacheHash) {
         console.log("using cache in frontend")
         handleLookupAjaxSuccess(cacheHash[query], query, doneCallback)
-    }
-    else
-    {
+    } else {
         console.log("sending AJAX request to backend Java Servlet")
-        // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
-        // with the query data
+            // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
+            // with the query data
         jQuery.ajax({
             "method": "GET",
             // generate the request url from the query.
@@ -157,16 +154,15 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     console.log(jsonData)
 
     // TODO: if you want to cache the result into a global variable you can do it here
-    if (!(query in cacheHash))
-    {
+    if (!(query in cacheHash)) {
         cacheHash[query] = data;
     }
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
-    jsonData = jsonData.slice(0,10);
-    doneCallback( { suggestions: jsonData } );
+    jsonData = jsonData.slice(0, 10);
+    doneCallback({ suggestions: jsonData });
 }
 
 function handleSelectSuggestion(suggestion) {

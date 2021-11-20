@@ -33,39 +33,39 @@ public class LoginFilter implements Filter {
         System.out.println("LoginFilter: " + httpRequest.getRequestURI());
 
         // Check if this URL is allowed to access without logging in
-//        if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
-//            System.out.println("isAllow");
-            // Keep default action: pass along the filter chain
-            // System.out.println(httpRequest.getSession().getAttribute("logged_in"));
-            //if(httpRequest.getSession().getAttribute("logged_in") != null) {
-//                if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
-//                    httpResponse.sendRedirect(resultPath+"/main.html");
-//                    System.out.println("LoginFilter: to main");
-//                }
-            //}
-           // else{
-           // httpResponse.sendRedirect(resultPath+"/main.html");
+       if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
+           System.out.println("isAllow");
+            Keep default action: pass along the filter chain
+            System.out.println(httpRequest.getSession().getAttribute("logged_in"));
+            if(httpRequest.getSession().getAttribute("logged_in") != null) {
+               if ((Boolean)httpRequest.getSession().getAttribute("logged_in") == true) {
+                   httpResponse.sendRedirect(resultPath+"/main.html");
+                   System.out.println("LoginFilter: to main");
+               }
+            }
+           else{
+           httpResponse.sendRedirect(resultPath+"/main.html");
                 chain.doFilter(request, response);
-           // }
-//        }
-//        else{
-//            // System.out.println("NoAllow");
-//            // Redirect to login page if the "user" attribute doesn't exist in session
-//            if (httpRequest.getSession().getAttribute("user") == null) {
-//                System.out.println("LoginFilter: to login");
-//                if(dashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
-//                    httpResponse.sendRedirect(resultPath+"/_dashboard.html");
-//                }
-//                else{
-//                    httpResponse.sendRedirect(resultPath+"/login.html");
-//                }
-//            } else {
-//                if ((Boolean) httpRequest.getSession().getAttribute("admin") == false && notAllowedDashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
-//                    httpResponse.sendRedirect(resultPath+"/main.html");
-//                }
-//                chain.doFilter(request, response);
-//            }
-//        }
+           }
+       }
+       else{
+           // System.out.println("NoAllow");
+           // Redirect to login page if the "user" attribute doesn't exist in session
+           if (httpRequest.getSession().getAttribute("user") == null) {
+               System.out.println("LoginFilter: to login");
+               if(dashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
+                   httpResponse.sendRedirect(resultPath+"/_dashboard.html");
+               }
+               else{
+                   httpResponse.sendRedirect(resultPath+"/login.html");
+               }
+           } else {
+               if ((Boolean) httpRequest.getSession().getAttribute("admin") == false && notAllowedDashboardURIs.stream().anyMatch(httpRequest.getRequestURI().toLowerCase()::endsWith)){
+                   httpResponse.sendRedirect(resultPath+"/main.html");
+               }
+               chain.doFilter(request, response);
+           }
+       }
     }
 
     private boolean isUrlAllowedWithoutLogin(String requestURI) {
