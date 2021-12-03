@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +43,15 @@ public class MoviesServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        //TS TJ time test
+        //------------------------------------------------------//
+        long startTj;
+        long endTj;
+        long TJ;
+        long startTS = System.nanoTime();
+        ArrayList<Long> TJs = new ArrayList<>();
+        //------------------------------------------------------//
 
         response.setContentType("application/json"); // Response mime type
 
@@ -165,7 +177,19 @@ public class MoviesServlet extends HttpServlet {
                         }
                     }
 
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet rs1 = count_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
+
                     while (rs1.next()) {
                         totalResults = rs1.getString("c");
                     }
@@ -207,7 +231,19 @@ public class MoviesServlet extends HttpServlet {
 
 
                 // Perform the query
+
+                //-----------------------------------------------------------//
+                startTj = System.nanoTime();
+                //-----------------------------------------------------------//
+
                 ResultSet rs = statement.executeQuery();
+
+                //-----------------------------------------------------------//
+                endTj = System.nanoTime();
+                TJ = endTj - startTj;
+                TJs.add(TJ);
+                //-----------------------------------------------------------//
+
 
                 JsonArray jsonArray = new JsonArray();
 
@@ -225,7 +261,20 @@ public class MoviesServlet extends HttpServlet {
                             "where gim.genreId = g.id and gim.movieId = ? ";
                     PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
                     gnames_statement.setString(1, movie_id);
+
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet gnames_rs = gnames_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
+
                     String movie_gnames = "null";
                     if(gnames_rs.next()){
                         movie_gnames= gnames_rs.getString("gnames");
@@ -237,7 +286,19 @@ public class MoviesServlet extends HttpServlet {
                             "where sim.starId = s.id and sim.movieId = ? ";
                     PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
                     snames_statement.setString(1, movie_id);
+
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet snames_rs = snames_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
                     String movie_snames = "null";
                     if(snames_rs.next()){
                         movie_snames= snames_rs.getString("snames");
@@ -277,6 +338,22 @@ public class MoviesServlet extends HttpServlet {
                 // Set response status to 200 (OK)
                 response.setStatus(200);
 
+                //-----------------------------------------------------------//
+                long endTS = System.nanoTime();
+                long ts = (endTS - startTS);
+                long tjTotal = 0;
+                for(long d : TJs)
+                    tjTotal += d;
+                String result_str = String.valueOf(ts) + "," + String.valueOf(tjTotal);
+                Path path = Paths.get(request.getServletContext().getRealPath("/"),"logpool.txt");
+                System.out.println(path.toString());
+                try{
+                    OutputStream logOut = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND));
+                    logOut.write(result_str.getBytes());
+                } catch (IOException e) {
+                    request.getServletContext().log(e.getMessage());
+                }
+                //-----------------------------------------------------------//
 
             } catch (Exception e) {
                 // Write error message JSON object to output
@@ -416,7 +493,18 @@ public class MoviesServlet extends HttpServlet {
 //                        }
 //                    }
 
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet rs1 = count_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
                     while (rs1.next()) {
                         totalResults = rs1.getString("c");
                     }
@@ -481,7 +569,17 @@ public class MoviesServlet extends HttpServlet {
                 System.out.println(ps_idex);
                 statement.setInt(++ps_idex,Integer.parseInt(startIndex));
 
+                //-----------------------------------------------------------//
+                startTj = System.nanoTime();
+                //-----------------------------------------------------------//
+
                 ResultSet rs = statement.executeQuery();
+
+                //-----------------------------------------------------------//
+                endTj = System.nanoTime();
+                TJ = endTj - startTj;
+                TJs.add(TJ);
+                //-----------------------------------------------------------//
 
                 JsonArray jsonArray = new JsonArray();
 
@@ -498,7 +596,19 @@ public class MoviesServlet extends HttpServlet {
                             "where gim.genreId = g.id and gim.movieId = ? ";
                     PreparedStatement gnames_statement = conn.prepareStatement(sub_query_gnames);
                     gnames_statement.setString(1, movie_id);
+
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet gnames_rs = gnames_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
                     String movie_gnames = "null";
                     if(gnames_rs.next()){
                         movie_gnames= gnames_rs.getString("gnames");
@@ -510,7 +620,19 @@ public class MoviesServlet extends HttpServlet {
                             "where sim.starId = s.id and sim.movieId = ? ";
                     PreparedStatement snames_statement = conn.prepareStatement(sub_query_snames);
                     snames_statement.setString(1, movie_id);
+
+                    //-----------------------------------------------------------//
+                    startTj = System.nanoTime();
+                    //-----------------------------------------------------------//
+
                     ResultSet snames_rs = snames_statement.executeQuery();
+
+                    //-----------------------------------------------------------//
+                    endTj = System.nanoTime();
+                    TJ = endTj - startTj;
+                    TJs.add(TJ);
+                    //-----------------------------------------------------------//
+
                     String movie_snames = "null";
                     if(snames_rs.next()){
                         movie_snames= snames_rs.getString("snames");
@@ -550,6 +672,23 @@ public class MoviesServlet extends HttpServlet {
                 // Set response status to 200 (OK)
                 response.setStatus(200);
 
+                //-----------------------------------------------------------//
+                long endTS = System.nanoTime();
+                long ts = (endTS - startTS);
+                long tjTotal = 0;
+                for(long d : TJs)
+                    tjTotal += d;
+                String result_str = String.valueOf(ts) + "," + String.valueOf(tjTotal);
+                Path path = Paths.get(request.getServletContext().getRealPath("/"),"logpool.txt");
+                System.out.println(path.toString());
+                try{
+                    OutputStream logOut = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND));
+                    logOut.write(result_str.getBytes());
+                } catch (IOException e) {
+                    request.getServletContext().log(e.getMessage());
+                }
+                //-----------------------------------------------------------//
+
             } catch (Exception e) {
 
                 // Write error message JSON object to output
@@ -565,6 +704,7 @@ public class MoviesServlet extends HttpServlet {
 
 
         }
+
 
 
         // Always remember to close db connection after usage. Here it's done by try-with-resources
