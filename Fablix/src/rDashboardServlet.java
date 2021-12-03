@@ -88,9 +88,9 @@ public class rDashboardServlet extends HttpServlet
             try (Connection conn = dataSource.getConnection())
             {
                 // Get a connection from dataSource
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("errorMessage", "damnsuccess");
-                out.write(jsonObject.toString());
+//                JsonObject jsonObject = new JsonObject();
+//                jsonObject.addProperty("errorMessage", "damnsuccess");
+//                out.write(jsonObject.toString());
                 // Construct a query with parameter represented by "?"
                 System.out.println("why??");
 
@@ -264,9 +264,9 @@ public class rDashboardServlet extends HttpServlet
         PrintWriter out = response.getWriter();
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
-            JsonObject tt = new JsonObject();
-            tt.addProperty("test", "damnsuccess");
-            out.write(tt.toString());
+//            JsonObject tt = new JsonObject();
+//            tt.addProperty("test", "damnsuccess");
+//            out.write(tt.toString());
             // Construct a query with parameter represented by "?"
             Statement statement = conn.createStatement();
 
