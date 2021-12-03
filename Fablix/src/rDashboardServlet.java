@@ -170,7 +170,7 @@ public class rDashboardServlet extends HttpServlet
             catch (Exception e) {
                 // Write error message JSON object to output
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("errorMessage", e.getMessage());
+                jsonObject.addProperty("errorMessage1", e.getMessage());
                 out.write(jsonObject.toString());
 
                 // Log error to localhost log
@@ -244,7 +244,7 @@ public class rDashboardServlet extends HttpServlet
             catch (Exception e) {
                 // Write error message JSON object to output
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("errorMessage", "why error?");
+                jsonObject.addProperty("errorMessage2", "why error?");
                 out.write(jsonObject.toString());
 
                 // Log error to localhost log
@@ -343,7 +343,7 @@ public class rDashboardServlet extends HttpServlet
         } catch (Exception e) {
             // Write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("errorMessage", e.getMessage());
+            jsonObject.addProperty("errorMessage3", e.getMessage());
             out.write(jsonObject.toString());
 
             // Log error to localhost log
