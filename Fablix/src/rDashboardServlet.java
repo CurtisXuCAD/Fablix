@@ -88,7 +88,9 @@ public class rDashboardServlet extends HttpServlet
             try (Connection conn = dataSource.getConnection())
             {
                 // Get a connection from dataSource
-
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("errorMessage", "damnsuccess");
+                out.write(jsonObject.toString());
                 // Construct a query with parameter represented by "?"
                 System.out.println("why??");
 
