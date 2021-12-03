@@ -264,9 +264,9 @@ public class rDashboardServlet extends HttpServlet
         PrintWriter out = response.getWriter();
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("test", "damnsuccess");
-            out.write(jsonObject.toString());
+            JsonObject tt = new JsonObject();
+            tt.addProperty("test", "damnsuccess");
+            out.write(tt.toString());
             // Construct a query with parameter represented by "?"
             Statement statement = conn.createStatement();
 
