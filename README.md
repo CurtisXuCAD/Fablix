@@ -86,19 +86,19 @@
      ```
 - # Connection Pooling
     - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
-        <a href="src/PaymentServlet.java">PaymentServlet.java</a>
-        <a href="src/DashboardServlet.java">DashboardServlet.java</a>
-        <a href="src/ConfirmationServlet.java">ConfirmationServlet.java</a>
-        <a href="src/IndexServlet.java">IndexServlet.java</a>
-        <a href="src/LoginServlet.java">LoginServlet.java</a>
-        <a href="src/MainServlet.java">MainServlet.java</a>
-        <a href="src/MoviesServlet.java">MoviesServlet.java</a>
-        <a href="src/PaymentServlet.java">PaymentServlet.java</a>
-        <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
-        <a href="src/SingleMovieServlet.java">SingleMovieServlet.java</a>
-        <a href="src/SingleStarServlet.java">SingleStarServlet.java</a>
-        <a href="WebContent/META-INF/context.xml">context.xml</a>
-        <a href="WebContent/WEB-INF/web.xml">web.xml</a>
+        <a href="Fablix/src/PaymentServlet.java">PaymentServlet.java</a>
+        <a href="Fablix/src/DashboardServlet.java">DashboardServlet.java</a>
+        <a href="Fablix/src/ConfirmationServlet.java">ConfirmationServlet.java</a>
+        <a href="Fablix/src/IndexServlet.java">IndexServlet.java</a>
+        <a href="Fablix/src/LoginServlet.java">LoginServlet.java</a>
+        <a href="Fablix/src/MainServlet.java">MainServlet.java</a>
+        <a href="Fablix/src/MoviesServlet.java">MoviesServlet.java</a>
+        <a href="Fablix/src/PaymentServlet.java">PaymentServlet.java</a>
+        <a href="Fablix/src/rDashboardServlet.java">rDashboardServlet.java</a>
+        <a href="Fablix/src/SingleMovieServlet.java">SingleMovieServlet.java</a>
+        <a href="Fablix/src/SingleStarServlet.java">SingleStarServlet.java</a>
+        <a href="Fablix/WebContent/META-INF/context.xml">context.xml</a>
+        <a href="Fablix/WebContent/WEB-INF/web.xml">web.xml</a>
 
     - #### Explain how Connection Pooling is utilized in the Fabflix code.
     ```
@@ -128,22 +128,22 @@
 - # Master/Slave
     - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
 
-    <a href="src/PaymentServlet.java">PaymentServlet.java</a>
-    <a href="src/DashboardServlet.java">DashboardServlet.java</a>
-    <a href="src/ConfirmationServlet.java">ConfirmationServlet.java</a>
-    <a href="src/IndexServlet.java">IndexServlet.java</a>
-    <a href="src/LoginServlet.java">LoginServlet.java</a>
-    <a href="src/MainServlet.java">MainServlet.java</a>
-    <a href="src/MoviesServlet.java">MoviesServlet.java</a>
-    <a href="src/PaymentServlet.java">PaymentServlet.java</a>
-    <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
-    <a href="src/SingleMovieServlet.java">SingleMovieServlet.java</a>
-    <a href="src/SingleStarServlet.java">SingleStarServlet.java</a>
-    <a href="WebContent/META-INF/context.xml">context.xml</a>
-    <a href="WebContent/WEB-INF/web.xml">web.xml</a>
+    <a href="Fablix/src/PaymentServlet.java">PaymentServlet.java</a>
+    <a href="Fablix/src/DashboardServlet.java">DashboardServlet.java</a>
+    <a href="Fablix/src/ConfirmationServlet.java">ConfirmationServlet.java</a>
+    <a href="Fablix/src/IndexServlet.java">IndexServlet.java</a>
+    <a href="Fablix/src/LoginServlet.java">LoginServlet.java</a>
+    <a href="Fablix/src/MainServlet.java">MainServlet.java</a>
+    <a href="Fablix/src/MoviesServlet.java">MoviesServlet.java</a>
+    <a href="Fablix/src/PaymentServlet.java">PaymentServlet.java</a>
+    <a href="Fablix/src/rDashboardServlet.java">rDashboardServlet.java</a>
+    <a href="Fablix/src/SingleMovieServlet.java">SingleMovieServlet.java</a>
+    <a href="Fablix/src/SingleStarServlet.java">SingleStarServlet.java</a>
+    <a href="Fablix/WebContent/META-INF/context.xml">context.xml</a>
+    <a href="Fablix/WebContent/WEB-INF/web.xml">web.xml</a>
     - #### How read/write requests were routed to Master/Slave SQL?
-    <a href="src/PaymentServlet.java">PaymentServlet.java</a>
-    <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
+    <a href="Fablix/src/PaymentServlet.java">PaymentServlet.java</a>
+    <a href="Fablix/src/rDashboardServlet.java">rDashboardServlet.java</a>
     These two web pages are the places that we implement write operations to the SQL. Because we could both write and read to master instance. We simply defined a connection to master instance on the top of the file. Every operation comes from these two website will be routed to Master SQL.
 
     For rest of the websites, all the operations are read. So it does not master whether it is connect to Master or Slave. We simply make it connect to localhost.
