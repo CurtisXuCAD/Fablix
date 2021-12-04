@@ -100,7 +100,7 @@
     ```
     -In the context.xml file, first define all the database resource you want to use.
     -In the web.xml file, register all the database resource you defined in the context.xml.
-    -On top of the servelet file what you want to use to connect to the database, define a datasource object.
+    -On top of the servelet file that you want to use to connect to the database, define a datasource object.
 
      public void init(ServletConfig config) {
             try {
