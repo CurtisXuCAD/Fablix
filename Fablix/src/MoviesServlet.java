@@ -348,6 +348,8 @@ public class MoviesServlet extends HttpServlet {
                 Path path = Paths.get(request.getServletContext().getRealPath("/"),"logTSTJ.txt");
                 request.getServletContext().log(path.toString());
                 request.getServletContext().log(result_str);
+                out.write(path.toString());
+                out.write(result_str);
                 try{
                     OutputStream logOut = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND));
                     logOut.write(result_str.getBytes());
@@ -683,6 +685,8 @@ public class MoviesServlet extends HttpServlet {
                 Path path = Paths.get(request.getServletContext().getRealPath("/"),"logTSTJ.txt");
                 request.getServletContext().log(path.toString());
                 request.getServletContext().log(result_str);
+                out.write(path.toString());
+                out.write(result_str);
                 try{
                     OutputStream logOut = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND));
                     logOut.write(result_str.getBytes());
