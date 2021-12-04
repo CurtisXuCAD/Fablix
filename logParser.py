@@ -13,4 +13,4 @@ for line in Lines:
 ts_avg = ts / float(count) / 1000000.0
 tj_avg = tj / float(count) / 1000000.0
 
-print(f"TS: {ts_avg}ms\n TJ: {tj_avg}ms")
+print(f"TS: {ts_avg}ms\nTJ: {tj_avg}ms")
