@@ -7,27 +7,29 @@
     - #### Project 5 Video Demo Link:
 
     - #### Instruction of deployment:
-     - On AWS Server clone the project1
+     
     ```
+    - On AWS Server clone the project1
     git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
-    ```
+    
     - Direct to project folder
-    ```
+    
     cd cs122b-fall21-team-6/Fablix
-    ```
+    
     - Build the war file
-    ```
+
     mvn package
-    ```
+  
     - Copy war file to tomcat to deploy
-    ```
+   
     sudo cp ./target/*.war /var/lib/tomcat9/webapps/
     ```
 
     - #### Collaborations and Work Distribution:
      
-     - CurtisXuCAD (Chunzhi Xu)
+        
      ```
+      - CurtisXuCAD (Chunzhi Xu)
        Build movie list page
        Beautify table
        GitHub setup
@@ -51,8 +53,9 @@
        Log files
      ```
 
-     - Silence-silence-silence (Haoting Ni)
+     
      ```
+     - Silence-silence-silence (Haoting Ni)
        Single Movie Page
        Single Star Page
        Jump Function
@@ -77,8 +80,8 @@
        Master/Slave
        Loading balacing
      ```
-# Connection Pooling
-#### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+- # Connection Pooling
+    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
 <a href="src/PaymentServlet.java">PaymentServlet.java</a>
 <a href="src/DashboardServlet.java">DashboardServlet.java</a>
 <a href="src/ConfirmationServlet.java">ConfirmationServlet.java</a>
@@ -93,7 +96,7 @@
 <a href="WebContent/META-INF/context.xml">context.xml</a>
 <a href="WebContent/WEB-INF/web.xml">web.xml</a>
 
-#### Explain how Connection Pooling is utilized in the Fabflix code.
+- #### Explain how Connection Pooling is utilized in the Fabflix code.
 ```
 -In the context.xml file, first define all the database resource you want to use.
 -In the web.xml file, register all the database resource you defined in the context.xml.
@@ -110,14 +113,17 @@
 Connection conn = dataSource.getConnection()
 - The connection will be reused by the clients in this way.
 ```
-#### Explain how Connection Pooling works with two backend SQL.
+- #### Explain how Connection Pooling works with two backend SQL.
+```
 - Since we have create two different datasources in the context.xml file, we could use different datasources depending on the situation.
 - Because there is no register on the read operations, we could define it as localhost mysql. So it could connect either one of the backend SQL.
 - And we define another connection to master instance for write operations.
 - The connections will be reused depending on the types of the operations.
+```
 
-# Master/Slave
-#### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+- # Master/Slave
+    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+
 <a href="src/PaymentServlet.java">PaymentServlet.java</a>
 <a href="src/DashboardServlet.java">DashboardServlet.java</a>
 <a href="src/ConfirmationServlet.java">ConfirmationServlet.java</a>
@@ -131,7 +137,7 @@ Connection conn = dataSource.getConnection()
 <a href="src/SingleStarServlet.java">SingleStarServlet.java</a>
 <a href="WebContent/META-INF/context.xml">context.xml</a>
 <a href="WebContent/WEB-INF/web.xml">web.xml</a>
-#### How read/write requests were routed to Master/Slave SQL?
+ - #### How read/write requests were routed to Master/Slave SQL?
 <a href="src/PaymentServlet.java">PaymentServlet.java</a>
 <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
 Thess two web pages are the place that we implement write operations to the SQL. Because we could both write and read to master instance. We simply defined a connection to master instance on the top of the file. Every operations come from these two website will be routed to Master SQL.
