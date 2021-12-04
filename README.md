@@ -140,7 +140,7 @@
     - #### How read/write requests were routed to Master/Slave SQL?
     <a href="src/PaymentServlet.java">PaymentServlet.java</a>
     <a href="src/rDashboardServlet.java">rDashboardServlet.java</a>
-    Thess two web pages are the place that we implement write operations to the SQL. Because we could both write and read to master instance. We simply defined a connection to master instance on the top of the file. Every operations come from these two website will be routed to Master SQL.
+    These two web pages are the places that we implement write operations to the SQL. Because we could both write and read to master instance. We simply defined a connection to master instance on the top of the file. Every operation comes from these two website will be routed to Master SQL.
 
     For rest of the websites, all the operations are read. So it does not master whether it is connect to Master or Slave. We simply make it connect to localhost.
 
