@@ -111,12 +111,12 @@
         }
     -use getconnection to connect to databases.
     Connection conn = dataSource.getConnection()
-    - The connection will be reused by the clients in this way.
+    - The connection will be reused by the clients in this way. The web page will get a connection to the database. When the website finish the actions, the connection will be put back to the connection pool.
     ```
     - #### Explain how Connection Pooling works with two backend SQL.
     ```
     - Since we have create two different datasources in the context.xml file, we could use different datasources depending on the situation.
-    - Because there is no register on the read operations, we could define it as localhost mysql. So it could connect either one of the backend SQL.
+    - Because there is no restriction on the read operations, we could connect one of the datasource to localhost mysql. So it could connect either one of the backend SQL.
     - And we define another connection to master instance for write operations.
     - The connections will be reused depending on the types of the operations.
     ```
