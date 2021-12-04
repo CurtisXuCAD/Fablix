@@ -1,7 +1,72 @@
-# CS122B-Fall21-Team-6
-This is a UCI CS122B Project4 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
-### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
-### Note2: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
+### Note: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
+
+# General
+#### Team#: This is a UCI CS122B Project4 made by **Fall 2021 Team 6** 
+#### Names: Chunzhi Xu & Haoting Ni
+#### Instruction of depolyment: 
+- On AWS Server clone the project1
+ ```
+ git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
+ ```
+- Direct to project folder
+ ```
+ cd cs122b-fall21-team-6/Fablix
+ ```
+- Build the war file
+ ```
+ mvn package
+ ```
+- Copy war file to tomcat to deploy
+ ```
+ sudo cp ./target/*.war /var/lib/tomcat9/webapps/
+ ```
+#### Collaborations and Work Distribution:
+- CurtisXuCAD (Chunzhi Xu)
+```
+  Build movie list page
+  Beautify table
+  GitHub setup
+  AWS setup
+  Create demo
+  Bug fixing
+  Beautify Login, Main Page, Movie List Page
+  Jump Function using session
+  Query optimization
+  Pagination
+  Sorting
+  HTTPS
+  Password Encryption
+  XML Parsing
+  Prepared Statedment
+  Fixing Query & Statedment
+  Android App -- Fablix Mobile
+  Fixing Pagination & Sorting for full-text search result
+```
+
+- Silence-silence-silence (Haoting Ni)
+```
+  Single Movie Page
+  Single Star Page
+  Jump Function
+  Readme Creation 
+  Beautify Pages
+  Creat_table.sql
+  Main Page 
+  Login Page
+  Browsing and Search Functionality
+  Shopping Cart
+  Payment Page
+  Place Order
+  Confirmation Page
+  Add to Cart
+  Beautify Shopping Cart, Payment Page, Confirmation Page
+  reCAPTCHA
+  Prepared Statedment
+  Employee Dashboard
+  Full-text Search
+  Autocomplete
+```
+
 ---
 ## Video Demo Link
 **https://youtu.be/ImmVItD0py4**
@@ -57,49 +122,4 @@ Others:
 [Inconsistent Report](xml_parser/inconsistency_report.txt)
 
 
-## Contribution
-- CurtisXuCAD (Chunzhi Xu)
-```
-  Build movie list page
-  Beautify table
-  GitHub setup
-  AWS setup
-  Create demo
-  Bug fixing
-  Beautify Login, Main Page, Movie List Page
-  Jump Function using session
-  Query optimization
-  Pagination
-  Sorting
-  HTTPS
-  Password Encryption
-  XML Parsing
-  Prepared Statedment
-  Fixing Query & Statedment
-  Android App -- Fablix Mobile
-  Fixing Pagination & Sorting for full-text search result
-```
 
-- Silence-silence-silence (Haoting Ni)
-```
-  Single Movie Page
-  Single Star Page
-  Jump Function
-  Readme Creation 
-  Beautify Pages
-  Creat_table.sql
-  Main Page 
-  Login Page
-  Browsing and Search Functionality
-  Shopping Cart
-  Payment Page
-  Place Order
-  Confirmation Page
-  Add to Cart
-  Beautify Shopping Cart, Payment Page, Confirmation Page
-  reCAPTCHA
-  Prepared Statedment
-  Employee Dashboard
-  Full-text Search
-  Autocomplete
-```
