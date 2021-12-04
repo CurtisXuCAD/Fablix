@@ -1,9 +1,9 @@
 ### Note: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
 
-# General
-#### Team#: This is a UCI CS122B Project4 made by **Fall 2021 Team 6** 
-#### Names: Chunzhi Xu & Haoting Ni
-#### Instruction of depolyment: 
+-# General
+-#### Team#: This is a UCI CS122B Project4 made by **Fall 2021 Team 6** 
+-#### Names: Chunzhi Xu & Haoting Ni
+-#### Instruction of depolyment: 
 - On AWS Server clone the project1
  ```
  git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
