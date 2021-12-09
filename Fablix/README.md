@@ -4,7 +4,7 @@ Fablix is a database website. The front end uses HTML,JS,CSS and also include a 
 ## Video Demo Link
 **https://youtu.be/ImmVItD0py4** \
 **https://youtu.be/lbSoraMGclA** \
-**https://youtu.be/HkKdf7C6H0U** \
+**https://youtu.be/HkKdf7C6H0U** 
 ## Application URL
 **https://ec2-54-151-116-40.us-west-1.compute.amazonaws.com:8443/fablix/** (NEED UCIFULL VPN)
 
