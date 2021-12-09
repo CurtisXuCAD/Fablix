@@ -1,4 +1,6 @@
-### Note: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
+# Fablix
+Fablix is a database website. The front end uses HTML,JS,CSS and also include a simple Anriod app. The back end uses JavaServlet and MySQL database management. \
+Fablix folder include the frontend and backend source. Fablix_Mobile include the App Source.
 - # General
     - #### Team#: **Fall 2021 Team 6** 
     
@@ -10,11 +12,11 @@
      
     ```
     - On AWS Server clone the project1
-    git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
+    git clone https://github.com/CurtisXuCAD/Fablix_Movies.git
     
     - Direct to project folder
     
-    cd cs122b-fall21-team-6/Fablix
+    cd Fablix_Movies/Fablix
     
     - Build the war file
 
