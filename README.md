@@ -151,7 +151,7 @@
 - # JMeter TS/TJ Time Logs
     - #### Move to the root of the project
     ```
-    cd cs122b-fall21-team-6/
+    cd Fablix_Movies/
     ```
     - #### The log file show be generated at:
     ```
