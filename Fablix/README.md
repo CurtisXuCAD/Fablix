@@ -1,21 +1,20 @@
-# CS122B-Fall21-Team-6
-This is a UCI CS122B Project4 made by **Fall 2021 Team 6** (Chunzhi Xu & Haoting Ni)
-### Note: Commit History users Haoting Ni and Silence-silence-silence are done by the same person Haoting Ni. Only for project 1, 2 because of mistaken push from local desktop.
-### Note2: Commit History users Ubuntu is our AWS Linux User, Chunzhi Xu accidentally push changes without checking the username when debugging on AWS.
+# Fablix_Movies
 ---
 ## Video Demo Link
 **https://youtu.be/ImmVItD0py4**
+**https://youtu.be/lbSoraMGclA**
+**https://youtu.be/HkKdf7C6H0U**
 ## Application URL
-**https://ec2-54-151-116-40.us-west-1.compute.amazonaws.com:8443/fablix/**
+**https://ec2-54-151-116-40.us-west-1.compute.amazonaws.com:8443/fablix/** (NEED UCIFULL VPN)
 
 ## How to deploy your application with Tomcat
 - On AWS Server clone the project1
  ```
- git clone https://github.com/UCI-Chenli-teaching/cs122b-fall21-team-6.git
+ git clone https://github.com/CurtisXuCAD/Fablix_Movies.git
  ```
 - Direct to project folder
  ```
- cd cs122b-fall21-team-6/Fablix
+ cd Fablix_Movies/Fablix
  ```
 - Build the war file
  ```
